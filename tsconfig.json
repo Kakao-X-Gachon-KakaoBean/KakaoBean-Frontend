@@ -10,6 +10,7 @@
     "strict": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
+    "typeRoots": ["types"],
     "paths": {
       "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
