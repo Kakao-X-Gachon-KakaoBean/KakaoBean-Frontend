@@ -32,9 +32,12 @@ export const TopMenu = styled.div`
 `;
 
 export const LeftMenu = styled.div`
-  font-size: 4rem;
-  font-weight: bold;
   color: gray;
+`;
+
+export const Img = styled.img`
+  width: 4rem;
+  height: 4rem;
 `;
 
 export const RightMenu = styled.div`

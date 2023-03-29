@@ -1,9 +1,10 @@
 import React from "react";
-// import { Logo } from "../../image/beanSolo.png";
+import Logo from "../../image/beanSolo.png";
 
 import { Link } from "react-router-dom";
 import {
   Bar,
+  Img,
   LeftMenu,
   MainBar,
   RightMenu,
@@ -17,8 +18,7 @@ const HeaderBar = () => {
         <TopMenu>
           <Link to="main" style={{ textDecoration: "none" }}>
             <LeftMenu>
-              {/*<img  src={Logo} alt="" />*/}
-              사진
+              <Img src={Logo} alt="" />
             </LeftMenu>
           </Link>
           <RightMenu>
@@ -40,7 +40,9 @@ const HeaderBar = () => {
                 <span>Login</span>
               </Link>
             </span>
-            <span>Get Start</span>
+            <span>
+              <span>Get Start</span>
+            </span>
           </RightMenu>
         </TopMenu>
       </MainBar>
