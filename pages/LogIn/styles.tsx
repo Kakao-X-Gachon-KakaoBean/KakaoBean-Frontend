@@ -98,3 +98,42 @@ export const LoginBtn = styled.button`
     border: none;
   }
 `;
+
+export const SocialLogin = styled.div`
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+export const GoogleBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  font-size: 1.3rem;
+  box-sizing: border-box;
+  width: 32rem;
+  height: 4rem;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+`;
+
+export const KakaoBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  box-sizing: border-box;
+  width: 32rem;
+  height: 4rem;
+  background: #ebeca8;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+`;
+
+export const Img = styled.img`
+  width: 2rem;
+  height: 2rem;
+  float: left;
+  margin-right: 0.4rem;
+`;
