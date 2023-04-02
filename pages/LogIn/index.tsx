@@ -1,18 +1,25 @@
 import React, { FormEvent, useCallback } from "react";
+import GoogleImg from "../../image/google-logo.png";
+import KakaoImg from "../../image/kakao-logo.png";
 
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import useInput from "@hooks/useInput";
 import {
   Form,
+  GoogleBtn,
   Header,
+  Img,
   Input,
+  KakaoBtn,
   Label,
   LoginBtn,
   SearchBox,
+  SocialLogin,
   Wrapper,
 } from "@pages/LogIn/styles";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const LogIn = () => {
   const clientId = "";
@@ -64,13 +71,23 @@ const LogIn = () => {
           </SearchBox>
         </Form>
         <div>또는</div>
-        <GoogleOAuthProvider clientId={clientId}>
-          <GoogleLogin
-            onSuccess={(res) => {
-              console.log(res);
-            }}
-          />
-        </GoogleOAuthProvider>
+        {/*<GoogleOAuthProvider clientId={clientId}>*/}
+        {/*  <GoogleLogin*/}
+        {/*    onSuccess={(res) => {*/}
+        {/*      console.log(res);*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*</GoogleOAuthProvider>*/}
+        <SocialLogin>
+          <GoogleBtn>
+            <Img src={GoogleImg} alt="Google" />
+            <div>Google로 계속</div>
+          </GoogleBtn>
+          <KakaoBtn>
+            <Img src={KakaoImg} alt="Google" />
+            <div>KaKao로 계속</div>
+          </KakaoBtn>
+        </SocialLogin>
       </Wrapper>
     </>
   );
