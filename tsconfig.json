@@ -6,7 +6,7 @@
     "jsx": "react",
     "module": "esnext",
     "moduleResolution": "Node",
-    "target": "es5",
+    "target": "es6",
     "strict": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
@@ -24,7 +24,7 @@
     "compilerOptions": {
       "module": "commonjs",
       "moduleResolution": "Node",
-      "target": "es5",
+      "target": "es6",
       "esModuleInterop": true
     }
   }
