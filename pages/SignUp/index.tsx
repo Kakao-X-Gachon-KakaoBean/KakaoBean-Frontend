@@ -1,8 +1,10 @@
-import React, { FormEvent, useCallback } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { LoginBtn, Wrapper, Label } from "@pages/LogIn/styles";
 import { Header, SubHeader, Input, CheckBtn, Form } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
+import Menu from "@components/Menu";
+import EmailModal from "@components/EmailModal";
 
 const SignUp = () => {
   const [name, onChangeName, setName] = useInput("");
@@ -10,6 +12,12 @@ const SignUp = () => {
   const [birthDay, onChangeBirthDay, setBirthDay] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
   const [passwordCheck, onChangePasswordCheck, setPasswordCheck] = useInput("");
+  const [authKey, onChangeAuthKey, seyAuthKey] = useInput("");
+  const [emailModal, setEmailModal] = useState(false);
+
+  const onCloseEmailModal = useCallback(() => {
+    setEmailModal((prev) => !prev);
+  }, []);
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
@@ -18,9 +26,6 @@ const SignUp = () => {
     },
     [name, birthDay, email, passwordCheck, password]
   );
-  const onCheckEmail = useCallback(() => {
-    console.log("클릭됨");
-  }, []);
 
   return (
     <>
@@ -63,7 +68,7 @@ const SignUp = () => {
               placeholder="이메일"
             />
           </Label>
-          <CheckBtn type="button" onClick={onCheckEmail}>
+          <CheckBtn type="button" onClick={onCloseEmailModal}>
             이메일 인증
           </CheckBtn>
           <Label>
@@ -88,6 +93,17 @@ const SignUp = () => {
           </Label>
           <LoginBtn type="submit">가입하기</LoginBtn>
         </Form>
+        {emailModal && (
+          <Menu show={emailModal} onCloseModal={onCloseEmailModal}>
+            <EmailModal
+              email={email}
+              onChangeEmail={onChangeEmail}
+              onCloseCheckEmailModal={onCloseEmailModal}
+              authKey={authKey}
+              onChangeAuthKey={onChangeAuthKey}
+            />
+          </Menu>
+        )}
       </Wrapper>
     </>
   );
