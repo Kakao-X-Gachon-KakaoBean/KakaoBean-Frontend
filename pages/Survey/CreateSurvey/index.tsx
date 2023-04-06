@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { atom, useRecoilState } from 'recoil';
 
 interface QuestionTypeItem {
     id: string;
@@ -8,8 +9,13 @@ interface QuestionTypeItem {
 }
 interface QuestionsItem {
     id: string;
+    type: string;
     content: string;
 }
+const countState = atom({
+    key: 'countQuestions',
+    default: 10,
+})
 
 const getQuestionType = (): QuestionTypeItem[] => [
     {
@@ -32,6 +38,7 @@ const getQuestionType = (): QuestionTypeItem[] => [
 const getQuestions = (count: number): QuestionsItem[] =>
     Array.from({ length: count }, (_, k) => k).map((k) => ({
         id: `item-${k}`,
+        type: `undefined`,
         content: `item ${k}`,
     }));
 
@@ -40,7 +47,6 @@ const reorderQuestionType = (list: QuestionTypeItem[], startIndex: number, endIn
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-
     return result;
 };
 
@@ -57,11 +63,7 @@ const getQuestionTypeItemStyle = (isDragging: boolean, draggableStyle: any): Rea
     userSelect: "none",
     padding: 16,
     margin: `0 0 8px 0`,
-
-    // 드래깅시 배경색 변경
     background: isDragging ? "lightgreen" : "grey",
-
-    // 드래그에 필요한 스타일 적용
     ...draggableStyle
 });
 
@@ -91,7 +93,10 @@ const getQuestionsListStyle = (isDraggingOver: boolean): React.CSSProperties => 
 
 const CreateSurvey = (): JSX.Element => {
     const [questionTypeItems, setQuestionTypeItems] = useState<QuestionTypeItem[]>(getQuestionType());
-    const [questionItems, setQuestionItems] = useState<QuestionsItem[]>(getQuestions(10));
+
+    const [countQuestion, setCountQuestion] = useRecoilState(countState);
+    const [questionItems, setQuestionItems] = useState<QuestionsItem[]>(getQuestions(countQuestion));
+    
 
     const onDragEnd = (result: DropResult): void => {
         if (!result.destination) {
@@ -105,6 +110,11 @@ const CreateSurvey = (): JSX.Element => {
                 result.destination.index
             );
             setQuestionTypeItems(newItems1);
+            if (result.destination.droppableId === "questions") {
+                setCountQuestion(countQuestion + 1);
+                console.log(result);
+                // detination의 index-1 과 index+1 사이에 source의 index에 해당하는 값의 양식을 넣어야 한다.
+            }
         }
         if (result.source.droppableId === "questions") {
             const newItems2 = reorderQuestions(
