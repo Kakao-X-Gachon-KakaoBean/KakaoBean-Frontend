@@ -21,9 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { RecoilLoadable } from "recoil";
 
-import error = RecoilLoadable.error;
 import { IUser } from "../../States/UserState";
 
 const LogIn = () => {
