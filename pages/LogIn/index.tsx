@@ -19,71 +19,91 @@ import {
   Wrapper,
 } from "@pages/LogIn/styles";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useQuery } from "react-query";
-import { RecoilLoadable } from "recoil";
+import axios, { AxiosError } from "axios";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import error = RecoilLoadable.error;
-import { IUser } from "../../States/UserState";
+import { IUser, UserState } from "../../States/UserState";
+import { useRecoilState } from "recoil";
+import fetcher from "@utils/fetcher";
+import { Redirect } from "react-router";
 
 const LogIn = () => {
   const clientId = "";
 
   const [email, onChangeEmail, setEmail] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
+  const [user, setUser] = useRecoilState<IUser>(UserState);
 
-  const onSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-    },
-    [email, password]
+  const queryClient = useQueryClient();
+  const {
+    isLoading,
+    isSuccess,
+    status,
+    isError,
+    data: userData,
+    error,
+  } = useQuery("user", () => fetcher({ queryKey: "멤버 get api" }));
+
+  console.log("유저 데이터" + userData);
+
+  // const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
+  const mutation = useMutation<
+    IUser,
+    AxiosError,
+    { email: string; password: string }
+  >(
+    "user",
+    (data) =>
+      axios
+        .post("로그인 url", data, {
+          withCredentials: true,
+        })
+        .then((response) => response.data),
+    {
+      onMutate() {
+        // setLogInError(false);
+      },
+      onSuccess() {
+        // queryClient.refetchQueries('user');
+        console.log(user);
+        setUser(user);
+      },
+      onError(error) {
+        // setLogInError(error.response?.data?.code === 401);
+      },
+    }
   );
 
-  // async function UserPost() {
-  //   const response = await fetch(`https://kakaoBean/members`);
-  //   return response.json();
-  // }
+  //로컬 로그인
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      mutation.mutate({ email, password });
+    },
+    [email, password, mutation]
+  );
   //
-  // const {
-  //   data: UserData,
-  //   isError,
-  //   error: any,
-  //   isLoading,
-  // } = useQuery(["postUser"], () => UserPost());
-  // if (isLoading) return <h3>Loading....</h3>;
-  // if (isError)
-  //   return (
-  //     <>
-  //       <p>{error.toString()}</p>
-  //     </>
-  //   );
+  // if (isLoading) {
+  //   return <div>로딩중...</div>;
+  // }
 
-  // const User = async (addUser: IUser): Promise<IUser> => {
-  //   const { name, age, gender, email, password, checkPassword, birth } =
-  //     await axios.post<IUser>(`/https://kakaoBean/members`, {
-  //       name,
-  //       age,
-  //       gender,
-  //       email,
-  //       password,
-  //       checkPassword,
-  //       birth,
-  //     });
-  //   return data;
-  // };
+  //로그인 정보 있을 시 메인으로 리다이렉트
+  if (user) {
+    return <Redirect to="/main" />;
+  }
 
   //구글 로그인
   const { data: GoogleData } = useQuery("getGoogle", () =>
     axios
       .get("http://localhost:8080/oauth2/authorization/google")
-      .then(({ data }) => data)
+      .then(({ data }) => setUser(data))
   );
 
   //카카오 로그인
   const { data: KakaoData } = useQuery("getKakao", () =>
     axios
       .get("http://localhost:8080/oauth2/authorization/google")
-      .then(({ data }) => data)
+      .then(({ data }) => setUser(data))
   );
 
   return (
