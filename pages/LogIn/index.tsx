@@ -20,6 +20,11 @@ import {
 } from "@pages/LogIn/styles";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useQuery } from "react-query";
+import { RecoilLoadable } from "recoil";
+
+import error = RecoilLoadable.error;
+import { IUser } from "../../States/UserState";
 
 const LogIn = () => {
   const clientId = "";
@@ -32,6 +37,53 @@ const LogIn = () => {
       e.preventDefault();
     },
     [email, password]
+  );
+
+  // async function UserPost() {
+  //   const response = await fetch(`https://kakaoBean/members`);
+  //   return response.json();
+  // }
+  //
+  // const {
+  //   data: UserData,
+  //   isError,
+  //   error: any,
+  //   isLoading,
+  // } = useQuery(["postUser"], () => UserPost());
+  // if (isLoading) return <h3>Loading....</h3>;
+  // if (isError)
+  //   return (
+  //     <>
+  //       <p>{error.toString()}</p>
+  //     </>
+  //   );
+
+  // const User = async (addUser: IUser): Promise<IUser> => {
+  //   const { name, age, gender, email, password, checkPassword, birth } =
+  //     await axios.post<IUser>(`/https://kakaoBean/members`, {
+  //       name,
+  //       age,
+  //       gender,
+  //       email,
+  //       password,
+  //       checkPassword,
+  //       birth,
+  //     });
+  //   return data;
+  // };
+
+  //구글 로그인
+  const { data: GoogleData } = useQuery("getGoogle", () =>
+    axios
+      .get("http://localhost:8080/oauth2/authorization/google")
+      .then(({ data }) => data)
+  );
+
+  //카카오 로그인
+  const { data: KakaoData } = useQuery("getKakao", () =>
+    axios
+      .get("http://localhost:8080/oauth2/authorization/google")
+      .then(({ data }) => data)
   );
 
   return (
