@@ -41,7 +41,9 @@ const HeaderBar = () => {
               </Link>
             </span>
             <span>
-              <span>Get Start</span>
+              <Link to="createsurvey">
+                <span>Get Start</span>
+              </Link>
             </span>
           </RightMenu>
         </TopMenu>
