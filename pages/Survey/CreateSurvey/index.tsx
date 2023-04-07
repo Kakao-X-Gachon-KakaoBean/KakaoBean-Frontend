@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { atom, useRecoilState } from 'recoil';
+import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { QuestionTypeItem, QuestionsItem } from '@pages/Survey/CreateSurvey/type';
+import { start } from 'repl';
 
-interface QuestionTypeItem {
-    id: string;
-    type: string;
-    content: string;
-}
-interface QuestionsItem {
-    id: string;
-    type: string;
-    content: string;
-}
 const countState = atom({
     key: 'countQuestions',
-    default: 10,
+    default: 0,
 })
 
 const getQuestionType = (): QuestionTypeItem[] => [
@@ -37,57 +29,10 @@ const getQuestionType = (): QuestionTypeItem[] => [
 
 const getQuestions = (count: number): QuestionsItem[] =>
     Array.from({ length: count }, (_, k) => k).map((k) => ({
-        id: `item-${k}`,
+        id: `add-${k}`,
         type: `undefined`,
-        content: `item ${k}`,
+        content: `add ${k}`,
     }));
-
-
-const reorderQuestionType = (list: QuestionTypeItem[], startIndex: number, endIndex: number): QuestionTypeItem[] => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-};
-
-const reorderQuestions = (list: QuestionsItem[], startIndex: number, endIndex: number): QuestionsItem[] => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-};
-
-
-// dnd style
-const getQuestionTypeItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
-    userSelect: "none",
-    padding: 16,
-    margin: `0 0 8px 0`,
-    background: isDragging ? "lightgreen" : "grey",
-    ...draggableStyle
-});
-
-const getQuestionTypeListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    padding: 8,
-    width: 250
-});
-
-const getQuestionsItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
-    userSelect: 'none',
-    padding: 20,
-    margin: `0 0 10px 0`,
-
-    background: isDragging ? "green" : "white",
-
-    ...draggableStyle
-})
-
-const getQuestionsListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-    background: isDraggingOver ? 'blue' : 'darkgrey',
-    padding: 10,
-    width: 350,
-})
 
 
 
@@ -97,6 +42,52 @@ const CreateSurvey = (): JSX.Element => {
     const [countQuestion, setCountQuestion] = useRecoilState(countState);
     const [questionItems, setQuestionItems] = useState<QuestionsItem[]>(getQuestions(countQuestion));
     
+    const reorderQuestions = (list: QuestionsItem[], startIndex: number, endIndex: number): QuestionsItem[] => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        return result;
+    };
+    
+    // endIndex index-1 과 index+1 사이에 startIndex에 해당하는 값의 양식을 넣어야 한다.
+    const reorderAddQuestions = (list: QuestionsItem[], startIndex: number, endIndex: number) => {
+        const result = Array.from(list);
+        console.log(countState);
+        const add = {id: `add-${countQuestion}`, type: 'undefined', content: questionTypeItems[startIndex].content}
+        result.splice(endIndex, 0, add);
+        return result;
+    };
+    
+    
+    const getQuestionTypeItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
+        userSelect: "none",
+        padding: 16,
+        margin: `0 0 8px 0`,
+        background: isDragging ? "lightgreen" : "grey",
+        ...draggableStyle
+    });
+    
+    const getQuestionTypeListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
+        background: isDraggingOver ? "lightblue" : "lightgrey",
+        padding: 8,
+        width: 250
+    });
+    
+    const getQuestionsItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
+        userSelect: 'none',
+        padding: 20,
+        margin: `0 0 10px 0`,
+        background: isDragging ? "green" : "white",
+    
+        ...draggableStyle
+    })
+    
+    const getQuestionsListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
+        background: isDraggingOver ? 'blue' : 'darkgrey',
+        padding: 10,
+        width: 350,
+    })
+    
 
     const onDragEnd = (result: DropResult): void => {
         if (!result.destination) {
@@ -104,15 +95,14 @@ const CreateSurvey = (): JSX.Element => {
         }
 
         if (result.source.droppableId === "questionType") {
-            const newItems1 = reorderQuestionType(
-                questionTypeItems,
-                result.source.index,
-                result.destination.index
-            );
-            setQuestionTypeItems(newItems1);
             if (result.destination.droppableId === "questions") {
                 setCountQuestion(countQuestion + 1);
-                console.log(result);
+                const newItems1 = reorderAddQuestions(
+                    questionItems,
+                    result.source.index,
+                    result.destination.index
+                )
+                setQuestionItems(newItems1);
                 // detination의 index-1 과 index+1 사이에 source의 index에 해당하는 값의 양식을 넣어야 한다.
             }
         }
