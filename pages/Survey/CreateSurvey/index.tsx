@@ -1,47 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
-import { QuestionTypeItem, QuestionsItem } from '@pages/Survey/CreateSurvey/type';
-import { start } from 'repl';
-
-const countState = atom({
-    key: 'countQuestions',
-    default: 0,
-})
-
-const getQuestionType = (): QuestionTypeItem[] => [
-    {
-        id: "0",
-        type: "객관식",
-        content: "객관식"
-    },
-    {
-        id: "1",
-        type: "주관식",
-        content: "주관식"
-    },
-    {
-        id: "2",
-        type: "찬반형",
-        content: "찬반형"
-    }
-];
-
-const getQuestions = (count: number): QuestionsItem[] =>
-    Array.from({ length: count }, (_, k) => k).map((k) => ({
-        id: `add-${k}`,
-        type: `undefined`,
-        content: `add ${k}`,
-    }));
-
+import { useRecoilState } from 'recoil';
+import { QuestionTypeItem, QuestionsItem, countState, getQuestionType, getQuestions } from '@pages/Survey/CreateSurvey/type';
+import { getQuestionTypeItemStyle, getQuestionTypeListStyle, getQuestionsItemStyle, getQuestionsListStyle, CreateSurveyDiv, QuestionTypeListDiv, QuestionsListDiv } from '@pages/Survey/CreateSurvey/styles';
 
 
 const CreateSurvey = (): JSX.Element => {
     const [questionTypeItems, setQuestionTypeItems] = useState<QuestionTypeItem[]>(getQuestionType());
 
     const [countQuestion, setCountQuestion] = useRecoilState(countState);
-    const [questionItems, setQuestionItems] = useState<QuestionsItem[]>(getQuestions(countQuestion));
+    const [questionItems, setQuestionItems] = useState<QuestionsItem[]>(getQuestions());
     
+    // 질문 리스트 순서 바꾸기
     const reorderQuestions = (list: QuestionsItem[], startIndex: number, endIndex: number): QuestionsItem[] => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
@@ -49,7 +19,7 @@ const CreateSurvey = (): JSX.Element => {
         return result;
     };
     
-    // endIndex index-1 과 index+1 사이에 startIndex에 해당하는 값의 양식을 넣어야 한다.
+    // 새로운 질문 추가
     const reorderAddQuestions = (list: QuestionsItem[], startIndex: number, endIndex: number) => {
         const result = Array.from(list);
         console.log(countState);
@@ -58,43 +28,18 @@ const CreateSurvey = (): JSX.Element => {
         return result;
     };
     
-    
-    const getQuestionTypeItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
-        userSelect: "none",
-        padding: 16,
-        margin: `0 0 8px 0`,
-        background: isDragging ? "lightgreen" : "grey",
-        ...draggableStyle
-    });
-    
-    const getQuestionTypeListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-        background: isDraggingOver ? "lightblue" : "lightgrey",
-        padding: 8,
-        width: 250
-    });
-    
-    const getQuestionsItemStyle = (isDragging: boolean, draggableStyle: any): React.CSSProperties => ({
-        userSelect: 'none',
-        padding: 20,
-        margin: `0 0 10px 0`,
-        background: isDragging ? "green" : "white",
-    
-        ...draggableStyle
-    })
-    
-    const getQuestionsListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-        background: isDraggingOver ? 'blue' : 'darkgrey',
-        padding: 10,
-        width: 350,
-    })
-    
 
+    // 드래그 종료 시
     const onDragEnd = (result: DropResult): void => {
+        // Droppable 밖에서 Drop 되었을 시에 제자리
         if (!result.destination) {
             return;
         }
 
+        // 질문 유형 리스트 내의 컴포넌트를 drag
         if (result.source.droppableId === "questionType") {
+
+            // 질문 리스트의 Droppable로  drop
             if (result.destination.droppableId === "questions") {
                 setCountQuestion(countQuestion + 1);
                 const newItems1 = reorderAddQuestions(
@@ -103,9 +48,10 @@ const CreateSurvey = (): JSX.Element => {
                     result.destination.index
                 )
                 setQuestionItems(newItems1);
-                // detination의 index-1 과 index+1 사이에 source의 index에 해당하는 값의 양식을 넣어야 한다.
             }
         }
+
+        // 질문 유형 내의 컴포넌트를 drag
         if (result.source.droppableId === "questions") {
             const newItems2 = reorderQuestions(
                 questionItems,
@@ -118,8 +64,8 @@ const CreateSurvey = (): JSX.Element => {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <div style={{ display: 'flex' }}>
-                <div style={{ flex: 1 }}>
+            <CreateSurveyDiv>
+                <QuestionTypeListDiv>
                     <Droppable droppableId="questionType" isDropDisabled={true}>
                         {(provided, snapshot) => (
                             <div
@@ -148,8 +94,8 @@ const CreateSurvey = (): JSX.Element => {
                             </div>
                         )}
                     </Droppable>
-                </div>
-                <div style={{ flex: 1 }}>
+                </QuestionTypeListDiv>
+                <QuestionsListDiv>
                     <Droppable droppableId="questions" isDropDisabled={false}>
                         {(provided, snapshot) => (
                             <div
@@ -178,8 +124,8 @@ const CreateSurvey = (): JSX.Element => {
                             </div>
                         )}
                     </Droppable>
-                </div>
-            </div>
+                </QuestionsListDiv>
+            </CreateSurveyDiv>
         </DragDropContext>
     );
 }
