@@ -22,7 +22,8 @@ const App = () => {
       <Route path="/team" component={Team} />
       <Route path="/product" component={Product} />
       <Route path="/mypage" component={MyPage} />
-      <Route path="/createsurvey" component={CreateSurvey}/>
+      <Route path="/mypage/:id" component={MyPage} />
+      <Route path="/createsurvey" component={CreateSurvey} />
     </Switch>
   );
 };
