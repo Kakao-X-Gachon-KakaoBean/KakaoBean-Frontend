@@ -28,7 +28,6 @@ import { useRecoilState } from "recoil";
 import fetcher from "@utils/fetcher";
 import { Redirect } from "react-router";
 
-
 const LogIn = () => {
   const clientId = "";
 
@@ -45,8 +44,6 @@ const LogIn = () => {
     data: userData,
     error,
   } = useQuery("user", () => fetcher({ queryKey: "멤버 get api" }));
-
-  console.log("유저 데이터" + userData);
 
   // const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
   const mutation = useMutation<
@@ -90,9 +87,9 @@ const LogIn = () => {
   // }
 
   //로그인 정보 있을 시 메인으로 리다이렉트
-  if (user) {
-    return <Redirect to="/main" />;
-  }
+  // if (user) {
+  //   return <Redirect to="/main" />;
+  // }
 
   //구글 로그인
   const { data: GoogleData } = useQuery("getGoogle", () =>
