@@ -1,8 +1,16 @@
 import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
-  padding-top: 10rem;
-  margin-bottom: 3rem;
+  margin-top: 7rem;
+  margin-bottom: 7rem;
+  padding: 3rem;
+  background-color: lightgrey;
+`;
+
+export const Div = styled.div`
+  justify-content: space-around;
+  flex-direction: row;
+  display: flex;
 `;
 
 export const TextDiv = styled.div`
@@ -17,6 +25,10 @@ export const Text = styled.text`
   font-size: 50px;
 `;
 
+export const SmallText = styled.text`
+  font-size: 20px;
+`;
+
 export const Button = styled.button`
   background-color: #5200ff;
   border-radius: 12px;
@@ -26,4 +38,9 @@ export const Button = styled.button`
   width: 7rem;
   height: 2rem;
   font-weight: bold;
+`;
+
+export const Image = styled.img`
+  width: 700px;
+  height: 400px;
 `;
