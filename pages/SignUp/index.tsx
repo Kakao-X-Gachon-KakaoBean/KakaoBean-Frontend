@@ -5,11 +5,20 @@ import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
 import Menu from "@components/Menu";
 import EmailModal from "@components/EmailModal";
+import { Redirect } from "react-router";
+import { useMutation, useQuery } from "react-query";
+import { IUser } from "../../States/UserState";
+import axios, { AxiosError } from "axios";
+import fetcher from "@utils/fetcher";
 
 const SignUp = () => {
+  const { isLoading, isSuccess, status, isError, data, error } = useQuery(
+    "user",
+    () => fetcher({ queryKey: "멤버 get api " })
+  );
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
-  const [birthDay, onChangeBirthDay, setBirthDay] = useInput("");
+  const [birth, onchangeBirth, setBirthDay] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
   const [passwordCheck, onChangePasswordCheck, setPasswordCheck] = useInput("");
   const [authKey, onChangeAuthKey, seyAuthKey] = useInput("");
@@ -19,13 +28,53 @@ const SignUp = () => {
     setEmailModal((prev) => !prev);
   }, []);
 
+  const mutation = useMutation<
+    IUser,
+    AxiosError,
+    {
+      email: string;
+      password: string;
+      name: string;
+      passwordCheck: string;
+      birth: string;
+    }
+  >(
+    "user",
+    (data) => axios.post("/api/users", data).then((response) => response.data),
+    {
+      onMutate() {
+        // setSignUpError("");
+        // setSignUpSuccess(false);
+      },
+      onSuccess() {
+        // setSignUpSuccess(true);
+        console.log(data);
+      },
+      onError(error) {
+        // setSignUpError(error.response?.data);
+      },
+    }
+  );
+
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log(name, email, birthDay, password, passwordCheck);
+      if (name) {
+        console.log("회원가입 시도");
+        mutation.mutate({ email, name, password, passwordCheck, birth });
+      }
     },
-    [name, birthDay, email, passwordCheck, password]
+    [email, name, password, passwordCheck, birth, mutation]
   );
+
+  // if (isLoading) {
+  //   return <div>로딩중...</div>;
+  // }
+
+  //로그인 정보 있을 시 메인으로 리다이렉트
+  if (data) {
+    return <Redirect to="/main" />;
+  }
 
   return (
     <>
@@ -51,10 +100,10 @@ const SignUp = () => {
           <Label>
             <Input
               type="text"
-              id="birthDay"
-              name="birthDay"
-              value={birthDay}
-              onChange={onChangeBirthDay}
+              id="birth"
+              name="birth"
+              value={birth}
+              onChange={onchangeBirth}
               placeholder="생년월일 6자리"
             />
           </Label>
