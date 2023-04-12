@@ -30,7 +30,7 @@ export const SideBar = styled.section`
 
   margin: 0 auto;
 
-  border-right: 2px solid gray;
+  border-right: 4px solid gray;
 
   @media screen and (max-width: 769px) {
     order: 1;
