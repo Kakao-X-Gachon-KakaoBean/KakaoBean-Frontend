@@ -1,9 +1,10 @@
 import React from "react";
 import HeaderBar from "@components/HeaderBar";
-import MainFirst from "@components/MainFirst";
-import HorizonScroll from "@components/MainTouchScroll";
-import DNDText from "@components/DNDText";
-import GreyField from "@components/GreyField";
+import MainFirst from "@components/MainComponent/MainFirst";
+import HorizonScroll from "@components/MainComponent/MainTouchScroll";
+import DNDText from "@components/MainComponent/DNDText";
+import GreyField from "@components/MainComponent/GreyField";
+import BlackField from "@components/MainComponent/BlackField";
 
 const Main = () => {
   return (
@@ -14,6 +15,7 @@ const Main = () => {
         <HorizonScroll />
         <DNDText />
         <GreyField />
+        <BlackField />
       </div>
     </>
   );
