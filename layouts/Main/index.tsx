@@ -4,6 +4,7 @@ import MainFirst from "@components/MainFirst";
 import HorizonScroll from "@components/MainTouchScroll";
 import DNDText from "@components/DNDText";
 import GreyField from "@components/GreyField";
+import BlackField from "@components/BlackField";
 
 const Main = () => {
   return (
@@ -14,6 +15,7 @@ const Main = () => {
         <HorizonScroll />
         <DNDText />
         <GreyField />
+        <BlackField />
       </div>
     </>
   );
