@@ -9,6 +9,10 @@ export const getQuestionTypeItemStyle = (
   padding: 16,
   borderRadius: 10,
   margin: `0 0 8px 0`,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 200,
   boxShadow: `0px 2px 4px rgba(0,0,0,0.3)`,
   background: isDragging ? "white" : "white",
   ...draggableStyle,
@@ -20,7 +24,6 @@ export const getQuestionTypeListStyle = (
   borderRadius: 10,
   background: isDraggingOver ? "white" : "white",
   padding: 8,
-  width: 250,
 });
 
 export const getQuestionsItemStyle = (
@@ -43,23 +46,26 @@ export const getQuestionsListStyle = (
   border: "1px solid",
   borderColor: "D3D3D3",
   background: isDraggingOver ? "white" : "white",
-  padding: 90,
-  width: 650,
+  padding: 40,
 });
 
 // component style
 export const CreateSurveyDiv = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 0.3fr 0.6fr;
+
+  min-height: 100vh;
+  margin-top: -2rem;
 `;
 
 export const QuestionTypeListDiv = styled.div`
-  position: absolute;
-  top: 20%;
-  left: 20%;
+  padding-top: 10rem;
+  padding-right: 1rem;
+
+  margin: 0 auto;
 `;
 
 export const QuestionsListDiv = styled.div`
-  position: absolute;
-  top: 20%;
-  right: 30%;
+  padding-top: 10rem;
+  padding-bottom: 1rem;
 `;

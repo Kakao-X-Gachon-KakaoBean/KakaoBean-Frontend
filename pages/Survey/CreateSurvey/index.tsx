@@ -106,8 +106,8 @@ const CreateSurvey = (): JSX.Element => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <CreateSurveyDiv>
+    <CreateSurveyDiv>
+      <DragDropContext onDragEnd={onDragEnd}>
         <QuestionTypeListDiv>
           <Droppable droppableId="questionType" isDropDisabled={true}>
             {(provided, snapshot) => (
@@ -172,8 +172,8 @@ const CreateSurvey = (): JSX.Element => {
             )}
           </Droppable>
         </QuestionsListDiv>
-      </CreateSurveyDiv>
-    </DragDropContext>
+      </DragDropContext>
+    </CreateSurveyDiv>
   );
 };
 

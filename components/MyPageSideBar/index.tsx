@@ -13,12 +13,12 @@ const MyPageSideBar: FC<SideBar> = ({ sideBar }) => {
           </NavLink>
         </span>
         <span>
-          <NavLink activeClassName="selected" to={`/mypage/surveyinfo`}>
+          <NavLink activeClassName="selected" to={"/mypage/surveyinfo"}>
             참여 설문 조회
           </NavLink>
         </span>
         <span>
-          <NavLink activeClassName="selected" to={`/mypage/mysurvey`}>
+          <NavLink activeClassName="selected" to={"/mypage/mysurvey"}>
             내가 만든 설문 조회
           </NavLink>
         </span>
