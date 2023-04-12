@@ -15,7 +15,7 @@ const BlackField = () => {
   return (
     <Wrapper>
       <CorTextDiv>
-        <BeanText>KaKaoBean</BeanText>
+        <BeanText>KaKaoBeanjjj</BeanText>
         <CorText> corporation</CorText>
       </CorTextDiv>
       <TextDiv>
