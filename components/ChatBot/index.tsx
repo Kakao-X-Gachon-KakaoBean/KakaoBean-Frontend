@@ -14,7 +14,7 @@ const ChatBot: FC<ChatBotModal> = ({ onCloseCheckChatBotModal }) => {
   return (
     <Wrapper onClick={stopPropagation}>
       <Container>
-        챗봇임 ㅋ<CloseBtn onClick={onCloseCheckChatBotModal}>X</CloseBtn>
+        챗봇임 ㅋ{/*<CloseBtn onClick={onCloseCheckChatBotModal}>X</CloseBtn>*/}
       </Container>
     </Wrapper>
   );
