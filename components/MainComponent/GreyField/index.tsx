@@ -1,6 +1,6 @@
 import { Wrapper, Text, SmallText, Div, TextDiv, Image } from "./styles";
 import React from "react";
-import img1 from "../../image/ScreenTest1.png";
+import img1 from "../../../image/ScreenTest1.png";
 
 const GreyField = () => {
   return (
