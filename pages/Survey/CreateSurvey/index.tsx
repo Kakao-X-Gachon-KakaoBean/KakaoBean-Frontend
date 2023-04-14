@@ -19,7 +19,10 @@ const CreateSurvey = (): JSX.Element => {
       </ChatBtn>
       {chatBotModal && (
         <Menu show={chatBotModal} onCloseModal={onCloseChatBotModal}>
-          <ChatBot onCloseCheckChatBotModal={onCloseChatBotModal} />
+          <ChatBot
+            show={chatBotModal}
+            onCloseCheckChatBotModal={onCloseChatBotModal}
+          />
         </Menu>
       )}
     </CreateSurveyDiv>

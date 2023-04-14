@@ -1,9 +1,14 @@
 import React, { FC, FormEvent, useCallback, useState } from "react";
-import { CloseBtn, Container, Wrapper } from "@components/ChatBot/styles";
+import {
+  CloseBtn,
+  Container,
+  FalseContainer,
+  Wrapper,
+} from "@components/ChatBot/styles";
 import axios from "axios";
 import { ChatBotModal } from "@components/ChatBot/type";
 
-const ChatBot: FC<ChatBotModal> = ({ onCloseCheckChatBotModal }) => {
+const ChatBot: FC<ChatBotModal> = ({ show, onCloseCheckChatBotModal }) => {
   const stopPropagation = useCallback(
     (e: React.SyntheticEvent<EventTarget>) => {
       e.stopPropagation();
@@ -11,11 +16,20 @@ const ChatBot: FC<ChatBotModal> = ({ onCloseCheckChatBotModal }) => {
     []
   );
 
+  console.log(show);
   return (
     <Wrapper onClick={stopPropagation}>
-      <Container>
-        챗봇임 ㅋ{/*<CloseBtn onClick={onCloseCheckChatBotModal}>X</CloseBtn>*/}
-      </Container>
+      {show ? (
+        <Container>
+          챗봇임 ㅋ
+          {/*<CloseBtn onClick={onCloseCheckChatBotModal}>X</CloseBtn>*/}
+        </Container>
+      ) : (
+        <FalseContainer>
+          챗봇임 ㅋ
+          {/*<CloseBtn onClick={onCloseCheckChatBotModal}>X</CloseBtn>*/}
+        </FalseContainer>
+      )}
     </Wrapper>
   );
 };
