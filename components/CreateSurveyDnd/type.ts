@@ -24,6 +24,11 @@ export const getQuestionType = (): QuestionTypeItem[] => [
     type: "주관식",
     content: "주관식",
   },
+  {
+    id: "2",
+    type: "선형배율",
+    content: "선형배율",
+  },
 ];
 
 export const getQuestions = (): QuestionsItem[] => [];
