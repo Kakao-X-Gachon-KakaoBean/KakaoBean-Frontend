@@ -36,14 +36,14 @@ const LogIn = () => {
   const [user, setUser] = useRecoilState<IUser>(UserState);
 
   const queryClient = useQueryClient();
-  const {
-    isLoading,
-    isSuccess,
-    status,
-    isError,
-    data: userData,
-    error,
-  } = useQuery("user", () => fetcher({ queryKey: "멤버 get api" }));
+  // const {
+  //   isLoading,
+  //   isSuccess,
+  //   status,
+  //   isError,
+  //   data: userData,
+  //   error,
+  // } = useQuery("user", () => fetcher({ queryKey: "멤버 get api" }));
 
   // const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
   const mutation = useMutation<
@@ -69,6 +69,7 @@ const LogIn = () => {
       },
       onError(error) {
         // setLogInError(error.response?.data?.code === 401);
+        console.log("응 실패야 ㅋㅋ");
       },
     }
   );
@@ -81,6 +82,17 @@ const LogIn = () => {
     },
     [email, password, mutation]
   );
+
+  //구글 로그인 요청
+  const onClickGoogle = useCallback((e) => {
+    e.preventDefault();
+  }, []);
+
+  //카카오 로그인 요청
+  const onClickKakao = useCallback((e) => {
+    e.preventDefault();
+  }, []);
+
   //
   // if (isLoading) {
   //   return <div>로딩중...</div>;
@@ -91,19 +103,27 @@ const LogIn = () => {
   //   return <Redirect to="/main" />;
   // }
 
-  //구글 로그인
-  const { data: GoogleData } = useQuery("getGoogle", () =>
-    axios
-      .get("http://localhost:8080/oauth2/authorization/google")
-      .then(({ data }) => setUser(data))
-  );
+  // 구글 로그인
+  // const { data: GoogleData } = useQuery("getGoogle", () =>
+  //   axios
+  //     .get("http://localhost:8080/oauth2/authorization/google")
+  //     .then(({ data }) => setUser(data))
+  // );
+
+  // async function getGoogle() {
+  //   const { data: GoogleData } = useQuery("getGoogle", () =>
+  //     axios
+  //       .get("http://localhost:8080/oauth2/authorization/google")
+  //       .then(({ data }) => setUser(data))
+  //   );
+  // }
 
   //카카오 로그인
-  const { data: KakaoData } = useQuery("getKakao", () =>
-    axios
-      .get("http://localhost:8080/oauth2/authorization/google")
-      .then(({ data }) => setUser(data))
-  );
+  // const { data: KakaoData } = useQuery("getKakao", () =>
+  //   axios
+  //     .get("http://localhost:8080/oauth2/authorization/google")
+  //     .then(({ data }) => setUser(data))
+  // );
 
   return (
     <>
@@ -150,7 +170,7 @@ const LogIn = () => {
         {/*  />*/}
         {/*</GoogleOAuthProvider>*/}
         <SocialLogin>
-          <GoogleBtn>
+          <GoogleBtn onClick={onClickGoogle}>
             <Img src={GoogleImg} alt="Google" />
             <div>Google로 계속</div>
           </GoogleBtn>
