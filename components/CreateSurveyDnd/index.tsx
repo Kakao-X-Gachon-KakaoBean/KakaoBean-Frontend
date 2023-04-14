@@ -21,6 +21,11 @@ import {
   QuestionTypeListDiv,
   QuestionsListDiv,
 } from "@components/CreateSurveyDnd/styles";
+import {
+  multipleChoiceQuestion,
+  subjectiveQuestion,
+  rangeBarQuestion,
+} from "@components/CreateSurveyDnd/QuestionItems";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const [questionTypeItems, setQuestionTypeItems] = useState<
@@ -59,13 +64,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     };
     result.splice(endIndex, 0, add);
     return result;
-  };
-
-  const multipleChoiceQuestion = (index: number) => {
-    return <div>Q.{index} 객관식 문제입니다.</div>;
-  };
-  const subjectiveQuestion = (index: number) => {
-    return <div>Q.{index} 주관식 문제입니다.</div>;
   };
 
   // 드래그 종료 시
@@ -152,9 +150,9 @@ const CreateSurveyDnd = (): JSX.Element => {
                         provided.draggableProps.style
                       )}
                     >
-                      {item.content === "객관식" &&
-                        multipleChoiceQuestion(index)}
-                      {item.content === "주관식" && subjectiveQuestion(index)}
+                      {item.type === "객관식" && multipleChoiceQuestion()}
+                      {item.type === "주관식" && subjectiveQuestion()}
+                      {item.type === "선형배율" && rangeBarQuestion()}
                     </div>
                   )}
                 </Draggable>
