@@ -17,3 +17,45 @@ export const ChatBtn = styled.button`
   bottom: 0;
   right: 0;
 `;
+
+export const Container = styled.div`
+  font-size: 1rem;
+  width: 15rem;
+  height: 35rem;
+  border: 2px solid black;
+  border-radius: 10px;
+  position: absolute;
+  right: -650px;
+  animation: slide-out 1s ease-in-out;
+  animation-fill-mode: forwards;
+
+  @keyframes slide-out {
+    from {
+      right: -650px;
+    }
+    to {
+      right: 0;
+    }
+  }
+`;
+
+export const FalseContainer = styled.div`
+  font-size: 1rem;
+  width: 15rem;
+  height: 35rem;
+  border: 2px solid black;
+  border-radius: 10px;
+  position: absolute;
+  right: 0;
+  animation: slide-in 1s ease-in-out;
+  animation-fill-mode: forwards;
+
+  @keyframes slide-in {
+    from {
+      right: 0;
+    }
+    to {
+      right: -650px;
+    }
+  }
+`;
