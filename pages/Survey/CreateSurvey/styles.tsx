@@ -1,71 +1,61 @@
 import styled from "@emotion/styled";
 
-// dnd styles
-export const getQuestionTypeItemStyle = (
-  isDragging: boolean,
-  draggableStyle: any
-): React.CSSProperties => ({
-  userSelect: "none",
-  padding: 16,
-  borderRadius: 10,
-  margin: `0 0 8px 0`,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: 200,
-  boxShadow: `0px 2px 4px rgba(0,0,0,0.3)`,
-  background: isDragging ? "white" : "white",
-  ...draggableStyle,
-});
-
-export const getQuestionTypeListStyle = (
-  isDraggingOver: boolean
-): React.CSSProperties => ({
-  borderRadius: 10,
-  background: isDraggingOver ? "white" : "white",
-  padding: 8,
-});
-
-export const getQuestionsItemStyle = (
-  isDragging: boolean,
-  draggableStyle: any
-): React.CSSProperties => ({
-  borderRadius: 10,
-  userSelect: "none",
-  padding: 20,
-  margin: `0 0 10px 0`,
-  boxShadow: `0px 2px 4px rgba(0,0,0,0.3)`,
-  background: isDragging ? "white" : "white",
-  ...draggableStyle,
-});
-
-export const getQuestionsListStyle = (
-  isDraggingOver: boolean
-): React.CSSProperties => ({
-  borderRadius: 10,
-  border: "1px solid",
-  borderColor: "D3D3D3",
-  background: isDraggingOver ? "white" : "white",
-  padding: 40,
-});
-
 // component style
 export const CreateSurveyDiv = styled.div`
   display: grid;
-  grid-template-columns: 0.3fr 0.6fr;
+  grid-template-columns: 0.3fr 0.6fr 0.3fr;
 
   min-height: 100vh;
   margin-top: -2rem;
 `;
 
-export const QuestionTypeListDiv = styled.div`
-  padding-top: 10rem;
-  padding-right: 1rem;
-
-  margin: 0 auto;
+export const ChatBtn = styled.button`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 0;
+  right: 0;
 `;
 
-export const QuestionsListDiv = styled.div`
-  padding-top: 10rem;
-  padding-bottom: 1rem;
+export const Container = styled.div`
+  font-size: 1rem;
+  width: 15rem;
+  height: 35rem;
+  border: 2px solid black;
+  border-radius: 10px;
+  position: absolute;
+  right: -650px;
+  animation: slide-out 1s ease-in-out;
+  animation-fill-mode: forwards;
+
+  @keyframes slide-out {
+    from {
+      right: -650px;
+    }
+    to {
+      right: 0;
+    }
+  }
+`;
+
+export const FalseContainer = styled.div`
+  font-size: 1rem;
+  width: 15rem;
+  height: 35rem;
+  border: 2px solid black;
+  border-radius: 10px;
+  position: absolute;
+  right: 0;
+  animation: slide-in 1s ease-in-out;
+  animation-fill-mode: forwards;
+
+  @keyframes slide-in {
+    from {
+      right: 0;
+    }
+    to {
+      right: -650px;
+    }
+  }
 `;
