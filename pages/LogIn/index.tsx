@@ -29,8 +29,6 @@ import fetcher from "@utils/fetcher";
 import { Redirect } from "react-router";
 
 const LogIn = () => {
-  const clientId = "";
-
   const [email, onChangeEmail, setEmail] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
   const [user, setUser] = useRecoilState<IUser>(UserState);
@@ -143,13 +141,6 @@ const LogIn = () => {
           </SearchBox>
         </Form>
         <div>또는</div>
-        {/*<GoogleOAuthProvider clientId={clientId}>*/}
-        {/*  <GoogleLogin*/}
-        {/*    onSuccess={(res) => {*/}
-        {/*      console.log(res);*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*</GoogleOAuthProvider>*/}
         <SocialLogin>
           <GoogleBtn onClick={() => setGoogleEnabled(true)}>
             <Img src={GoogleImg} alt="Google" />
