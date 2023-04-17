@@ -8,12 +8,12 @@ export const Wrapper = styled.div`
 
   background-color: white;
 
-  width: 40vw;
+  width: 50vw;
   min-width: 400px;
-  height: 30vh;
+  height: 50vh;
   min-height: 180px;
 
-  margin: 50vh auto;
+  margin: 20vh auto;
 
   display: flex;
   flex-direction: column;

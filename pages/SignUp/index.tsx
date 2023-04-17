@@ -52,6 +52,7 @@ const SignUp = () => {
       },
       onError(error) {
         // setSignUpError(error.response?.data);
+        console.log("에러");
       },
     }
   );
