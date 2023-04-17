@@ -35,3 +35,19 @@ export const countState = atom({
   key: "countQuestions",
   default: 0,
 });
+
+export interface MultipleQuestion {
+  title: string;
+  options: string[];
+}
+
+export interface SubjectiveQuestion {
+  title: string;
+}
+
+export interface RangeBarQuestion {
+  title: string;
+  value: number;
+  min: number;
+  max: number;
+}

@@ -56,7 +56,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     endIndex: number
   ) => {
     const result = Array.from(list);
-    console.log(countState);
     const add = {
       id: `add-${countQuestion}`,
       type: questionTypeItems[startIndex].content,
