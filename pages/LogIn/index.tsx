@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import GoogleImg from "../../image/google-logo.png";
 import KakaoImg from "../../image/kakao-logo.png";
 
@@ -34,18 +34,27 @@ const LogIn = () => {
   const [email, onChangeEmail, setEmail] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
   const [user, setUser] = useRecoilState<IUser>(UserState);
+  const [googleEnabled, setGoogleEnabled] = useState(false);
+  const [kakaoEnabled, setKakaoEnabled] = useState(false);
 
-  const queryClient = useQueryClient();
-  // const {
-  //   isLoading,
-  //   isSuccess,
-  //   status,
-  //   isError,
-  //   data: userData,
-  //   error,
-  // } = useQuery("user", () => fetcher({ queryKey: "멤버 get api" }));
+  //구글 로그인 get
+  const { data: googleData, refetch: googleRefetch } = useQuery(
+    ["googleUser"],
+    () => fetcher({ queryKey: "구글 get api" }),
+    {
+      enabled: googleEnabled,
+    }
+  );
 
-  // const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher);
+  //카카오 로그인 get
+  const { data: kakaoData, refetch: kakaoRefetch } = useQuery(
+    ["kakaoUser"],
+    () => fetcher({ queryKey: "카카오 get api" }),
+    {
+      enabled: kakaoEnabled,
+    }
+  );
+
   const mutation = useMutation<
     IUser,
     AxiosError,
@@ -83,23 +92,6 @@ const LogIn = () => {
     [email, password, mutation]
   );
 
-  //구글 로그인 요청
-  // const onClickGoogle = useCallback((e) => {
-  //   e.preventDefault();
-  //   console.log("요청");
-  //   // 구글 로그인
-  //   const { data: GoogleData } = useQuery("getGoogle", () =>
-  //     axios
-  //       .get("http://localhost:8080/oauth2/authorization/google")
-  //       .then(({ data }) => setUser(data))
-  //   );
-  // }, []);
-
-  //카카오 로그인 요청
-  const onClickKakao = useCallback((e) => {
-    e.preventDefault();
-  }, []);
-
   //
   // if (isLoading) {
   //   return <div>로딩중...</div>;
@@ -109,28 +101,6 @@ const LogIn = () => {
   // if (user) {
   //   return <Redirect to="/main" />;
   // }
-
-  // 구글 로그인
-  // const { data: GoogleData } = useQuery("getGoogle", () =>
-  //   axios
-  //     .get("http://localhost:8080/oauth2/authorization/google")
-  //     .then(({ data }) => setUser(data))
-  // );
-
-  // async function getGoogle() {
-  //   const { data } = useQuery("getGoogle", () =>
-  //     axios
-  //       .get("http://localhost:8080/oauth2/authorization/google")
-  //       .then(({ data }) => setUser(data))
-  //   );
-  // }
-
-  //카카오 로그인
-  // const { data: KakaoData } = useQuery("getKakao", () =>
-  //   axios
-  //     .get("http://localhost:8080/oauth2/authorization/google")
-  //     .then(({ data }) => setUser(data))
-  // );
 
   return (
     <>
@@ -177,11 +147,11 @@ const LogIn = () => {
         {/*  />*/}
         {/*</GoogleOAuthProvider>*/}
         <SocialLogin>
-          <GoogleBtn>
+          <GoogleBtn onClick={() => setGoogleEnabled(true)}>
             <Img src={GoogleImg} alt="Google" />
             <div>Google로 계속</div>
           </GoogleBtn>
-          <KakaoBtn>
+          <KakaoBtn onClick={() => setKakaoEnabled(true)}>
             <Img src={KakaoImg} alt="Google" />
             <div>KaKao로 계속</div>
           </KakaoBtn>
