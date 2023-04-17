@@ -40,7 +40,10 @@ const LogIn = () => {
   //구글 로그인 get
   const { data: googleData, refetch: googleRefetch } = useQuery(
     ["googleUser"],
-    () => fetcher({ queryKey: "구글 get api" }),
+    () =>
+      fetcher({
+        queryKey: "http://localhost:8080/oauth2/authorization/google",
+      }),
     {
       enabled: googleEnabled,
     }
@@ -49,7 +52,8 @@ const LogIn = () => {
   //카카오 로그인 get
   const { data: kakaoData, refetch: kakaoRefetch } = useQuery(
     ["kakaoUser"],
-    () => fetcher({ queryKey: "카카오 get api" }),
+    () =>
+      fetcher({ queryKey: "http://localhost:8080/oauth2/authorization/kakao" }),
     {
       enabled: kakaoEnabled,
     }
