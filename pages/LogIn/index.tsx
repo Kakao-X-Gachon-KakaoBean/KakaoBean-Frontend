@@ -84,9 +84,16 @@ const LogIn = () => {
   );
 
   //구글 로그인 요청
-  const onClickGoogle = useCallback((e) => {
-    e.preventDefault();
-  }, []);
+  // const onClickGoogle = useCallback((e) => {
+  //   e.preventDefault();
+  //   console.log("요청");
+  //   // 구글 로그인
+  //   const { data: GoogleData } = useQuery("getGoogle", () =>
+  //     axios
+  //       .get("http://localhost:8080/oauth2/authorization/google")
+  //       .then(({ data }) => setUser(data))
+  //   );
+  // }, []);
 
   //카카오 로그인 요청
   const onClickKakao = useCallback((e) => {
@@ -111,7 +118,7 @@ const LogIn = () => {
   // );
 
   // async function getGoogle() {
-  //   const { data: GoogleData } = useQuery("getGoogle", () =>
+  //   const { data } = useQuery("getGoogle", () =>
   //     axios
   //       .get("http://localhost:8080/oauth2/authorization/google")
   //       .then(({ data }) => setUser(data))
@@ -170,7 +177,7 @@ const LogIn = () => {
         {/*  />*/}
         {/*</GoogleOAuthProvider>*/}
         <SocialLogin>
-          <GoogleBtn onClick={onClickGoogle}>
+          <GoogleBtn>
             <Img src={GoogleImg} alt="Google" />
             <div>Google로 계속</div>
           </GoogleBtn>

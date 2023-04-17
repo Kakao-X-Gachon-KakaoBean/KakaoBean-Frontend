@@ -22,37 +22,7 @@ const SendProveEmail: FC<EmailModal> = ({
   authKey,
   onChangeAuthKey,
 }) => {
-  const [failUseEmail, setFailUseEmail] = useState(false);
   const [proveEmail, setProveEmail] = useState(false);
-
-  //입력한 이메일로 인증번호 보내기
-  const onSubmitEmail = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      if (!email && !email.trim()) return;
-
-      axios
-        .post(
-          "",
-          {
-            email,
-          },
-          { withCredentials: true }
-        )
-        .then((response) => {
-          setFailUseEmail(true);
-          alert("이메일을 발송하였습니다.");
-          console.log(response);
-        })
-        .catch((error) => {
-          alert("이메일 발송에 실패했습니다.");
-          setFailUseEmail(false);
-          console.log(error.response);
-        });
-    },
-    [email]
-  );
 
   //이메일 인증 보내기
   const onSubmitProveEmail = useCallback(
@@ -92,24 +62,16 @@ const SendProveEmail: FC<EmailModal> = ({
 
   return (
     <Wrapper onClick={stopPropagation}>
-      <Form onSubmit={onSubmitEmail}>
+      <Form>
         <Div>
           <Header>이메일 인증</Header>
-          <Button type="submit">보내기</Button>
         </Div>
-        <Input
-          type="email"
-          id="email"
-          onChange={onChangeEmail}
-          name="email"
-          value={email}
-        ></Input>
         <button onClick={onCloseCheckEmailModal}>X</button>
       </Form>
 
       {/*{failUseEmail && !proveEmail && (*/}
       <InputKey>
-        <form onSubmit={onSubmitProveEmail}>
+        <Form onSubmit={onSubmitProveEmail}>
           <EmailInput
             type="text"
             value={authKey}
@@ -118,7 +80,7 @@ const SendProveEmail: FC<EmailModal> = ({
           />
           {proveEmail && <div>이메일 인증이 완료되었습니다.</div>}
           <Button type="submit">인증 확인</Button>
-        </form>
+        </Form>
       </InputKey>
       {/*)}*/}
     </Wrapper>

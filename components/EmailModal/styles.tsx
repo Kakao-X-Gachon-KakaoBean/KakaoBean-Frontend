@@ -8,9 +8,9 @@ export const Wrapper = styled.div`
 
   background-color: white;
 
-  width: 50vw;
+  width: 40vw;
   min-width: 400px;
-  height: 50vh;
+  height: 30vh;
   min-height: 180px;
 
   margin: 20vh auto;
@@ -36,6 +36,8 @@ export const Wrapper = styled.div`
 
 export const InputKey = styled.div`
   margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 `;
 
 export const EmailInput = styled.input`
@@ -65,7 +67,8 @@ export const EmailInput = styled.input`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
 `;
 
@@ -77,7 +80,8 @@ export const Div = styled.div`
 `;
 
 export const Header = styled.header`
-  font-size: 1rem;
+  font-size: 1.3rem;
+  font-weight: bold;
 `;
 
 export const Button = styled.button`

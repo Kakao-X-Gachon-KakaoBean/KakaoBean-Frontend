@@ -12,16 +12,17 @@ import axios, { AxiosError } from "axios";
 import fetcher from "@utils/fetcher";
 
 const SignUp = () => {
-  const { isLoading, isSuccess, status, isError, data, error } = useQuery(
-    "user",
-    () => fetcher({ queryKey: "멤버 get api " })
-  );
+  // const { isLoading, isSuccess, status, isError, data, error } = useQuery(
+  //   "user",
+  //   () => fetcher({ queryKey: "멤버 get api " })
+  // );
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
   const [passwordCheck, onChangePasswordCheck, setPasswordCheck] = useInput("");
   const [authKey, onChangeAuthKey, seyAuthKey] = useInput("");
+  const [failUseEmail, setFailUseEmail] = useState(false);
   const [emailModal, setEmailModal] = useState(false);
 
   const onCloseEmailModal = useCallback(() => {
@@ -48,7 +49,6 @@ const SignUp = () => {
       },
       onSuccess() {
         // setSignUpSuccess(true);
-        console.log(data);
       },
       onError(error) {
         // setSignUpError(error.response?.data);
@@ -59,11 +59,11 @@ const SignUp = () => {
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      if (name) {
-        console.log("회원가입 시도");
-        mutation.mutate({ email, name, password, passwordCheck, birth });
-      }
+      // e.preventDefault();
+      // if (name) {
+      //   console.log("회원가입 시도");
+      //   mutation.mutate({ email, name, password, passwordCheck, birth });
+      // }
     },
     [email, name, password, passwordCheck, birth, mutation]
   );
@@ -73,9 +73,32 @@ const SignUp = () => {
   // }
 
   //로그인 정보 있을 시 메인으로 리다이렉트
-  if (data) {
-    return <Redirect to="/main" />;
-  }
+  // if (data) {
+  //   return <Redirect to="/main" />;
+  // }
+
+  //입력한 이메일로 인증번호 보내기
+  const onSubmitEmail = useCallback(
+    (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e?.preventDefault();
+
+      if (!email || !email.trim()) return;
+
+      axios
+        .post("", { email }, { withCredentials: true })
+        .then((response) => {
+          setFailUseEmail(true);
+          alert("이메일을 발송하였습니다.");
+          console.log(response);
+        })
+        .catch((error) => {
+          alert("이메일 발송에 실패했습니다.");
+          setFailUseEmail(false);
+          console.log(error.response);
+        });
+    },
+    [email]
+  );
 
   return (
     <>
@@ -118,7 +141,13 @@ const SignUp = () => {
               placeholder="이메일"
             />
           </Label>
-          <CheckBtn type="button" onClick={onCloseEmailModal}>
+          <CheckBtn
+            type="button"
+            onClick={(e) => {
+              onCloseEmailModal();
+              onSubmitEmail(e);
+            }}
+          >
             이메일 인증
           </CheckBtn>
           <Label>
