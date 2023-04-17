@@ -3,9 +3,13 @@ import { CreateModal } from "@components/Menu/styles";
 import { Props } from "@components/Menu/type";
 
 const Menu: FC<Props> = ({ children, show, onCloseModal, closeButton }) => {
+  const stopPropagation = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <div>
-      <CreateModal onClick={onCloseModal}>
+      <CreateModal>
         <div>{children}</div>
       </CreateModal>
     </div>
