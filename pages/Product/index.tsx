@@ -10,7 +10,6 @@ import ReactFlow, {
   Controls,
 } from "react-flow-renderer";
 import { RightSide, SideBar, Wrapper } from "@pages/Product/styles";
-//import { Node } from "./type";
 
 const initialNodes: Node[] = [
   {
@@ -20,6 +19,7 @@ const initialNodes: Node[] = [
     position: { x: 400, y: 100 },
   },
 ];
+
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function Product() {
@@ -27,7 +27,7 @@ export default function Product() {
   const [id, setId] = useState("1");
   const [x, setX] = useState(400);
   const [y, setY] = useState(100);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);\
 
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
