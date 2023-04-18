@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Input } from "antd";
 import ReactFlow, {
   addEdge,
@@ -9,22 +9,37 @@ import ReactFlow, {
   Controls,
 } from "react-flow-renderer";
 import { RightSide, SideBar, Wrapper } from "@pages/Product/styles";
-
-const initialNodes = [
-  { id: "1", position: { x: 400, y: 100 }, data: { label: "Submit" } },
-];
+import { Node } from "./type";
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function Product() {
   const [input, setInput] = useState("0");
+  const [id, setId] = useState(1);
+  const [x, setX] = useState(400);
+  const [y, setY] = useState(100);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>([
+    { id: "1", position: { x: 400, y: 100 }, data: { label: "Submit" } },
+  ]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const inputChange = useCallback(() => {
+    setId(id + 1);
+    setY(y + 100);
+    const newNode = [
+      {
+        id: id,
+        position: { x: x, y: y },
+        data: { label: "New One" },
+      },
+    ];
+    setNodes([...nodes, newNode]);
+  }, [input]);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -46,7 +61,7 @@ export default function Product() {
           nodesDraggable={false}
         >
           <Controls />
-          <Background gap={12} size={1} />
+          <Background gap={30} size={1} />
         </ReactFlow>
       </RightSide>
     </Wrapper>
