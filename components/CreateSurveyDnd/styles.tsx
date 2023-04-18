@@ -46,7 +46,7 @@ export const getQuestionsListStyle = (
   border: "1px solid",
   borderColor: "D3D3D3",
   background: isDraggingOver ? "white" : "white",
-  padding: `50px 170px 50px 170px`,
+  padding: `5% 10% 5% 10%`,
 });
 
 export const QuestionTypeListDiv = styled.div`

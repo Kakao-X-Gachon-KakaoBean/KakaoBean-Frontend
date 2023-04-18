@@ -1,57 +1,195 @@
 import React, { useState } from "react";
-import { Input, Button } from "antd";
+import { Input, Button, Slider, InputNumber } from "antd";
+import {
+  AddOption,
+  DeleteOption,
+  MinMaxRange,
+  MultipleOptionInput,
+  MultipleQuestionDiv,
+  SubjectiveInput,
+  TitleInput,
+} from "@components/CreateSurveyDnd/QuestionItems/styles";
+import {
+  MultipleQuestion,
+  RangeBarQuestion,
+  SubjectiveQuestion,
+} from "../../../States/UserState";
 
 export const multipleChoiceQuestion = () => {
-  interface Question {
-    title: string;
-    options: string[];
-  }
-  const [question, setQuestion] = useState<Question>({
+  const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
     title: "",
     options: [""],
   });
-
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuestion({ ...question, title: event.target.value });
+    setMultipleQuestion({ ...multipleQuestion, title: event.target.value });
   };
 
   const handleOptionChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     optionIndex: number
   ) => {
-    const newOptions = [...question.options];
+    const newOptions = [...multipleQuestion.options];
     newOptions[optionIndex] = event.target.value;
-    setQuestion({ ...question, options: newOptions });
+    setMultipleQuestion({ ...multipleQuestion, options: newOptions });
   };
 
   const handleAddOption = () => {
-    const newOptions = [...question.options, ""];
-    setQuestion({ ...question, options: newOptions });
+    const newOptions = [...multipleQuestion.options, ""];
+    setMultipleQuestion({ ...multipleQuestion, options: newOptions });
+  };
+
+  const handleDeleteOption = (optionIndex: number) => {
+    const newOptions = [...multipleQuestion.options];
+    newOptions.splice(optionIndex, 1);
+    setMultipleQuestion({ ...multipleQuestion, options: newOptions });
   };
 
   return (
-    <div>
+    <div style={{ padding: "40px" }}>
       <Input
-        value={question.title}
+        value={multipleQuestion.title}
         onChange={handleTitleChange}
         placeholder={"제목을 입력하세요"}
+        style={TitleInput()}
       />
-      {question.options.map((option, optionIndex) => (
-        <div key={optionIndex}>
+      {multipleQuestion.options.map((option, optionIndex) => (
+        <MultipleQuestionDiv key={optionIndex}>
           <Input
             value={option}
             onChange={(event) => handleOptionChange(event, optionIndex)}
+            style={MultipleOptionInput()}
           />
-        </div>
+          <Button
+            onClick={() => {
+              handleDeleteOption(optionIndex);
+            }}
+            style={DeleteOption()}
+          >
+            X
+          </Button>
+        </MultipleQuestionDiv>
       ))}
-      <Button onClick={handleAddOption}>+</Button>
+      <Button onClick={handleAddOption} style={AddOption()}>
+        + 옵션 추가
+      </Button>
     </div>
   );
 };
 export const subjectiveQuestion = () => {
-  return <div>주관식 문제입니다.</div>;
+  const [subjectiveQuestions, setSubjectiveQuestions] =
+    useState<SubjectiveQuestion>({
+      title: "",
+    });
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSubjectiveQuestions({
+      ...subjectiveQuestions,
+      title: event.target.value,
+    });
+  };
+
+  return (
+    <div style={{ padding: "40px" }}>
+      <Input
+        value={subjectiveQuestions.title}
+        onChange={handleTitleChange}
+        placeholder={"제목을 입력하세요"}
+        style={TitleInput()}
+      />
+      <Input
+        placeholder={"이 곳에 응답이 기록됩니다"}
+        readOnly
+        style={SubjectiveInput()}
+      />
+    </div>
+  );
 };
 
 export const rangeBarQuestion = () => {
-  return <div>선형배율 문제입니다.</div>;
+  const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
+    title: "",
+    value: 0,
+    min: 0,
+    max: 5,
+  });
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRangeBarQuestions({
+      ...rangeBarQuestions,
+      title: event.target.value,
+    });
+  };
+  const handleRangeChange = (newValue: number) => {
+    setRangeBarQuestions({
+      ...rangeBarQuestions,
+      value: newValue,
+    });
+  };
+  const handleMinChange = (value: number | null) => {
+    if (value != null) {
+      setRangeBarQuestions({
+        ...rangeBarQuestions,
+        min: value,
+      });
+    }
+  };
+
+  const handleMaxChange = (value: number | null) => {
+    if (value != null) {
+      setRangeBarQuestions({
+        ...rangeBarQuestions,
+        max: value,
+      });
+    }
+  };
+
+  return (
+    <div style={{ padding: "40px" }}>
+      <Input
+        value={rangeBarQuestions.title}
+        onChange={handleTitleChange}
+        placeholder={"제목을 입력하세요"}
+        style={TitleInput()}
+      />
+      <MinMaxRange style={{ display: "flex", justifyContent: "space-between" }}>
+        <InputNumber
+          min={0}
+          max={1000}
+          value={rangeBarQuestions.min}
+          onChange={(value) => {
+            handleMinChange(value);
+          }}
+          style={{ width: "50px", borderWidth: 0 }}
+        />
+        <InputNumber
+          min={0}
+          max={1000}
+          value={rangeBarQuestions.max}
+          onChange={(value) => {
+            handleMaxChange(value);
+          }}
+          style={{ width: "50px", borderWidth: 0 }}
+        />
+      </MinMaxRange>
+      <Slider
+        min={rangeBarQuestions.min}
+        max={rangeBarQuestions.max}
+        onChange={handleRangeChange}
+        value={
+          typeof rangeBarQuestions.value === "number"
+            ? rangeBarQuestions.value
+            : 0
+        }
+      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          fontWeight: "600",
+          fontSize: "1.3rem",
+        }}
+      >
+        {rangeBarQuestions.value}
+      </div>
+    </div>
+  );
 };
