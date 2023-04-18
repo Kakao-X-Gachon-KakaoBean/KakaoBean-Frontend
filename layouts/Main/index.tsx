@@ -6,10 +6,8 @@ import DNDText from "@components/MainComponent/DNDText";
 import GreyField from "@components/MainComponent/GreyField";
 import BlackField from "@components/MainComponent/BlackField";
 import { Mobile, PC } from "@hooks/responsive";
-import { useLocation } from "react-router";
 
 const Main = () => {
-
   const location = new Location();
 
   function header(location: any) {
@@ -25,7 +23,6 @@ const Main = () => {
         header(location);
       }
     }, [header]);
-
   }
   return (
     <>

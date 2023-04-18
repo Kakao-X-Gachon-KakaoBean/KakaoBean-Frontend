@@ -35,6 +35,28 @@ const LogIn = () => {
   const [googleEnabled, setGoogleEnabled] = useState(false);
   const [kakaoEnabled, setKakaoEnabled] = useState(false);
 
+  //구글 로그인 get
+  const { data: googleData, refetch: googleRefetch } = useQuery(
+    ["googleUser"],
+    () =>
+      fetcher({
+        queryKey: "http://localhost:8080/oauth2/authorization/google",
+      }),
+    {
+      enabled: googleEnabled,
+    }
+  );
+
+  //카카오 로그인 get
+  const { data: kakaoData, refetch: kakaoRefetch } = useQuery(
+    ["kakaoUser"],
+    () =>
+      fetcher({ queryKey: "http://localhost:8080/oauth2/authorization/kakao" }),
+    {
+      enabled: kakaoEnabled,
+    }
+  );
+
   const mutation = useMutation<
     IUser,
     AxiosError,
@@ -120,19 +142,11 @@ const LogIn = () => {
         </Form>
         <div>또는</div>
         <SocialLogin>
-          <GoogleBtn
-            href={
-              "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/main"
-            }
-          >
+          <GoogleBtn onClick={() => setGoogleEnabled(true)}>
             <Img src={GoogleImg} alt="Google" />
             <div>Google로 계속</div>
           </GoogleBtn>
-          <KakaoBtn
-            href={
-              "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main"
-            }
-          >
+          <KakaoBtn onClick={() => setKakaoEnabled(true)}>
             <Img src={KakaoImg} alt="Google" />
             <div>KaKao로 계속</div>
           </KakaoBtn>

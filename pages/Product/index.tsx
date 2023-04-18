@@ -1,26 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Input } from "antd";
+import React, { useCallback } from "react";
+//import ReactFlow from "reactflow";
 import ReactFlow, {
   addEdge,
   useEdgesState,
   useNodesState,
   Background,
-  MiniMap,
-  Controls,
 } from "react-flow-renderer";
-import { RightSide, SideBar, Wrapper } from "@pages/Product/styles";
-import { Node } from "./type";
+
+const initialNodes = [
+  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
+  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
+];
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function Product() {
-  const [input, setInput] = useState("0");
-  const [id, setId] = useState(1);
-  const [x, setX] = useState(400);
-  const [y, setY] = useState(100);
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>([
-    { id: "1", position: { x: 400, y: 100 }, data: { label: "Submit" } },
-  ]);
-
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
@@ -28,42 +22,17 @@ export default function Product() {
     [setEdges]
   );
 
-  const inputChange = useCallback(() => {
-    setId(id + 1);
-    setY(y + 100);
-    const newNode = [
-      {
-        id: id,
-        position: { x: x, y: y },
-        data: { label: "New One" },
-      },
-    ];
-    setNodes([...nodes, newNode]);
-  }, [input]);
-
-  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-    console.log(input);
-  };
-
   return (
-    <Wrapper>
-      <SideBar>
-        <Input onChange={onChangeInput}></Input>
-        <text>응답에 따라 로직 구성</text>
-      </SideBar>
-      <RightSide>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          elementsSelectable={false}
-          nodesConnectable={false}
-          nodesDraggable={false}
-        >
-          <Controls />
-          <Background gap={30} size={1} />
-        </ReactFlow>
-      </RightSide>
-    </Wrapper>
+    <div style={{ width: "20rem", height: "20rem" }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+      >
+        <Background gap={12} size={1} />
+      </ReactFlow>
+    </div>
   );
 }
