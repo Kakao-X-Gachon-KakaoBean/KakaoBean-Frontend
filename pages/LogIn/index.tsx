@@ -29,8 +29,6 @@ import fetcher from "@utils/fetcher";
 import { Redirect } from "react-router";
 
 const LogIn = () => {
-  const clientId = "";
-
   const [email, onChangeEmail, setEmail] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
   const [user, setUser] = useRecoilState<IUser>(UserState);
@@ -40,7 +38,10 @@ const LogIn = () => {
   //구글 로그인 get
   const { data: googleData, refetch: googleRefetch } = useQuery(
     ["googleUser"],
-    () => fetcher({ queryKey: "구글 get api" }),
+    () =>
+      fetcher({
+        queryKey: "http://localhost:8080/oauth2/authorization/google",
+      }),
     {
       enabled: googleEnabled,
     }
@@ -49,7 +50,8 @@ const LogIn = () => {
   //카카오 로그인 get
   const { data: kakaoData, refetch: kakaoRefetch } = useQuery(
     ["kakaoUser"],
-    () => fetcher({ queryKey: "카카오 get api" }),
+    () =>
+      fetcher({ queryKey: "http://localhost:8080/oauth2/authorization/kakao" }),
     {
       enabled: kakaoEnabled,
     }
@@ -139,13 +141,6 @@ const LogIn = () => {
           </SearchBox>
         </Form>
         <div>또는</div>
-        {/*<GoogleOAuthProvider clientId={clientId}>*/}
-        {/*  <GoogleLogin*/}
-        {/*    onSuccess={(res) => {*/}
-        {/*      console.log(res);*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*</GoogleOAuthProvider>*/}
         <SocialLogin>
           <GoogleBtn onClick={() => setGoogleEnabled(true)}>
             <Img src={GoogleImg} alt="Google" />
