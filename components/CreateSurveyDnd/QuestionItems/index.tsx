@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Slider } from "antd";
+import { Input, Button, Slider, InputNumber } from "antd";
 import {
   AddOption,
   DeleteOption,
@@ -124,25 +124,21 @@ export const rangeBarQuestion = () => {
       value: newValue,
     });
   };
-  const handleMinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isNaN(parseInt(event.target.value))) {
+  const handleMinChange = (value: number | null) => {
+    if (value != null) {
       setRangeBarQuestions({
         ...rangeBarQuestions,
-        min: parseInt(event.target.value),
+        min: value,
       });
-    } else {
-      alert("숫자를 입력해주세요");
     }
   };
 
-  const handleMaxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isNaN(parseInt(event.target.value))) {
+  const handleMaxChange = (value: number | null) => {
+    if (value != null) {
       setRangeBarQuestions({
         ...rangeBarQuestions,
-        max: parseInt(event.target.value),
+        max: value,
       });
-    } else {
-      alert("숫자를 입력해주세요");
     }
   };
 
@@ -155,17 +151,23 @@ export const rangeBarQuestion = () => {
         style={TitleInput()}
       />
       <MinMaxRange style={{ display: "flex", justifyContent: "space-between" }}>
-        <Input
-          placeholder={"최소"}
+        <InputNumber
+          min={0}
+          max={1000}
           value={rangeBarQuestions.min}
-          onChange={handleMinChange}
-          style={{ width: "50px" }}
+          onChange={(value) => {
+            handleMinChange(value);
+          }}
+          style={{ width: "50px", borderWidth: 0 }}
         />
-        <Input
-          placeholder={"최대"}
+        <InputNumber
+          min={0}
+          max={1000}
           value={rangeBarQuestions.max}
-          onChange={handleMaxChange}
-          style={{ width: "50px" }}
+          onChange={(value) => {
+            handleMaxChange(value);
+          }}
+          style={{ width: "50px", borderWidth: 0 }}
         />
       </MinMaxRange>
       <Slider
@@ -178,6 +180,16 @@ export const rangeBarQuestion = () => {
             : 0
         }
       />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          fontWeight: "600",
+          fontSize: "1.3rem",
+        }}
+      >
+        {rangeBarQuestions.value}
+      </div>
     </div>
   );
 };
