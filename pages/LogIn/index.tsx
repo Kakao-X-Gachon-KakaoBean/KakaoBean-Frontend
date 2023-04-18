@@ -142,11 +142,19 @@ const LogIn = () => {
         </Form>
         <div>또는</div>
         <SocialLogin>
-          <GoogleBtn onClick={() => setGoogleEnabled(true)}>
+          <GoogleBtn
+            href={
+              "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/main"
+            }
+          >
             <Img src={GoogleImg} alt="Google" />
             <div>Google로 계속</div>
           </GoogleBtn>
-          <KakaoBtn onClick={() => setKakaoEnabled(true)}>
+          <KakaoBtn
+            href={
+              "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main"
+            }
+          >
             <Img src={KakaoImg} alt="Google" />
             <div>KaKao로 계속</div>
           </KakaoBtn>

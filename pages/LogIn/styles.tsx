@@ -105,7 +105,7 @@ export const SocialLogin = styled.div`
   flex-direction: column;
   gap: 1rem;
 `;
-export const GoogleBtn = styled.div`
+export const GoogleBtn = styled.a`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,14 +116,18 @@ export const GoogleBtn = styled.div`
   height: 4rem;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
+  text-decoration: none;
+  color: black;
 `;
 
-export const KakaoBtn = styled.div`
+export const KakaoBtn = styled.a`
   display: flex;
+  color: black;
   justify-content: center;
   align-items: center;
   font-size: 1.3rem;
   box-sizing: border-box;
+  text-decoration: none;
   width: 32rem;
   height: 4rem;
   background: #ebeca8;
