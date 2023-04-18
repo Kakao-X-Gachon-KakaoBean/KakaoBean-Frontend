@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import HeaderBar from "@components/HeaderBar";
 import MainFirst from "@components/MainComponent/MainFirst";
 import HorizonScroll from "@components/MainComponent/MainTouchScroll";
@@ -8,22 +8,6 @@ import BlackField from "@components/MainComponent/BlackField";
 import { Mobile, PC } from "@hooks/responsive";
 
 const Main = () => {
-  const location = new Location();
-
-  function header(location: any) {
-    const params = new URLSearchParams(location.search);
-
-    let token = params.get("token");
-
-    console.log(token);
-  }
-  if (location.search) {
-    useEffect(() => {
-      if (location.search) {
-        header(location);
-      }
-    }, [header]);
-  }
   return (
     <>
       <PC>
