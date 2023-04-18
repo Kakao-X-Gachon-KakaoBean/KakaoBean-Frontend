@@ -1,11 +1,12 @@
-import React, { useCallback } from "react";
-//import ReactFlow from "reactflow";
+import React, { useCallback, useEffect, useState } from "react";
+import { Input } from "antd";
 import ReactFlow, {
   Node,
   addEdge,
   useEdgesState,
   useNodesState,
   Background,
+  Controls,
 } from "react-flow-renderer";
 import { RightSide, SideBar, Wrapper } from "@pages/Product/styles";
 
@@ -25,7 +26,7 @@ export default function Product() {
   const [id, setId] = useState("1");
   const [x, setX] = useState(400);
   const [y, setY] = useState(100);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);\
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
 
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -48,22 +49,44 @@ export default function Product() {
     console.log(nodes);
   }, [nodes, input]);
 
+  // useEffect(() => {
+  //   setId(id + 1);
+  //   setY(y + 100);
+  //
+  //   const newNode: Node = {
+  //     id: id,
+  //     type: "input",
+  //     data: { label: "New One" },
+  //     position: { x: x, y: y },
+  //   };
+  //   setNodes([...nodes, newNode]);
+  //   console.log(nodes);
+  // }, [input]);
+
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    inputChange();
     setInput(e.target.value);
     console.log(input);
   };
 
   return (
-    <div style={{ width: "20rem", height: "20rem" }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      >
-        <Background gap={12} size={1} />
-      </ReactFlow>
-    </div>
+    <Wrapper>
+      <SideBar>
+        <Input onChange={onChangeInput}></Input>
+        <text>응답에 따라 로직 구성</text>
+      </SideBar>
+      <RightSide>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          elementsSelectable={false}
+          nodesConnectable={false}
+          nodesDraggable={false}
+        >
+          <Controls />
+          <Background gap={30} size={1} />
+        </ReactFlow>
+      </RightSide>
+    </Wrapper>
   );
 }
