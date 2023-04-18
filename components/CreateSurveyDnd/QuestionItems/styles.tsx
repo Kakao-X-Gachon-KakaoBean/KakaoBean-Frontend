@@ -13,6 +13,7 @@ export const CreateModal = styled.div`
 export const TitleInput = (): React.CSSProperties => ({
   border: 0,
   fontSize: 25,
+  height: "10%",
   fontWeight: "650",
   marginBottom: "10px",
 });
