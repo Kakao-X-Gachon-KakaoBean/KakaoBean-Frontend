@@ -76,6 +76,7 @@ const LogIn = () => {
       onSuccess() {
         // queryClient.refetchQueries('user');
         console.log(user);
+        console.log("성공");
         setUser(user);
       },
       onError(error) {
@@ -90,6 +91,7 @@ const LogIn = () => {
     (e) => {
       e.preventDefault();
       mutation.mutate({ email, password });
+      console.log(mutation);
     },
     [email, password, mutation]
   );

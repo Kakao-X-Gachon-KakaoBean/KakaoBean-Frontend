@@ -10,12 +10,9 @@ import { useMutation, useQuery } from "react-query";
 import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
 import fetcher from "@utils/fetcher";
+import { EmailInput } from "@components/EmailModal/styles";
 
 const SignUp = () => {
-  // const { isLoading, isSuccess, status, isError, data, error } = useQuery(
-  //   "user",
-  //   () => fetcher({ queryKey: "멤버 get api " })
-  // );
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
@@ -38,6 +35,7 @@ const SignUp = () => {
       name: string;
       passwordCheck: string;
       birth: string;
+      authKey: string;
     }
   >(
     "user",
@@ -49,6 +47,7 @@ const SignUp = () => {
       },
       onSuccess() {
         // setSignUpSuccess(true);
+        console.log("성공");
       },
       onError(error) {
         // setSignUpError(error.response?.data);
@@ -59,13 +58,21 @@ const SignUp = () => {
 
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
-      // e.preventDefault();
-      // if (name) {
-      //   console.log("회원가입 시도");
-      //   mutation.mutate({ email, name, password, passwordCheck, birth });
-      // }
+      e.preventDefault();
+      if (name) {
+        console.log("회원가입 시도");
+        mutation.mutate({
+          email,
+          name,
+          password,
+          passwordCheck,
+          birth,
+          authKey,
+        });
+      }
+      console.log(mutation);
     },
-    [email, name, password, passwordCheck, birth, mutation]
+    [email, name, password, passwordCheck, birth, authKey, mutation]
   );
 
   // if (isLoading) {
@@ -133,25 +140,6 @@ const SignUp = () => {
           </Label>
           <Label>
             <Input
-              type="text"
-              id="email"
-              name="email"
-              value={email}
-              onChange={onChangeEmail}
-              placeholder="이메일"
-            />
-          </Label>
-          <CheckBtn
-            type="button"
-            onClick={(e) => {
-              onCloseEmailModal();
-              onSubmitEmail(e);
-            }}
-          >
-            이메일 인증
-          </CheckBtn>
-          <Label>
-            <Input
               type="password"
               id="password"
               name="password"
@@ -170,19 +158,50 @@ const SignUp = () => {
               placeholder="비밀번호 확인"
             />
           </Label>
+          <Label>
+            <Input
+              type="text"
+              id="email"
+              name="email"
+              value={email}
+              onChange={onChangeEmail}
+              placeholder="이메일"
+            />
+          </Label>
+          <CheckBtn
+            type="button"
+            onClick={(e) => {
+              // onCloseEmailModal();
+              onSubmitEmail(e);
+            }}
+          >
+            이메일 인증
+          </CheckBtn>
+          {failUseEmail && (
+            <Label>
+              <Input
+                type="text"
+                id="authKey"
+                name="authKey"
+                value={authKey}
+                onChange={onChangeAuthKey}
+                placeholder="인증번호 입력"
+              />
+            </Label>
+          )}
           <LoginBtn type="submit">가입하기</LoginBtn>
         </Form>
-        {emailModal && (
-          <Menu show={emailModal} onCloseModal={onCloseEmailModal}>
-            <EmailModal
-              email={email}
-              onChangeEmail={onChangeEmail}
-              onCloseCheckEmailModal={onCloseEmailModal}
-              authKey={authKey}
-              onChangeAuthKey={onChangeAuthKey}
-            />
-          </Menu>
-        )}
+        {/*{emailModal && (*/}
+        {/*  <Menu show={emailModal} onCloseModal={onCloseEmailModal}>*/}
+        {/*    <EmailModal*/}
+        {/*      email={email}*/}
+        {/*      onChangeEmail={onChangeEmail}*/}
+        {/*      onCloseCheckEmailModal={onCloseEmailModal}*/}
+        {/*      authKey={authKey}*/}
+        {/*      onChangeAuthKey={onChangeAuthKey}*/}
+        {/*    />*/}
+        {/*  </Menu>*/}
+        {/*)}*/}
       </Wrapper>
     </>
   );
