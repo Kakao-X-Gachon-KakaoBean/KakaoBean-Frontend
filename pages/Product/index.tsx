@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Input } from "antd";
 import ReactFlow, {
   Node,
+  Edge,
   addEdge,
   useEdgesState,
   useNodesState,
@@ -37,33 +38,61 @@ export default function Product() {
 
   useEffect(() => {
     let i = 0;
-    const newTuple: Node[] = [];
+    const newNodeTuple: Node[] = [];
+    const newEdgeTuple: Edge[] = [];
     let id_num = 1;
     let yaxis = 0;
 
-    // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성됨
-    for (i; i < 5; i++) {
-      const newNode = {
-        id: String(id_num),
-        type: "input",
-        data: { label: String(id_num) },
-        position: { x: x, y: yaxis },
+    // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
+    for (i; i < 3; i++) {
+      let newNode, newEdge;
+      if (i == 0) {
+        newNode = {
+          id: String(id_num),
+          type: "input",
+          data: { label: String(id_num) },
+          position: { x: x, y: yaxis },
+        };
+      } else {
+        newNode = {
+          id: String(id_num),
+          data: { label: String(id_num) },
+          position: { x: x, y: yaxis },
+        };
+      }
+
+      newEdge = {
+        id: "e" + String(id_num) + "-" + String(id_num + 1),
+        source: String(id_num),
+        target: String(id_num + 1),
       };
-      newTuple.push(newNode);
+
+      newNodeTuple.push(newNode);
+      newEdgeTuple.push(newEdge);
       id_num += 1;
       yaxis += 100;
     }
 
     const submitNode = {
       id: String(id_num),
-      type: "input",
+      type: "output",
       data: { label: "submit" },
       position: { x: x, y: yaxis },
     };
 
-    newTuple.push(submitNode);
-    setNodes(newTuple);
-    //console.log(newTuple);
+    const submitEdge = {
+      id: "e_submit",
+      source: String(id_num),
+      target: "0",
+    };
+
+    newNodeTuple.push(submitNode);
+    newEdgeTuple.push(submitEdge);
+
+    setNodes(newNodeTuple);
+    setEdges(newEdgeTuple);
+    //console.log(newNodeTuple);
+    console.log(newEdgeTuple);
   }, []);
 
   return (
