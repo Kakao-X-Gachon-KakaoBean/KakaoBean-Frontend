@@ -12,12 +12,13 @@ import { RightSide, SideBar, Wrapper } from "@pages/Product/styles";
 
 const initialNodes: Node[] = [
   {
-    id: "1",
+    id: "0",
     type: "input",
     data: { label: "Submit" },
-    position: { x: 400, y: 100 },
+    position: { x: 400, y: 0 },
   },
 ];
+const tuple: Node[] = initialNodes;
 
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
@@ -26,8 +27,7 @@ export default function Product() {
   const [id, setId] = useState("1");
   const [x, setX] = useState(400);
   const [y, setY] = useState(100);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-
+  const [nodes, setNodes, onNodesChange] = useNodesState(tuple);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
@@ -35,45 +35,41 @@ export default function Product() {
     [setEdges]
   );
 
-  const inputChange = useCallback(() => {
-    setId(id + 1);
-    setY(y + 100);
+  useEffect(() => {
+    let i = 0;
+    const newTuple: Node[] = [];
+    let id_num = 1;
+    let yaxis = 0;
 
-    const newNode: Node = {
-      id: id,
+    // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성됨
+    for (i; i < 5; i++) {
+      const newNode = {
+        id: String(id_num),
+        type: "input",
+        data: { label: String(id_num) },
+        position: { x: x, y: yaxis },
+      };
+      newTuple.push(newNode);
+      id_num += 1;
+      yaxis += 100;
+    }
+
+    const submitNode = {
+      id: String(id_num),
       type: "input",
-      data: { label: "New One" },
-      position: { x: x, y: y },
+      data: { label: "submit" },
+      position: { x: x, y: yaxis },
     };
-    setNodes([...nodes, newNode]);
-    console.log(nodes);
-  }, [nodes, input]);
 
-  // useEffect(() => {
-  //   setId(id + 1);
-  //   setY(y + 100);
-  //
-  //   const newNode: Node = {
-  //     id: id,
-  //     type: "input",
-  //     data: { label: "New One" },
-  //     position: { x: x, y: y },
-  //   };
-  //   setNodes([...nodes, newNode]);
-  //   console.log(nodes);
-  // }, [input]);
-
-  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    inputChange();
-    setInput(e.target.value);
-    console.log(input);
-  };
+    newTuple.push(submitNode);
+    setNodes(newTuple);
+    //console.log(newTuple);
+  }, []);
 
   return (
     <Wrapper>
       <SideBar>
-        <Input onChange={onChangeInput}></Input>
-        <text>응답에 따라 로직 구성</text>
+        <div>응답에 따라 로직 구성</div>
       </SideBar>
       <RightSide>
         <ReactFlow
