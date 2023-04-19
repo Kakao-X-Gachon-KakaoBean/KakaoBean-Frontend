@@ -92,7 +92,7 @@ export default function Product() {
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
     //console.log(newNodeTuple);
-    console.log(newEdgeTuple);
+    //console.log(newEdgeTuple);
   }, []);
 
   return (
