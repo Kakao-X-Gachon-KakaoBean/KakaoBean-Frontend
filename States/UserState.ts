@@ -7,6 +7,7 @@ export interface IUser {
   gender: string;
   email: string;
   password: string;
+  authKey: string;
   checkPassword: string;
   birth: string;
   jwt: string;
@@ -20,6 +21,7 @@ const initialState: IUser = {
   gender: "",
   email: "",
   password: "",
+  authKey: "",
   checkPassword: "",
   birth: "",
   jwt: "",
