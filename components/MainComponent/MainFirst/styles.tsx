@@ -13,7 +13,7 @@ export const TextDiv = styled.div`
   padding-bottom: 1rem;
 `;
 
-export const Text = styled.text`
+export const Text = styled.div`
   font-size: 50px;
 `;
 

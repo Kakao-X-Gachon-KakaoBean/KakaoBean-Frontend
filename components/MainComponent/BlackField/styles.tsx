@@ -17,11 +17,11 @@ export const CorTextDiv = styled.div`
   margin-left: 5rem;
 `;
 
-export const BeanText = styled.text`
+export const BeanText = styled.div`
   font-size: 30px;
 `;
 
-export const CorText = styled.text`
+export const CorText = styled.div`
   margin-left: 10px;
   font-size: 20px;
 `;
@@ -43,17 +43,17 @@ export const IndexDiv = styled.div`
   }
 `;
 
-export const Indexes = styled.text`
+export const Indexes = styled.div`
   font-size: 18px;
   margin-bottom: 10px;
   color: #92989f;
 `;
 
-export const Detail = styled.text`
+export const Detail = styled.div`
   font-size: 18px;
   margin-bottom: 10px;
 `;
 
-export const LongText = styled.text`
+export const LongText = styled.div`
   font-size: 18px;
 `;
