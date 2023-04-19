@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -12,7 +12,12 @@ import {
   getQuestionType,
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
-import { countState } from "../../States/UserState";
+import {
+  countState,
+  MultipleQuestion,
+  RangeBarQuestion,
+  SubjectiveQuestion,
+} from "../../States/UserState";
 import {
   getQuestionTypeItemStyle,
   getQuestionTypeListStyle,
@@ -21,16 +26,18 @@ import {
   QuestionTypeListDiv,
   QuestionsListDiv,
 } from "@components/CreateSurveyDnd/styles";
-import {
-  multipleChoiceQuestion,
-  subjectiveQuestion,
-  rangeBarQuestion,
-} from "@components/CreateSurveyDnd/QuestionItems";
+import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
+import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
+import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const [questionTypeItems, setQuestionTypeItems] = useState<
     QuestionTypeItem[]
   >(getQuestionType());
+
+  const [questions, setQuestions] = useState<
+    Array<MultipleQuestion | SubjectiveQuestion | RangeBarQuestion>
+  >([]);
 
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
   const [questionItems, setQuestionItems] = useState<QuestionsItem[]>(
@@ -56,6 +63,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     endIndex: number
   ) => {
     const result = Array.from(list);
+    console.log(countState);
     const add = {
       id: `add-${countQuestion}`,
       type: questionTypeItems[startIndex].content,
@@ -96,6 +104,10 @@ const CreateSurveyDnd = (): JSX.Element => {
       setQuestionItems(newItems2);
     }
   };
+
+  useEffect(() => {
+    console.log(questionItems);
+  }, [questionItems]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -149,9 +161,9 @@ const CreateSurveyDnd = (): JSX.Element => {
                         provided.draggableProps.style
                       )}
                     >
-                      {item.type === "객관식" && multipleChoiceQuestion()}
-                      {item.type === "주관식" && subjectiveQuestion()}
-                      {item.type === "선형배율" && rangeBarQuestion()}
+                      {item.type === "객관식" && <MultipleChoiceQuestions />}
+                      {item.type === "주관식" && <SubjectiveQuestions />}
+                      {item.type === "선형배율" && <RangeBarQuestions />}
                     </div>
                   )}
                 </Draggable>
