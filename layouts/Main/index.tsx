@@ -9,6 +9,8 @@ import { Mobile, PC } from "@hooks/responsive";
 import { useLocation } from "react-router";
 import { useCookies } from "react-cookie";
 import moment from "moment";
+import { useQuery } from "react-query";
+import fetcher from "@utils/fetcher";
 
 const Main = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -28,6 +30,11 @@ const Main = () => {
       // removeCookie("accessToken");
     }, [token]);
   }
+
+  //유저 정보 get
+  const { data: MainUser } = useQuery(["MainUser"], () =>
+    fetcher({ queryKey: "" })
+  );
   return (
     <>
       <PC>
