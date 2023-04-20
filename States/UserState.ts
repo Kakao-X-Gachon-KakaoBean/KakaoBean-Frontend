@@ -32,8 +32,3 @@ export const UserState = atom({
   key: "UserState",
   default: initialState,
 });
-
-export const countState = atom({
-  key: "countQuestions",
-  default: 0,
-});
