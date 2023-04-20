@@ -12,12 +12,19 @@ import {
   getQuestionType,
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
+<<<<<<< Updated upstream
 import {
   countState,
   MultipleQuestion,
   RangeBarQuestion,
   SubjectiveQuestion,
 } from "../../States/UserState";
+=======
+import { countState } from "../../States/SurveyState";
+import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
+import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
+>>>>>>> Stashed changes
 import {
   getQuestionTypeItemStyle,
   getQuestionTypeListStyle,
