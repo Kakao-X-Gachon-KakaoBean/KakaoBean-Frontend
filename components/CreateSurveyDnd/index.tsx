@@ -12,12 +12,10 @@ import {
   getQuestionType,
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
-import {
-  countState,
-  MultipleQuestion,
-  RangeBarQuestion,
-  SubjectiveQuestion,
-} from "../../States/UserState";
+import { countState } from "../../States/UserState";
+import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
+import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import {
   getQuestionTypeItemStyle,
   getQuestionTypeListStyle,

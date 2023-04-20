@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RangeBarQuestion } from "../../../../States/UserState";
+import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import { Input, InputNumber, Slider } from "antd";
 import {
   ExplainInput,

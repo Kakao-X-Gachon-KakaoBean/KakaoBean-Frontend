@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SubjectiveQuestion } from "../../../../States/UserState";
+import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { Input } from "antd";
 import {
   ExplainInput,
