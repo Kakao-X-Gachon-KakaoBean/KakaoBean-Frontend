@@ -6,18 +6,25 @@ import {
   MinMaxRange,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/styles";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { MultiState, RangeState } from "../../../../States/SurveyState";
 
 export const RangeBarQuestions = () => {
-  const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
-    type: "RANGE",
-    title: "",
-    explanation: "",
-    questionNumber: "",
-    value: 0,
-    min: 0,
-    max: 5,
-  });
+  // const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
+  //   type: "RANGE",
+  //   title: "",
+  //   explanation: "",
+  //   questionNumber: "",
+  //   finalQuestion: false,
+  //   nextQuestionNumber: "",
+  //   value: 0,
+  //   min: 0,
+  //   max: 5,
+  // });
+  const [rangeBarQuestions, setRangeBarQuestions] = useRecoilState(RangeState);
+  const resetList = useResetRecoilState(RangeState);
 
+  console.log(rangeBarQuestions);
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRangeBarQuestions({
       ...rangeBarQuestions,
@@ -98,6 +105,7 @@ export const RangeBarQuestions = () => {
             : 0
         }
       />
+      <button onClick={resetList}>리셋하기</button>
     </div>
   );
 };

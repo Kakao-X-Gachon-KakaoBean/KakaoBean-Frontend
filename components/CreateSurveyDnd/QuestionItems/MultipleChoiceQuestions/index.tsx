@@ -9,17 +9,25 @@ import {
   MultipleQuestionDiv,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { MultiState } from "../../../../States/SurveyState";
 
 export const MultipleChoiceQuestions = () => {
-  const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
-    type: "MULTIPLE",
-    title: "",
-    explanation: "",
-    questionNumber: "",
-    numberOfAnswerChoices: 0,
-    answers: [""],
-    logics: [""],
-  });
+  // const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
+  //   type: "MULTIPLE",
+  //   title: "",
+  //   explanation: "",
+  //   questionNumber: "",
+  //   finalQuestion: false,
+  //   numberOfAnswerChoices: 0,
+  //   nextQuestionNumber: "",
+  //   answers: [],
+  //   logics: [],
+  // });
+
+  const [multipleQuestion, setMultipleQuestion] = useRecoilState(MultiState);
+  const resetList = useResetRecoilState(MultiState);
+  console.log(multipleQuestion);
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleQuestion({ ...multipleQuestion, title: event.target.value });
   };
@@ -65,7 +73,7 @@ export const MultipleChoiceQuestions = () => {
         placeholder={"설명을 추가하세요"}
         style={ExplainInput()}
       />
-      {multipleQuestion.answers.map((option, optionIndex) => (
+      {multipleQuestion.answers.map((option: any, optionIndex) => (
         <MultipleQuestionDiv key={optionIndex}>
           <Input
             value={option}
@@ -84,6 +92,9 @@ export const MultipleChoiceQuestions = () => {
       ))}
       <Button onClick={handleAddOption} style={AddOption()}>
         + 옵션 추가
+      </Button>
+      <Button onClick={resetList} style={AddOption()}>
+        리셋 하기
       </Button>
     </div>
   );

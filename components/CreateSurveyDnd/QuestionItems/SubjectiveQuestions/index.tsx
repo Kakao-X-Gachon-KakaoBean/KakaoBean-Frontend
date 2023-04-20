@@ -6,15 +6,24 @@ import {
   SubjectiveInput,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/styles";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { RangeState, SubjectState } from "../../../../States/SurveyState";
 
 export const SubjectiveQuestions = () => {
+  // const [subjectiveQuestions, setSubjectiveQuestions] =
+  //   useState<SubjectiveQuestion>({
+  //     type: "ESSAY",
+  //     title: "",
+  //     explanation: "",
+  //     questionNumber: "",
+  //     finalQuestion: false,
+  //     nextQuestionNumber: "",
+  //   });
+
   const [subjectiveQuestions, setSubjectiveQuestions] =
-    useState<SubjectiveQuestion>({
-      type: "ESSAY",
-      title: "",
-      explanation: "",
-      questionNumber: "",
-    });
+    useRecoilState(SubjectState);
+  const resetList = useResetRecoilState(SubjectState);
+  console.log(subjectiveQuestions);
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
       ...subjectiveQuestions,
@@ -47,6 +56,7 @@ export const SubjectiveQuestions = () => {
         readOnly
         style={SubjectiveInput()}
       />
+      <button onClick={resetList}>리셋하기</button>
     </div>
   );
 };
