@@ -2,6 +2,7 @@ import { atom } from "recoil";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
+import { Survey } from "@components/CreateSurveyDnd/type";
 
 export const countState = atom({
   key: "countQuestions",
@@ -40,6 +41,15 @@ const SubjectInitialState: SubjectiveQuestion = {
   finalQuestion: false,
   nextQuestionNumber: "",
 };
+
+const SurveyInitialState: Survey = {
+  questions: [],
+};
+
+export const SurveyState = atom({
+  key: "Survey",
+  default: SurveyInitialState,
+});
 
 export const MultiState = atom({
   key: "Multi",
