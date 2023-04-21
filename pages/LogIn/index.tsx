@@ -65,7 +65,7 @@ const LogIn = () => {
     "user",
     (data) =>
       axios
-        .post("로그인 url", data, {
+        .post("http://localhost:8080/local/login", data, {
           withCredentials: true,
         })
         .then((response) => response.data),
