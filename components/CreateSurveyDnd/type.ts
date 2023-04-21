@@ -32,3 +32,9 @@ export const getQuestionType = (): QuestionTypeItem[] => [
 ];
 
 export const getQuestions = (): QuestionsItem[] => [];
+
+export interface Survey {
+  questions: questions[];
+}
+
+export interface questions {}
