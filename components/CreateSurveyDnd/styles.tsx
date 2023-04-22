@@ -50,13 +50,15 @@ export const getQuestionsListStyle = (
 });
 
 export const QuestionTypeListDiv = styled.div`
-  padding-top: 10rem;
+  position: fixed;
+  left: 4rem;
+  top: 10rem;
   padding-right: 1rem;
-
   margin: 0 auto;
 `;
 
 export const QuestionsListDiv = styled.div`
   padding-top: 10rem;
-  padding-bottom: 1rem;
+  justify-content: center;
+  margin-left: 20rem;
 `;

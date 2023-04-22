@@ -6,11 +6,10 @@ import {
   SubjectiveInput,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/styles";
-import { idProps } from "@components/CreateSurveyDnd/type";
 
 interface subProps {
   id: string;
-  onChange: (newValue: string) => void;
+  onChange: (updatedQuestion: SubjectiveQuestion) => void;
 }
 export const SubjectiveQuestions = (props: subProps) => {
   const [subjectiveQuestions, setSubjectiveQuestions] =
@@ -20,19 +19,22 @@ export const SubjectiveQuestions = (props: subProps) => {
       title: "",
       explanation: "",
       questionNumber: "",
+      finalQuestion: false,
+      nextQuestionNumber: "0",
     });
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
       ...subjectiveQuestions,
       title: event.target.value,
     });
-    props.onChange(event.target.value);
+    props.onChange(subjectiveQuestions);
   };
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
       ...subjectiveQuestions,
       explanation: event.target.value,
     });
+    props.onChange(subjectiveQuestions);
   };
 
   return (
@@ -54,13 +56,6 @@ export const SubjectiveQuestions = (props: subProps) => {
         readOnly
         style={SubjectiveInput()}
       />
-      <Button
-        onClick={() => {
-          console.log(props.id);
-        }}
-      >
-        id
-      </Button>
     </div>
   );
 };

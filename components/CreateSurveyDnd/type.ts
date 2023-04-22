@@ -13,10 +13,6 @@ export interface QuestionsItem {
   content: string;
 }
 
-export type idProps = {
-  id: string;
-};
-
 // droppable list type
 export const getQuestionType = (): QuestionTypeItem[] => [
   {

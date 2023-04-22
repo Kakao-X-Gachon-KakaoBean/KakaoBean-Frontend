@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 // component style
 export const CreateSurveyDiv = styled.div`
   display: grid;
-  grid-template-columns: 0.3fr 0.6fr 0.3fr;
+  grid-template-columns: 1.3fr 0.3fr;
 
   min-height: 100vh;
   margin-top: -2rem;

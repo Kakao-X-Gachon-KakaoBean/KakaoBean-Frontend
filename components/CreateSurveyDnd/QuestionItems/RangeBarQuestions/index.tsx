@@ -6,11 +6,14 @@ import {
   MinMaxRange,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/styles";
-import { idProps } from "@components/CreateSurveyDnd/type";
 
-export const RangeBarQuestions = (props: idProps) => {
+interface subProps {
+  id: string;
+  onChange: (updatedQuestion: RangeBarQuestion) => void;
+}
+export const RangeBarQuestions = (props: subProps) => {
   const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
-    id: "0",
+    id: props.id,
     type: "RANGE",
     title: "",
     explanation: "",
@@ -25,18 +28,21 @@ export const RangeBarQuestions = (props: idProps) => {
       ...rangeBarQuestions,
       title: event.target.value,
     });
+    props.onChange(rangeBarQuestions);
   };
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRangeBarQuestions({
       ...rangeBarQuestions,
       explanation: event.target.value,
     });
+    props.onChange(rangeBarQuestions);
   };
   const handleRangeChange = (newValue: number) => {
     setRangeBarQuestions({
       ...rangeBarQuestions,
       value: newValue,
     });
+    props.onChange(rangeBarQuestions);
   };
   const handleMinChange = (value: number | null) => {
     if (value != null) {
@@ -44,6 +50,7 @@ export const RangeBarQuestions = (props: idProps) => {
         ...rangeBarQuestions,
         min: value,
       });
+      props.onChange(rangeBarQuestions);
     }
   };
 
@@ -53,6 +60,7 @@ export const RangeBarQuestions = (props: idProps) => {
         ...rangeBarQuestions,
         max: value,
       });
+      props.onChange(rangeBarQuestions);
     }
   };
 

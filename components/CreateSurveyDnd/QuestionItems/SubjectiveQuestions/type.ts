@@ -4,4 +4,6 @@ export interface SubjectiveQuestion {
   title: string;
   explanation: string;
   questionNumber: string;
+  finalQuestion: boolean;
+  nextQuestionNumber: string;
 }
