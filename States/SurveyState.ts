@@ -4,11 +4,11 @@ import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/Rang
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { Survey } from "@components/CreateSurveyDnd/type";
 
+
 export const countState = atom({
   key: "countQuestions",
   default: 0,
 });
-
 const MultiInitialState: MultipleQuestion = {
   type: "MULTIPLE",
   title: "",

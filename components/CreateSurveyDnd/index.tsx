@@ -12,7 +12,6 @@ import {
   getQuestionType,
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
-
 import {
   countState,
   MultiState,

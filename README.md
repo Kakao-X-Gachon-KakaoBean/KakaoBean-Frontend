@@ -1,4 +1,6 @@
-# KakaoBean-frontend
+# KakaoBean-Frontend
 
 npm i <br>
-npm start dev
+npm run dev
+
+connect localhost:3000

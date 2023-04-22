@@ -32,35 +32,3 @@ export const UserState = atom({
   key: "UserState",
   default: initialState,
 });
-
-export const countState = atom({
-  key: "countQuestions",
-  default: 0,
-});
-
-export interface MultipleQuestion {
-  type: string;
-  title: string;
-  explanation: string;
-  questionNumber: string;
-  numberOfAnswerChoices: number;
-  answers: string[];
-  logics: string[];
-}
-
-export interface SubjectiveQuestion {
-  type: string;
-  title: string;
-  explanation: string;
-  questionNumber: string;
-}
-
-export interface RangeBarQuestion {
-  type: string;
-  title: string;
-  explanation: string;
-  questionNumber: string;
-  value: number;
-  min: number;
-  max: number;
-}

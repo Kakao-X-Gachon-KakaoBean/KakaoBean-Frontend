@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MultipleQuestion } from "../../../../States/UserState";
+import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { Button, Input } from "antd";
 import {
   AddOption,

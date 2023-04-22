@@ -18,3 +18,7 @@ export interface logics {
 }
 
 export interface conditionOfQuestionAnswers {}
+  numberOfAnswerChoices: number;
+  answers: string[];
+  logics: string[];
+}
