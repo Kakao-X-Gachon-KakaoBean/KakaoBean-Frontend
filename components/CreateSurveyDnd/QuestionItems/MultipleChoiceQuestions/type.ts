@@ -17,7 +17,7 @@ export interface logics {
   nextQuestionNumber: string;
 }
 
-export interface conditionOfQuestionAnswers {}
+export interface conditionOfQuestionAnswers {
   numberOfAnswerChoices: number;
   answers: string[];
   logics: string[];
