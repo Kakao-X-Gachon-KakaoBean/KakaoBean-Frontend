@@ -3,11 +3,11 @@ import { atom } from "recoil";
 export interface IUser {
   isLoggingIn: boolean;
   name: string;
-  age: number;
+  age: any;
   gender: string;
   email: string;
   password: string;
-  authKey: string;
+  emailAuthKey: string;
   checkPassword: string;
   birth: string;
   jwt: string;
@@ -21,7 +21,7 @@ const initialState: IUser = {
   gender: "",
   email: "",
   password: "",
-  authKey: "",
+  emailAuthKey: "",
   checkPassword: "",
   birth: "",
   jwt: "",
