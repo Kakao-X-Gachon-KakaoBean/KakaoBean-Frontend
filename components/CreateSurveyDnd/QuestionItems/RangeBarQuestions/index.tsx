@@ -9,6 +9,7 @@ import {
 
 export const RangeBarQuestions = () => {
   const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
+    id: "0",
     type: "RANGE",
     title: "",
     explanation: "",
