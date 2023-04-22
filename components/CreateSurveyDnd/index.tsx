@@ -5,14 +5,19 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   QuestionTypeItem,
   QuestionsItem,
   getQuestionType,
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
-import { countState } from "../../States/UserState";
+import {
+  countState,
+  MultiState,
+  RangeState,
+  SubjectState,
+} from "../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
@@ -41,6 +46,20 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [questionItems, setQuestionItems] = useState<QuestionsItem[]>(
     getQuestions()
   );
+  const Multi = useRecoilValue(MultiState);
+  const Range = useRecoilValue(RangeState);
+  const Subject = useRecoilValue(SubjectState);
+
+  function ResetFn() {
+    useResetRecoilState(MultiState);
+    useResetRecoilState(RangeState);
+    useResetRecoilState(SubjectState);
+  }
+
+  console.log(countState);
+  console.log(Multi);
+  console.log(Range);
+  console.log(Subject);
 
   // 질문 리스트 순서 바꾸기
   const reorderQuestions = (
@@ -61,7 +80,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     endIndex: number
   ) => {
     const result = Array.from(list);
-    console.log(countState);
     const add = {
       id: `add-${countQuestion}`,
       type: questionTypeItems[startIndex].content,
@@ -100,6 +118,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         result.destination.index
       );
       setQuestionItems(newItems2);
+      ResetFn();
     }
   };
 

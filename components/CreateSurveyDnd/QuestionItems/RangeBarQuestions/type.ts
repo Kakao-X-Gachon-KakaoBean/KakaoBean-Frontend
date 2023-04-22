@@ -3,7 +3,9 @@ export interface RangeBarQuestion {
   title: string;
   explanation: string;
   questionNumber: string;
-  value: number;
+  finalQuestion: boolean;
+  nextQuestionNumber: string;
   min: number;
   max: number;
+  value: any;
 }

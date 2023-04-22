@@ -16,9 +16,11 @@ const SignUp = () => {
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
+  const [age, onChangeAge, setAge] = useInput("");
+  const [gender, oncChangeGender, setGender] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
-  const [passwordCheck, onChangePasswordCheck, setPasswordCheck] = useInput("");
-  const [authKey, onChangeAuthKey, seyAuthKey] = useInput("");
+  const [checkPassword, onChangeCheckPassword, setCheckPassword] = useInput("");
+  const [emailAuthKey, onChangeEmailAuthKey, seyAuthKey] = useInput("");
   const [failUseEmail, setFailUseEmail] = useState(false);
   const [emailModal, setEmailModal] = useState(false);
 
@@ -30,16 +32,21 @@ const SignUp = () => {
     IUser,
     AxiosError,
     {
+      name: string;
+      age: string;
+      gender: string;
       email: string;
       password: string;
-      name: string;
-      passwordCheck: string;
+      checkPassword: string;
       birth: string;
-      authKey: string;
+      emailAuthKey: string;
     }
   >(
     "user",
-    (data) => axios.post("/api/users", data).then((response) => response.data),
+    (data) =>
+      axios
+        .post("http://localhost:8080/members", data)
+        .then((response) => response.data),
     {
       onMutate() {
         // setSignUpError("");
@@ -62,17 +69,19 @@ const SignUp = () => {
       if (name) {
         console.log("회원가입 시도");
         mutation.mutate({
-          email,
           name,
+          age,
+          gender,
+          email,
           password,
-          passwordCheck,
+          checkPassword,
           birth,
-          authKey,
+          emailAuthKey,
         });
       }
       console.log(mutation);
     },
-    [email, name, password, passwordCheck, birth, authKey, mutation]
+    [email, name, password, checkPassword, birth, emailAuthKey, mutation]
   );
 
   // if (isLoading) {
@@ -92,7 +101,11 @@ const SignUp = () => {
       if (!email || !email.trim()) return;
 
       axios
-        .post("", { email }, { withCredentials: true })
+        .post(
+          "http://localhost:8080/emails",
+          { email },
+          { withCredentials: true }
+        )
         .then((response) => {
           setFailUseEmail(true);
           alert("이메일을 발송하였습니다.");
@@ -131,6 +144,26 @@ const SignUp = () => {
           <Label>
             <Input
               type="text"
+              id="age"
+              name="age"
+              value={age}
+              onChange={onChangeAge}
+              placeholder="나이"
+            />
+          </Label>
+          <Label>
+            <Input
+              type="text"
+              id="gender"
+              name="gender"
+              value={gender}
+              onChange={oncChangeGender}
+              placeholder="성별"
+            />
+          </Label>
+          <Label>
+            <Input
+              type="text"
               id="birth"
               name="birth"
               value={birth}
@@ -153,8 +186,8 @@ const SignUp = () => {
               type="password"
               id="passwordCheck"
               name="passwordCheck"
-              value={passwordCheck}
-              onChange={onChangePasswordCheck}
+              value={checkPassword}
+              onChange={onChangeCheckPassword}
               placeholder="비밀번호 확인"
             />
           </Label>
@@ -183,8 +216,8 @@ const SignUp = () => {
                 type="text"
                 id="authKey"
                 name="authKey"
-                value={authKey}
-                onChange={onChangeAuthKey}
+                value={emailAuthKey}
+                onChange={onChangeEmailAuthKey}
                 placeholder="인증번호 입력"
               />
             </Label>
@@ -197,8 +230,8 @@ const SignUp = () => {
         {/*      email={email}*/}
         {/*      onChangeEmail={onChangeEmail}*/}
         {/*      onCloseCheckEmailModal={onCloseEmailModal}*/}
-        {/*      authKey={authKey}*/}
-        {/*      onChangeAuthKey={onChangeAuthKey}*/}
+        {/*      emailAuthKey={emailAuthKey}*/}
+        {/*      onChangeEmailAuthKey={onChangeEmailAuthKey}*/}
         {/*    />*/}
         {/*  </Menu>*/}
         {/*)}*/}
