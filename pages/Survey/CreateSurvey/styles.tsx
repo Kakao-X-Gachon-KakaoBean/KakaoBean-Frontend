@@ -3,8 +3,7 @@ import styled from "@emotion/styled";
 // component style
 export const CreateSurveyDiv = styled.div`
   display: grid;
-  grid-template-columns: 0.3fr 0.6fr 0.3fr;
-
+  grid-template-columns: 0.7fr 0.3fr;
   min-height: 100vh;
   margin-top: -2rem;
 `;
@@ -49,7 +48,7 @@ export const DialogButton = styled.button`
   font-weight: 400;
   border: none;
   cursor: pointer;
-  position: absolute;
+  position: fixed;
   right: 1rem;
   bottom: 1rem;
 

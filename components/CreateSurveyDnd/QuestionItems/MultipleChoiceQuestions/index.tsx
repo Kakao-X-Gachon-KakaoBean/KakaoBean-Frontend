@@ -10,8 +10,13 @@ import {
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
 
-export const MultipleChoiceQuestions = () => {
+interface subProps {
+  id: string;
+  onChange: (updatedQuestion: MultipleQuestion) => void;
+}
+export const MultipleChoiceQuestions = (props: subProps) => {
   const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
+    id: props.id,
     type: "MULTIPLE",
     title: "",
     explanation: "",
@@ -22,6 +27,7 @@ export const MultipleChoiceQuestions = () => {
   });
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleQuestion({ ...multipleQuestion, title: event.target.value });
+    props.onChange(multipleQuestion);
   };
 
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +35,7 @@ export const MultipleChoiceQuestions = () => {
       ...multipleQuestion,
       explanation: event.target.value,
     });
+    props.onChange(multipleQuestion);
   };
 
   const handleOptionChange = (
@@ -38,17 +45,20 @@ export const MultipleChoiceQuestions = () => {
     const newOptions = [...multipleQuestion.answers];
     newOptions[optionIndex] = event.target.value;
     setMultipleQuestion({ ...multipleQuestion, answers: newOptions });
+    props.onChange(multipleQuestion);
   };
 
   const handleAddOption = () => {
     const newOptions = [...multipleQuestion.answers, ""];
     setMultipleQuestion({ ...multipleQuestion, answers: newOptions });
+    props.onChange(multipleQuestion);
   };
 
   const handleDeleteOption = (optionIndex: number) => {
     const newOptions = [...multipleQuestion.answers];
     newOptions.splice(optionIndex, 1);
     setMultipleQuestion({ ...multipleQuestion, answers: newOptions });
+    props.onChange(multipleQuestion);
   };
 
   return (

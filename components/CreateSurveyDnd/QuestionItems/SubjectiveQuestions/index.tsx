@@ -1,31 +1,40 @@
 import React, { useState } from "react";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
-import { Input } from "antd";
+import { Button, Input } from "antd";
 import {
   ExplainInput,
   SubjectiveInput,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/styles";
 
-export const SubjectiveQuestions = () => {
+interface subProps {
+  id: string;
+  onChange: (updatedQuestion: SubjectiveQuestion) => void;
+}
+export const SubjectiveQuestions = (props: subProps) => {
   const [subjectiveQuestions, setSubjectiveQuestions] =
     useState<SubjectiveQuestion>({
+      id: props.id,
       type: "ESSAY",
       title: "",
       explanation: "",
       questionNumber: "",
+      finalQuestion: false,
+      nextQuestionNumber: "0",
     });
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
       ...subjectiveQuestions,
       title: event.target.value,
     });
+    props.onChange(subjectiveQuestions);
   };
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
       ...subjectiveQuestions,
       explanation: event.target.value,
     });
+    props.onChange(subjectiveQuestions);
   };
 
   return (
