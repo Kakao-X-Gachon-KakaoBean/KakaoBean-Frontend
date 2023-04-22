@@ -2,8 +2,6 @@ import React, { FormEvent, useCallback, useState } from "react";
 import GoogleImg from "../../image/google-logo.png";
 import KakaoImg from "../../image/kakao-logo.png";
 
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import useInput from "@hooks/useInput";
 import {
   Form,
@@ -15,6 +13,7 @@ import {
   Label,
   LoginBtn,
   SearchBox,
+  SearchBtn,
   SocialLogin,
   Wrapper,
 } from "@pages/LogIn/styles";
@@ -25,37 +24,29 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { IUser, UserState } from "../../States/UserState";
 import { useRecoilState } from "recoil";
-import fetcher from "@utils/fetcher";
+
 import { Redirect } from "react-router";
+import Menu from "@components/Menu";
+import SearchEmail from "@components/SearchEmail";
+import SearchPassword from "@components/PasswordModal";
 
 const LogIn = () => {
   const [email, onChangeEmail, setEmail] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
+
+  const [name, onChangeName, setName] = useInput("");
+  const [birth, onChangeBirth, setBirthDay] = useInput("");
   const [user, setUser] = useRecoilState<IUser>(UserState);
-  const [googleEnabled, setGoogleEnabled] = useState(false);
-  const [kakaoEnabled, setKakaoEnabled] = useState(false);
+  const [checkEmailModal, setCheckEmailModal] = useState(false);
+  const [checkPasswordModal, setCheckPasswordModal] = useState(false);
 
-  //구글 로그인 get
-  const { data: googleData, refetch: googleRefetch } = useQuery(
-    ["googleUser"],
-    () =>
-      fetcher({
-        queryKey: "http://localhost:8080/oauth2/authorization/google",
-      }),
-    {
-      enabled: googleEnabled,
-    }
-  );
+  const onCloseEmailModal = useCallback(() => {
+    setCheckEmailModal((prev) => !prev);
+  }, []);
 
-  //카카오 로그인 get
-  const { data: kakaoData, refetch: kakaoRefetch } = useQuery(
-    ["kakaoUser"],
-    () =>
-      fetcher({ queryKey: "http://localhost:8080/oauth2/authorization/kakao" }),
-    {
-      enabled: kakaoEnabled,
-    }
-  );
+  const onClosePasswordModal = useCallback(() => {
+    setCheckPasswordModal((prev) => !prev);
+  }, []);
 
   const mutation = useMutation<
     IUser,
@@ -65,7 +56,7 @@ const LogIn = () => {
     "user",
     (data) =>
       axios
-        .post("로그인 url", data, {
+        .post("http://localhost:8080/local/login", data, {
           withCredentials: true,
         })
         .then((response) => response.data),
@@ -75,13 +66,12 @@ const LogIn = () => {
       },
       onSuccess() {
         // queryClient.refetchQueries('user');
-        console.log(user);
         console.log("성공");
         setUser(user);
       },
       onError(error) {
         // setLogInError(error.response?.data?.code === 401);
-        console.log("응 실패야 ㅋㅋ");
+        alert("로그인에 실패하였습니다.");
       },
     }
   );
@@ -133,7 +123,19 @@ const LogIn = () => {
           </Label>
           <LoginBtn type="submit">로그인</LoginBtn>
           <SearchBox>
-            <span>비밀번호 찾기</span>
+            <span
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <SearchBtn type="button" onClick={onCloseEmailModal}>
+                이메일 찾기
+              </SearchBtn>
+              <SearchBtn type="button" onClick={onClosePasswordModal}>
+                비밀번호 찾기
+              </SearchBtn>
+            </span>
             <span>
               <span>신규 회원이신가요? </span>
               <Link style={{ fontWeight: "bold" }} to="/signup">
@@ -161,6 +163,32 @@ const LogIn = () => {
             <div>KaKao로 계속</div>
           </KakaoBtn>
         </SocialLogin>
+        {checkEmailModal && (
+          <Menu show={checkEmailModal} onCloseModal={onCloseEmailModal}>
+            {
+              <SearchEmail
+                name={name}
+                onChangeName={onChangeName}
+                onCloseEmailModal={onCloseEmailModal}
+                birth={birth}
+                onChangeBirth={onChangeBirth}
+              />
+            }
+          </Menu>
+        )}
+        {checkPasswordModal && (
+          <Menu show={checkPasswordModal} onCloseModal={onClosePasswordModal}>
+            {
+              <SearchPassword
+                name={email}
+                onChangeName={onChangeName}
+                onCloseEmailModal={onCloseEmailModal}
+                birth={birth}
+                onChangeBirth={onChangeBirth}
+              />
+            }
+          </Menu>
+        )}
       </Wrapper>
     </>
   );

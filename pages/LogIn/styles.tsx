@@ -62,17 +62,29 @@ export const Input = styled.input`
 export const SearchBox = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 32rem;
+  width: 30rem;
   font-size: 1rem;
   margin-top: 0.8rem;
   & span {
-    padding: 0.5rem;
     color: #343434;
     & a {
       text-decoration: none;
       color: inherit;
     }
   }
+`;
+
+export const SearchBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  text-align: center;
+  width: 7rem;
+  height: 1.6rem;
+  background-color: white;
+  border: none;
+  font-size: 1rem;
 `;
 
 export const LoginBtn = styled.button`
