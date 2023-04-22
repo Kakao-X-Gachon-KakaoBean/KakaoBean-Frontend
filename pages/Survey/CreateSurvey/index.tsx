@@ -7,6 +7,7 @@ import {
 } from "@pages/Survey/CreateSurvey/styles";
 import Modal from "@components/Modal";
 import Chatbot from "react-chatbot-kit";
+import CreateSurveySideBar from "@components/CreateSurveySideBar";
 
 const CreateSurvey = (): JSX.Element => {
   const [chatBotModal, setChatBotModal] = useState(false);
@@ -28,6 +29,7 @@ const CreateSurvey = (): JSX.Element => {
   return (
     <CreateSurveyDiv>
       <CreateSurveyDnd />
+      <CreateSurveySideBar />
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>모달 열렸어!</Modal>
       )}
