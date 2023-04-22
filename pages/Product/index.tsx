@@ -103,10 +103,6 @@ export default function Product() {
 
     setLogics(updatedLogics);
     setCount(updatedCounts);
-
-    //console.log(logics);
-    //console.log(count);
-    //console.log(id_num);
   };
 
   const onNodeClick = useCallback(
@@ -118,8 +114,6 @@ export default function Product() {
     [selNode]
   );
 
-  //useEffect(() => {}, [logics[Number(selNode)].logics]);
-
   useEffect(() => {
     let i = 0;
     const newNodeTuple: Node[] = [];
@@ -127,7 +121,7 @@ export default function Product() {
     let yaxis = 0;
 
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < 5; i++) {
+    for (i; i < 3; i++) {
       let newNode, newEdge;
       if (i == 0) {
         newNode = {
@@ -188,10 +182,6 @@ export default function Product() {
 
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
-    //console.log(count);
-    //console.log(logics);
-    //console.log(newNodeTuple);
-    //console.log(newEdgeTuple);
   }, []);
 
   const ConditionChange = (i: number, value: string) => {
@@ -238,8 +228,23 @@ export default function Product() {
 
   const NextQuestionChange = (i: number, value: string) => {
     const updatedLogics = [...logics];
+    let updatedEdges = [...edges];
+    const newEdge: Edge = {
+      id: "e" + selNode + "-" + value,
+      source: String(selNode),
+      target: String(value),
+    };
+
     updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = value;
     setLogics(updatedLogics);
+
+    if (i == 0) {
+      updatedEdges = edges.filter((edge) => edge.source !== selNode);
+    }
+    updatedEdges.push(newEdge);
+    setEdges(updatedEdges);
+
+    console.log(edges);
   };
 
   return (
@@ -331,7 +336,7 @@ export default function Product() {
             edges={edges}
             elementsSelectable={true}
             nodesConnectable={false}
-            nodesDraggable={false}
+            nodesDraggable={true}
             onNodeClick={onNodeClick}
           >
             <Controls />
