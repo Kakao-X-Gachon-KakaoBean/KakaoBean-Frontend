@@ -7,6 +7,7 @@ export interface QuestionTypeItem {
   content: string;
 }
 export interface QuestionsItem {
+  questionNumber: string;
   id: string;
   type: string;
   content: string;
@@ -30,5 +31,4 @@ export const getQuestionType = (): QuestionTypeItem[] => [
     content: "선형배율",
   },
 ];
-
 export const getQuestions = (): QuestionsItem[] => [];

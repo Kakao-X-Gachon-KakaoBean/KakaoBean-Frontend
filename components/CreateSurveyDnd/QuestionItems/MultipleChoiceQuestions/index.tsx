@@ -12,6 +12,7 @@ import {
 
 export const MultipleChoiceQuestions = () => {
   const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
+    id: "0",
     type: "MULTIPLE",
     title: "",
     explanation: "",
