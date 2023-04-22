@@ -1,4 +1,5 @@
 export interface RangeBarQuestion {
+  id: string;
   type: string;
   title: string;
   explanation: string;

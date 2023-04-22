@@ -10,6 +10,7 @@ import {
 export const SubjectiveQuestions = () => {
   const [subjectiveQuestions, setSubjectiveQuestions] =
     useState<SubjectiveQuestion>({
+      id: "0",
       type: "ESSAY",
       title: "",
       explanation: "",
