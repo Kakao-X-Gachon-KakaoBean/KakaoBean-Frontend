@@ -9,8 +9,9 @@ import {
   MultipleQuestionDiv,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
+import { idProps } from "@components/CreateSurveyDnd/type";
 
-export const MultipleChoiceQuestions = () => {
+export const MultipleChoiceQuestions = (props: idProps) => {
   const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
     id: "0",
     type: "MULTIPLE",

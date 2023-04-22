@@ -6,8 +6,9 @@ import {
   MinMaxRange,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/styles";
+import { idProps } from "@components/CreateSurveyDnd/type";
 
-export const RangeBarQuestions = () => {
+export const RangeBarQuestions = (props: idProps) => {
   const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
     id: "0",
     type: "RANGE",

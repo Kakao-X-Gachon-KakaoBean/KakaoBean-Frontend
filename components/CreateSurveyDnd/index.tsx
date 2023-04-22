@@ -41,6 +41,8 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
 
+  const handleEditQuestion = (id: string, value: string) => {};
+
   // 질문 리스트 순서 바꾸기
   const reorderQuestions = (
     list: QuestionTypes[],
@@ -68,8 +70,8 @@ const CreateSurveyDnd = (): JSX.Element => {
     const addMultiple = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "MULTIPLE",
-      title: "",
-      explanation: "",
+      title: "-",
+      explanation: "-",
       questionNumber: "0",
       numberOfAnswerChoices: 0,
       answers: [""],
@@ -78,15 +80,15 @@ const CreateSurveyDnd = (): JSX.Element => {
     const addSubjective = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "ESSAY",
-      title: "",
-      explanation: "",
+      title: "-",
+      explanation: "-",
       questionNumber: "0",
     };
     const addRangeBar = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "RANGE",
-      title: "",
-      explanation: "",
+      title: "-",
+      explanation: "-",
       questionNumber: "0",
       value: 0,
       min: 0,
@@ -199,9 +201,21 @@ const CreateSurveyDnd = (): JSX.Element => {
                         provided.draggableProps.style
                       )}
                     >
-                      {item.type === "MULTIPLE" && <MultipleChoiceQuestions />}
-                      {item.type === "ESSAY" && <SubjectiveQuestions />}
-                      {item.type === "RANGE" && <RangeBarQuestions />}
+                      {item.type === "MULTIPLE" && (
+                        <MultipleChoiceQuestions key={item.id} id={item.id} />
+                      )}
+                      {item.type === "ESSAY" && "title" in item && (
+                        <SubjectiveQuestions
+                          key={item.id}
+                          id={item.id}
+                          onChange={(newTitle) => {
+                            item.title = newTitle;
+                          }}
+                        />
+                      )}
+                      {item.type === "RANGE" && (
+                        <RangeBarQuestions key={item.id} id={item.id} />
+                      )}
                     </div>
                   )}
                 </Draggable>

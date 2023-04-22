@@ -1,16 +1,21 @@
 import React, { useState } from "react";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
-import { Input } from "antd";
+import { Button, Input } from "antd";
 import {
   ExplainInput,
   SubjectiveInput,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/styles";
+import { idProps } from "@components/CreateSurveyDnd/type";
 
-export const SubjectiveQuestions = () => {
+interface subProps {
+  id: string;
+  onChange: (newValue: string) => void;
+}
+export const SubjectiveQuestions = (props: subProps) => {
   const [subjectiveQuestions, setSubjectiveQuestions] =
     useState<SubjectiveQuestion>({
-      id: "0",
+      id: props.id,
       type: "ESSAY",
       title: "",
       explanation: "",
@@ -21,6 +26,7 @@ export const SubjectiveQuestions = () => {
       ...subjectiveQuestions,
       title: event.target.value,
     });
+    props.onChange(event.target.value);
   };
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
@@ -48,6 +54,13 @@ export const SubjectiveQuestions = () => {
         readOnly
         style={SubjectiveInput()}
       />
+      <Button
+        onClick={() => {
+          console.log(props.id);
+        }}
+      >
+        id
+      </Button>
     </div>
   );
 };
