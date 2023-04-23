@@ -1,32 +1,17 @@
+export interface Logic {
+  conditionOfQuestionAnswers: string[];
+  nextQuestionNumber: string;
+}
+
 export interface MultipleQuestion {
   id: string;
   type: string;
   title: string;
   explanation: string;
+  finalQuestion: boolean;
+  nextQuestionNumber: string;
   questionNumber: string;
   numberOfAnswerChoices: number;
   answers: string[];
-  logics: string[];
+  logics: Logic[];
 }
-
-// export interface MultipleQuestion {
-//   type: string;
-//   title: string;
-//   explanation: string;
-//   questionNumber: string;
-//   finalQuestion: boolean;
-//   numberOfAnswerChoices: number;
-//   nextQuestionNumber: string;
-//   answers: answers[];
-//   logics: logics[];
-// }
-//
-// export interface answers {}
-//
-// export interface logics {
-//   conditionOfQuestionAnswers: conditionOfQuestionAnswers[];
-//   nextQuestionNumber: string;
-// }
-//
-// export interface conditionOfQuestionAnswers {}
-//

@@ -13,7 +13,10 @@ import {
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
 import { countState, createSurveyOptionState } from "../../States/SurveyState";
-import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import {
+  MultipleQuestion,
+  Logic,
+} from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import {
@@ -41,6 +44,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     | RangeBarQuestion;
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
+  const [questions, setQuestions] = useState<QuestionTypes[]>([]);
 
   const [viewLogic, setViewLogic] = useRecoilState(createSurveyOptionState);
 
@@ -81,12 +85,14 @@ const CreateSurveyDnd = (): JSX.Element => {
     const addMultiple = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "MULTIPLE",
-      title: "-",
-      explanation: "-",
-      questionNumber: "0",
+      title: "",
+      explanation: "",
+      questionNumber: "",
+      finalQuestion: false,
+      nextQuestionNumber: "0",
       numberOfAnswerChoices: 0,
       answers: [""],
-      logics: [""],
+      logics: [],
     };
     const addSubjective = {
       id: `KEA-KakaoBeans-${countQuestion}`,
@@ -103,6 +109,8 @@ const CreateSurveyDnd = (): JSX.Element => {
       title: "-",
       explanation: "-",
       questionNumber: "0",
+      finalQuestion: false,
+      nextQuestionNumber: "0",
       value: 0,
       min: 0,
       max: 5,
@@ -159,8 +167,24 @@ const CreateSurveyDnd = (): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log(questionItems);
+    console.log("id 확인용 json", questionItems);
+    deleteIdAndValue();
+    console.log("실제 보낼 json", questions);
   }, [questionItems]);
+
+  const deleteIdAndValue = () => {
+    const updatedQuestions = questionItems.map((item) => {
+      if ("id" in item) {
+        const { id, ...rest } = item;
+        return rest;
+      } else if ("value" in item) {
+        const { value, ...rest } = item as RangeBarQuestion;
+        return rest;
+      }
+      return item;
+    });
+    setQuestions(updatedQuestions as QuestionTypes[]);
+  };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import { Input, InputNumber, Slider } from "antd";
 import {
@@ -18,31 +18,34 @@ export const RangeBarQuestions = (props: subProps) => {
     title: "",
     explanation: "",
     questionNumber: "",
+    finalQuestion: false,
+    nextQuestionNumber: "0",
     value: 0,
     min: 0,
     max: 5,
   });
+
+  useEffect(() => {
+    props.onChange(rangeBarQuestions);
+  }, [rangeBarQuestions]);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRangeBarQuestions({
       ...rangeBarQuestions,
       title: event.target.value,
     });
-    props.onChange(rangeBarQuestions);
   };
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRangeBarQuestions({
       ...rangeBarQuestions,
       explanation: event.target.value,
     });
-    props.onChange(rangeBarQuestions);
   };
   const handleRangeChange = (newValue: number) => {
     setRangeBarQuestions({
       ...rangeBarQuestions,
       value: newValue,
     });
-    props.onChange(rangeBarQuestions);
   };
   const handleMinChange = (value: number | null) => {
     if (value != null) {
@@ -50,7 +53,6 @@ export const RangeBarQuestions = (props: subProps) => {
         ...rangeBarQuestions,
         min: value,
       });
-      props.onChange(rangeBarQuestions);
     }
   };
 

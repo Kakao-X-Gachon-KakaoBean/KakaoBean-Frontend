@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import React, { useEffect, useState } from "react";
+import {
+  MultipleQuestion,
+  Logic,
+} from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { Button, Input } from "antd";
 import {
   AddOption,
@@ -21,13 +24,34 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     title: "",
     explanation: "",
     questionNumber: "",
+    finalQuestion: false,
+    nextQuestionNumber: "",
     numberOfAnswerChoices: 0,
     answers: [""],
-    logics: [""],
+    logics: [],
   });
+
+  // 새로운 로직 추가 예시 코드
+  // const newLogic = {
+  //   conditionOfQuestionAnswers: ["yes"],
+  //   nextQuestionNumber: "2",
+  // };
+  // const addLogic = (newLogic: Logic) => {
+  //   setMultipleQuestion((prevMultipleQuestion) => {
+  //     const updatedLogics = [...prevMultipleQuestion.logics, newLogic];
+  //     return {
+  //       ...prevMultipleQuestion,
+  //       logics: updatedLogics,
+  //     };
+  //   });
+  // };
+
+  useEffect(() => {
+    props.onChange(multipleQuestion);
+  }, [multipleQuestion]);
+
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleQuestion({ ...multipleQuestion, title: event.target.value });
-    props.onChange(multipleQuestion);
   };
 
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +59,6 @@ export const MultipleChoiceQuestions = (props: subProps) => {
       ...multipleQuestion,
       explanation: event.target.value,
     });
-    props.onChange(multipleQuestion);
   };
 
   const handleOptionChange = (
@@ -45,20 +68,17 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     const newOptions = [...multipleQuestion.answers];
     newOptions[optionIndex] = event.target.value;
     setMultipleQuestion({ ...multipleQuestion, answers: newOptions });
-    props.onChange(multipleQuestion);
   };
 
   const handleAddOption = () => {
     const newOptions = [...multipleQuestion.answers, ""];
     setMultipleQuestion({ ...multipleQuestion, answers: newOptions });
-    props.onChange(multipleQuestion);
   };
 
   const handleDeleteOption = (optionIndex: number) => {
     const newOptions = [...multipleQuestion.answers];
     newOptions.splice(optionIndex, 1);
     setMultipleQuestion({ ...multipleQuestion, answers: newOptions });
-    props.onChange(multipleQuestion);
   };
 
   return (
