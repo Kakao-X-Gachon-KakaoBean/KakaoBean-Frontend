@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import {
+  MultipleQuestion,
+  Logic,
+} from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { Button, Input } from "antd";
 import {
   AddOption,
@@ -21,10 +24,27 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     title: "",
     explanation: "",
     questionNumber: "",
+    finalQuestion: false,
+    nextQuestionNumber: "",
     numberOfAnswerChoices: 0,
     answers: [""],
-    logics: [""],
+    logics: [],
   });
+
+  // 새로운 로직 추가 예시 코드
+  // const newLogic = {
+  //   conditionOfQuestionAnswers: ["yes"],
+  //   nextQuestionNumber: "2",
+  // };
+  // const addLogic = (newLogic: Logic) => {
+  //   setMultipleQuestion((prevMultipleQuestion) => {
+  //     const updatedLogics = [...prevMultipleQuestion.logics, newLogic];
+  //     return {
+  //       ...prevMultipleQuestion,
+  //       logics: updatedLogics,
+  //     };
+  //   });
+  // };
 
   useEffect(() => {
     props.onChange(multipleQuestion);
