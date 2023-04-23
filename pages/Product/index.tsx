@@ -36,7 +36,6 @@ let id_num = 1;
 let QuestionList: any[] = [];
 
 export default function Product() {
-  const [x, setX] = useState(400);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   // 현재 선택한 노드
@@ -165,13 +164,13 @@ export default function Product() {
           id: String(id_num),
           type: "input",
           data: { label: String(id_num), nextQ: String(id_num + 1) },
-          position: { x: x, y: yaxis },
+          position: { x: 400, y: yaxis },
         };
       } else {
         newNode = {
           id: String(id_num),
           data: { label: String(id_num), nextQ: String(id_num + 1) },
-          position: { x: x, y: yaxis },
+          position: { x: 400, y: yaxis },
         };
       }
 
@@ -206,7 +205,7 @@ export default function Product() {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: x, y: yaxis },
+      position: { x: 400, y: yaxis },
     };
 
     const submitEdge = {
@@ -321,13 +320,7 @@ export default function Product() {
               />
             </div>
 
-            <Button
-              onClick={(e) => {
-                addLogic();
-              }}
-            >
-              로직 추가 하기
-            </Button>
+            <Button onClick={addLogic}>로직 추가 하기</Button>
             {count[Number(selNode)] > 0 ? (
               <>
                 {logics[Number(selNode)].logics.map((logic, i) => (
