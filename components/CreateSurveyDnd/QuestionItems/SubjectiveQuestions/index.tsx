@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { Button, Input } from "antd";
 import {
@@ -22,19 +22,21 @@ export const SubjectiveQuestions = (props: subProps) => {
       finalQuestion: false,
       nextQuestionNumber: "0",
     });
+
+  useEffect(() => {
+    props.onChange(subjectiveQuestions);
+  }, [subjectiveQuestions]);
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
       ...subjectiveQuestions,
       title: event.target.value,
     });
-    props.onChange(subjectiveQuestions);
   };
   const handleExplainChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectiveQuestions({
       ...subjectiveQuestions,
       explanation: event.target.value,
     });
-    props.onChange(subjectiveQuestions);
   };
 
   return (
