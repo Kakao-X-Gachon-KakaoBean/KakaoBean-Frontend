@@ -18,6 +18,8 @@ export const RangeBarQuestions = (props: subProps) => {
     title: "",
     explanation: "",
     questionNumber: "",
+    finalQuestion: false,
+    nextQuestionNumber: "0",
     value: 0,
     min: 0,
     max: 5,
