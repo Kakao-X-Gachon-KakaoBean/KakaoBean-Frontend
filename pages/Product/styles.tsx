@@ -24,7 +24,7 @@ export const Wrapper = styled.div`
 export const SideBar = styled.section`
   padding-top: 5rem;
   padding-right: 1rem;
-
+  width: 13rem;
   margin: 0 auto;
 
   @media screen and (max-width: 769px) {
