@@ -58,22 +58,51 @@ export const Input = styled.input`
   }
 `;
 
-export const InputGender = styled.input`
+export const CheckLabel = styled.div`
+  display: flex;
+  gap: 2rem;
+`;
+
+export const Label2 = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #969696;
   background-color: #ffffff;
   position: relative;
   box-sizing: border-box;
   box-shadow: 0 4px 4px 0 #00000040;
   border: 1px solid #969696;
-  gap: 2rem;
   border-radius: 12px;
-  width: 13rem;
+  width: 15rem;
   height: 3.5rem;
   outline: none;
   font-size: 1.3rem;
   padding: 10px 15px 12px;
   margin-top: 0.9rem;
   margin-bottom: 0.3rem;
+
+  & input[type="radio"]:checked + span {
+    color: black;
+  }
+`;
+
+export const InputGender = styled.input`
+  //color: #969696;
+  //background-color: #ffffff;
+  //position: relative;
+  //box-sizing: border-box;
+  //box-shadow: 0 4px 4px 0 #00000040;
+  //border: 1px solid #969696;
+  //gap: 2rem;
+  //border-radius: 12px;
+  //width: 13rem;
+  //height: 3.5rem;
+  //outline: none;
+  //font-size: 1.3rem;
+  //padding: 10px 15px 12px;
+  //margin-top: 0.9rem;
+  //margin-bottom: 0.3rem;
   :focus {
     border: 1px solid gray;
   }
@@ -81,6 +110,9 @@ export const InputGender = styled.input`
     font-size: 1.3rem;
     font-weight: 200;
     color: #969696;
+  }
+  &[type="radio"] {
+    display: none;
   }
 `;
 export const CheckBtn = styled.button`
