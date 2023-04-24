@@ -7,6 +7,8 @@ import {
   CheckBtn,
   Form,
   InputGender,
+  Label2,
+  CheckLabel,
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
@@ -130,6 +132,7 @@ const SignUp = () => {
     [email]
   );
 
+  console.log(gender);
   return (
     <>
       <Wrapper>
@@ -151,23 +154,26 @@ const SignUp = () => {
               placeholder="이름"
             />
           </Label>
-          <div>
-            남자
-            <InputGender
-              type="radio"
-              name="성별"
-              value="MALE"
-              onChange={oncChangeGender}
-              placeholder="남자"
-            />
-            여자
-            <InputGender
-              type="radio"
-              name="성별"
-              value="FEMALE"
-              onChange={oncChangeGender}
-            />
-          </div>
+          <CheckLabel>
+            <Label2>
+              <InputGender
+                type="radio"
+                name="성별"
+                value="MALE"
+                onChange={oncChangeGender}
+              />
+              <span>남자</span>
+            </Label2>
+            <Label2>
+              <InputGender
+                type="radio"
+                name="성별"
+                value="FEMALE"
+                onChange={oncChangeGender}
+              />
+              <span>여자</span>
+            </Label2>
+          </CheckLabel>
           <Label>
             <Input
               type="text"
