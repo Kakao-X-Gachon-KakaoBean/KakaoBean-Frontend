@@ -169,8 +169,11 @@ const CreateSurveyDnd = (): JSX.Element => {
   useEffect(() => {
     console.log("id 확인용 json", questionItems);
     deleteIdAndValue();
-    console.log("실제 보낼 json", questions);
   }, [questionItems]);
+
+  useEffect(() => {
+    console.log("실제 보낼 json", questions);
+  }, [questions]);
 
   const deleteIdAndValue = () => {
     const updatedQuestions = questionItems.map((item) => {
