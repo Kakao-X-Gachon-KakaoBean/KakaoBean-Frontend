@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import HeaderBar from "@components/HeaderBar";
-import { Carousel, Button } from "antd";
+import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
+import { Button, ButtonBox } from "@pages/Team/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronRight,
+  faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 
 const contentStyle: React.CSSProperties = {
   height: "480px",
@@ -45,12 +51,14 @@ const Team = () => {
           <h3 style={contentStyle}>4</h3>
         </div>
       </Carousel>
-      <Button disabled={currentSlide === 0} onClick={handlePrevClick}>
-        이전
-      </Button>
-      <Button disabled={currentSlide === 3} onClick={handleNextClick}>
-        다음
-      </Button>
+      <ButtonBox>
+        <Button disabled={currentSlide === 0} onClick={handlePrevClick}>
+          <FontAwesomeIcon icon={faChevronLeft} />
+        </Button>
+        <Button disabled={currentSlide === 3} onClick={handleNextClick}>
+          <FontAwesomeIcon icon={faChevronRight} />
+        </Button>
+      </ButtonBox>
     </div>
   );
 };
