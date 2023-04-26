@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Menu } from "antd";
 import type { MenuProps } from "antd";
-import { MenuDiv, OptionDiv } from "@components/CreateSurveySideBar/styles";
+import {
+  ContentDiv,
+  MenuDiv,
+  OptionDiv,
+} from "@components/CreateSurveySideBar/styles";
 import { RecoilRoot, selector, useRecoilState } from "recoil";
 import { createSurveyOptionState } from "../../States/SurveyState";
 import { OptionControl } from "@components/CreateSurveySideBar/OptionControl";
@@ -37,6 +41,9 @@ const CreateSurveySideBar = (): JSX.Element => {
             style={{ flex: "auto" }}
           />
         </MenuDiv>
+        <ContentDiv>
+          {optionState == "option" ? <OptionControl /> : <LogicControl />}
+        </ContentDiv>
       </OptionDiv>
     </RecoilRoot>
   );
