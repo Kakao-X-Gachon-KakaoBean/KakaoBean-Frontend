@@ -37,6 +37,7 @@ import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/S
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 import Product from "@pages/Product";
 import { Button } from "antd";
+import { Link, Element } from "react-scroll";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const [questionTypeItems, setQuestionTypeItems] = useState<
@@ -209,19 +210,21 @@ const CreateSurveyDnd = (): JSX.Element => {
           <SidebarQuestions>
             <div style={{ height: "3rem" }}>전체 문항</div>
             {questionItems.map((item, index) => (
-              <SidebarQuestion
-                onClick={() => {
-                  if (
-                    item.type == "MULTIPLE" ||
-                    item.type == "ESSAY" ||
-                    item.type == "RANGE"
-                  ) {
-                    handleQuestionClick(item, index);
-                  }
-                }}
-              >
-                {"title" in item ? item.title : item.type}
-              </SidebarQuestion>
+              <Link to={item.id} smooth={true}>
+                <SidebarQuestion
+                  onClick={() => {
+                    if (
+                      item.type == "MULTIPLE" ||
+                      item.type == "ESSAY" ||
+                      item.type == "RANGE"
+                    ) {
+                      handleQuestionClick(item, index);
+                    }
+                  }}
+                >
+                  {"title" in item ? item.title : item.type}
+                </SidebarQuestion>
+              </Link>
             ))}
           </SidebarQuestions>
           <QuestionTypeListDiv>
@@ -279,40 +282,42 @@ const CreateSurveyDnd = (): JSX.Element => {
                       index={index}
                     >
                       {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getQuestionsItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
-                        >
-                          {item.type === "MULTIPLE" && (
-                            <MultipleChoiceQuestions
-                              id={item.id}
-                              onChange={(updatedQuestion) =>
-                                handleQuestionChange(updatedQuestion, index)
-                              }
-                            />
-                          )}
-                          {item.type === "ESSAY" && "title" in item && (
-                            <SubjectiveQuestions
-                              id={item.id}
-                              onChange={(updatedQuestion) =>
-                                handleQuestionChange(updatedQuestion, index)
-                              }
-                            />
-                          )}
-                          {item.type === "RANGE" && (
-                            <RangeBarQuestions
-                              id={item.id}
-                              onChange={(updatedQuestion) =>
-                                handleQuestionChange(updatedQuestion, index)
-                              }
-                            />
-                          )}
-                        </div>
+                        <Element name={item.id}>
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getQuestionsItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.type === "MULTIPLE" && (
+                              <MultipleChoiceQuestions
+                                id={item.id}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                            {item.type === "ESSAY" && "title" in item && (
+                              <SubjectiveQuestions
+                                id={item.id}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                            {item.type === "RANGE" && (
+                              <RangeBarQuestions
+                                id={item.id}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                          </div>
+                        </Element>
                       )}
                     </Draggable>
                   ))}
