@@ -82,6 +82,7 @@ export default function Product() {
     }
     //처음 추가하는게 아닌경우 기존 로직에다가 추가
     else {
+      //마지막 질문일 경우 next질문 0 (제출하기)
       if (selNode == String(id_num - 1)) {
         updatedLogics[Number(selNode)] = {
           ...updatedLogics[Number(selNode)],
@@ -90,7 +91,9 @@ export default function Product() {
             { conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
           ],
         };
-      } else {
+      }
+      //마지막 질문 아닌경우 next질문 다음 번호
+      else {
         updatedLogics[Number(selNode)] = {
           ...updatedLogics[Number(selNode)],
           logics: [
