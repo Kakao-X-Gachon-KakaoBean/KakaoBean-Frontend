@@ -26,6 +26,7 @@ import {
   getQuestionsListStyle,
   QuestionTypeListDiv,
   QuestionsListDiv,
+  LogicDiv,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
@@ -223,7 +224,9 @@ const CreateSurveyDnd = (): JSX.Element => {
           </Droppable>
         </QuestionTypeListDiv>
         {viewLogic === "logic" ? (
-          <Product />
+          <LogicDiv>
+            <Product />
+          </LogicDiv>
         ) : (
           <QuestionsListDiv>
             <Droppable droppableId="questions" isDropDisabled={false}>

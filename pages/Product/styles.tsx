@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 0.2fr 1fr;
 
-  min-height: 100vh;
+  min-height: 70vh;
 
   & a {
     text-decoration: none;
