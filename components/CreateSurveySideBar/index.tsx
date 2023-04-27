@@ -30,7 +30,7 @@ const CreateSurveySideBar = (): JSX.Element => {
     },
   ];
   return (
-    <RecoilRoot>
+    <>
       <OptionDiv>
         <MenuDiv>
           <Menu
@@ -45,7 +45,7 @@ const CreateSurveySideBar = (): JSX.Element => {
           {optionState == "option" ? <OptionControl /> : <LogicControl />}
         </ContentDiv>
       </OptionDiv>
-    </RecoilRoot>
+    </>
   );
 };
 
