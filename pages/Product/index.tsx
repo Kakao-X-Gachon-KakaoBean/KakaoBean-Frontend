@@ -27,8 +27,6 @@ const initialNodes: Node[] = [
 ];
 
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-//추가 예정
-const defaultViewport = { x: 400, y: 0, zoom: 1.5 };
 
 // 노드 아이디
 let id_num = 1;
@@ -240,12 +238,18 @@ export default function Product() {
     let updatedEdges = [...edges];
     let updatedNodes = [...nodes];
     const newEdge: Edge = {
-      id: "e" + selNode + "-" + value,
+      id: "e" + selNode + "-" + value + "-animated",
       source: String(selNode),
       target: String(value),
       animated: true,
     };
 
+    const originValue =
+      updatedLogics[Number(selNode)].logics[i].nextQuestionNumber;
+    const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
+    console.log(selNode);
+    console.log(updatedNodes[Number(selNode)]);
+    console.log(rootXAxis);
     updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = value;
     setLogics(updatedLogics);
 
@@ -257,9 +261,17 @@ export default function Product() {
         node.id > value
       ) {
       } else {
-        node.position.x = node.position.x + 100;
+        node.position.x = rootXAxis + 100;
       }
     });
+    updatedEdges = updatedEdges.filter((edge) => {
+      return !(
+        edge.source === selNode &&
+        edge.target == originValue &&
+        edge.animated
+      );
+    });
+
     updatedEdges.push(newEdge);
     setEdges(updatedEdges);
     setNodes(updatedNodes);
