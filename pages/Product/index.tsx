@@ -252,17 +252,25 @@ export default function Product() {
       updatedLogics[Number(selNode)].logics[i].nextQuestionNumber;
     const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
 
-    updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = value;
+    updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = "" + value;
     setLogics(updatedLogics);
 
     //변경이 필요한 노드들의 위치를 수정
-    if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+
+    if (value == "0") {
+      updatedNodes.forEach((node) => {
+        if (Number(node.id) > Number(selNode)) {
+          node.position.x = rootXAxis + 100;
+        }
+      });
+    } else if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
       updatedNodes.forEach((node) => {
         if (
           node.id === String(selNode) ||
           node.id === String(value) ||
           node.id === "0" ||
-          node.id > value
+          Number(node.id) < Number(selNode) ||
+          Number(node.id) > Number(value)
         ) {
           node.position.x = rootXAxis;
         } else {
