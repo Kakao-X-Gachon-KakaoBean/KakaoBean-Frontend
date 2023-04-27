@@ -1,0 +1,71 @@
+{
+  "questions" :
+   [    {
+            "type" : "ESSAY",
+            "title" : "Essay Question Title",
+            "explanation" : "ex2",
+            "questionNumber" : "1",
+            "finalQuestion" : false,
+            "nextQuestionNumber" : "2"
+        },
+        {
+            "type" : "MULTIPLE",
+            "title" : "First Multiple Question Title",
+            "explanation" : "ex3",
+            "questionNumber" : "2",
+            "finalQuestion" : false,
+            "nextQuestionNumber" : "0",
+            "numberOfAnswerChoices" : 2,
+            "answers" : [  "1", "2", "3", "4", "5" ],
+            "logics" : [ {
+                            "conditionOfQuestionAnswers" : [ "1", "2" ],
+                            "nextQuestionNumber" : "3"
+                         },
+                         {
+                            "conditionOfQuestionAnswers" : [ "3", "4" ],
+                            "nextQuestionNumber" : "4"
+                         }
+                       ]
+        },
+        {
+            "type" : "RANGE",
+            "title" : "Range Bar Question",
+            "explanation" : "ex1",
+            "questionNumber" : "3",
+            "finalQuestion" : false,
+            "nextQuestionNumber" : "5",
+            "min" : 1,
+            "max" : 10
+        },
+        {
+            "type" : "MULTIPLE",
+            "title" : "Multiple Question Title",
+            "explanation" : "without logic",
+            "questionNumber" : "4",
+            "finalQuestion" : false,
+            "nextQuestionNumber" : "5",
+            "numberOfAnswerChoices" : 1,
+            "answers" : [ "first choice answer", "second choice answer", "third choice answer", "fourth choice answer", "fifth choice answer" ],
+            "logics" : [ ]
+        },
+        {
+            "type" : "ESSAY",
+            "title" : "Essay Question Title",
+            "explanation" : "ex2",
+            "questionNumber" : "5",
+            "finalQuestion" : false,
+            "nextQuestionNumber" : "6"
+        },
+        {
+            "type" : "MULTIPLE",
+            "title" : "Multiple Question Title",
+            "explanation" : "without logic",
+            "questionNumber" : "7",
+            "finalQuestion" : true,
+            "nextQuestionNumber" : "0",
+            "numberOfAnswerChoices" : 1,
+            "answers" : [ "first choice answer", "second choice answer", "third choice answer", "fourth choice answer", "fifth choice answer" ],
+            "logics" : [ ]
+        }
+   ]
+}
