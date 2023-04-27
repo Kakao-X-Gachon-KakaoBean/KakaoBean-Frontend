@@ -58,7 +58,13 @@ export const QuestionTypeListDiv = styled.div`
 `;
 
 export const QuestionsListDiv = styled.div`
+  width: 70rem;
   padding-top: 10rem;
-  justify-content: center;
   margin-left: 20rem;
+`;
+
+export const LogicDiv = styled.div`
+  width: 70rem;
+  margin-left: 20rem;
+  padding-top: 10rem;
 `;
