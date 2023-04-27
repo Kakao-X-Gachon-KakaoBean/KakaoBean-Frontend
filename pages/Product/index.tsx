@@ -11,34 +11,32 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { Logic } from "@pages/Product/type";
 import { RightSide, SideBar, Wrapper } from "@pages/Product/styles";
-import { Select, Space } from "antd";
+import { Select } from "antd";
 
 import { useRecoilState } from "recoil";
 import { countState } from "../../States/SurveyState";
+import { target } from "react-chatbot-kit/build/webpack.config";
 
 const initialNodes: Node[] = [
   {
     id: "0",
     type: "input",
-    data: { label: "Submit" },
+    data: { label: "Submit", nextQ: "0" },
     position: { x: 400, y: 0 },
   },
 ];
 
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-//추가 예정
-const defaultViewport = { x: 400, y: 0, zoom: 1.5 };
+
+// 노드 아이디
 let id_num = 1;
+// 질문 목록
 let QuestionList: any[] = [];
-let multiPossible = true;
 
 export default function Product() {
-  const [input, setInput] = useState("0");
-  const [id, setId] = useState("1");
-  const [x, setX] = useState(400);
-  const [y, setY] = useState(100);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  // 현재 선택한 노드
   const [selNode, setSelNode] = useState<string>();
 
   const [logics, setLogics] = useState<Logic[]>([
@@ -48,41 +46,48 @@ export default function Product() {
     },
   ]);
 
+  //로직 개수 count
   const [count, setCount] = useState<number[]>([0]);
+  //로직 조건 개수 count
+  const [isMultiCondition, setIsMultiCondition] = useState<number[]>([0]);
 
+  //로직 추가하기
   const addLogic = () => {
     const updatedLogics = [...logics];
     const updatedCounts = [...count];
 
     //처음 추가 하는 경우
     if (count[Number(selNode)] == 0) {
+      //마지막 질문일 경우 next질문 0 (제출하기)
       if (selNode == String(id_num - 1)) {
         updatedLogics[Number(selNode)] = {
           id: String(selNode),
           logics: [
-            { conditionOfQuestionAnswers: ["0"], nextQuestionNumber: "0" },
+            { conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
           ],
         };
-      } else {
+      }
+      //마지막 질문 아닌경우 next질문 다음 번호
+      else {
         updatedLogics[Number(selNode)] = {
           id: String(selNode),
           logics: [
             {
-              conditionOfQuestionAnswers: ["0"],
+              conditionOfQuestionAnswers: [""],
               nextQuestionNumber: String(Number(selNode) + 1),
             },
           ],
         };
       }
     }
-    //처음 추가하는게 아닌경우
+    //처음 추가하는게 아닌경우 기존 로직에다가 추가
     else {
       if (selNode == String(id_num - 1)) {
         updatedLogics[Number(selNode)] = {
           ...updatedLogics[Number(selNode)],
           logics: [
             ...updatedLogics[Number(selNode)].logics,
-            { conditionOfQuestionAnswers: ["0"], nextQuestionNumber: "0" },
+            { conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
           ],
         };
       } else {
@@ -91,7 +96,7 @@ export default function Product() {
           logics: [
             ...updatedLogics[Number(selNode)].logics,
             {
-              conditionOfQuestionAnswers: ["0"],
+              conditionOfQuestionAnswers: [""],
               nextQuestionNumber: String(Number(selNode) + 1),
             },
           ],
@@ -99,21 +104,50 @@ export default function Product() {
       }
     }
 
-    updatedCounts[Number(selNode)] = count[Number(selNode)] + 1;
+    //로직 개수 count에 ++
+    updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
 
     setLogics(updatedLogics);
     setCount(updatedCounts);
   };
 
+  //조건 추가 하기
+  const addCondition = (i: number) => {
+    const updatedLogics = [...logics];
+    const updateMultiCondition = [...isMultiCondition];
+    const times = updateMultiCondition[Number(selNode)] + 1;
+
+    const originList =
+      updatedLogics[Number(selNode)].logics[i].conditionOfQuestionAnswers;
+    originList.push("");
+
+    updatedLogics[Number(selNode)] = {
+      ...updatedLogics[Number(selNode)],
+      logics: [
+        ...updatedLogics[Number(selNode)].logics,
+        {
+          conditionOfQuestionAnswers: originList,
+          nextQuestionNumber: String(Number(selNode) + 1),
+        },
+      ],
+    };
+
+    updateMultiCondition[Number(selNode)] = times;
+    setIsMultiCondition(updateMultiCondition);
+  };
+
+  //노드 클릭하면 selNode에다가 아이디 넣어주기
   const onNodeClick = useCallback(
     (event) => {
       const targetId = Object.values(event.currentTarget.dataset.id);
       setSelNode(String(targetId));
-      //console.log(count);
+      //console.log(targetId);
+      //console.log(nodes);
     },
     [selNode]
   );
 
+  //처음 실행될때 node, edge, logic, count, 멀티 로직 count 초기화
   useEffect(() => {
     let i = 0;
     const newNodeTuple: Node[] = [];
@@ -121,20 +155,20 @@ export default function Product() {
     let yaxis = 0;
 
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < 3; i++) {
+    for (i; i < 5; i++) {
       let newNode, newEdge;
       if (i == 0) {
         newNode = {
           id: String(id_num),
           type: "input",
-          data: { label: String(id_num) },
-          position: { x: x, y: yaxis },
+          data: { label: String(id_num), nextQ: String(id_num + 1) },
+          position: { x: 400, y: yaxis },
         };
       } else {
         newNode = {
           id: String(id_num),
-          data: { label: String(id_num) },
-          position: { x: x, y: yaxis },
+          data: { label: String(id_num), nextQ: String(id_num + 1) },
+          position: { x: 400, y: yaxis },
         };
       }
 
@@ -155,6 +189,7 @@ export default function Product() {
       };
 
       setCount((prevCount) => [...prevCount, 0]);
+      setIsMultiCondition((prevVal) => [...prevVal, 1]);
       setLogics((prevLogic) => [...prevLogic, newLogic]);
       newNodeTuple.push(newNode);
       newEdgeTuple.push(newEdge);
@@ -168,7 +203,7 @@ export default function Product() {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: x, y: yaxis },
+      position: { x: 400, y: yaxis },
     };
 
     const submitEdge = {
@@ -179,72 +214,104 @@ export default function Product() {
 
     newNodeTuple.push(submitNode);
     newEdgeTuple.push(submitEdge);
+    QuestionList.push({ value: 0, label: "제출하기" });
 
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
   }, []);
 
-  const ConditionChange = (i: number, value: string) => {
+  //로직->조건 변경시 호출. node위치 및 edge 변경 필요
+  const ConditionChange = (i: number, index: number, value: string) => {
     const updatedLogics = [...logics];
     const selNodeNumber = Number(selNode);
     const targetLogic = updatedLogics[selNodeNumber].logics[i];
-    const isInitialValue = targetLogic.conditionOfQuestionAnswers[0] === "0";
 
-    if (multiPossible) {
-      if (isInitialValue) {
-        targetLogic.conditionOfQuestionAnswers = [value];
-      } else {
-        if (!targetLogic.conditionOfQuestionAnswers.includes(value)) {
-          targetLogic.conditionOfQuestionAnswers.push(value);
-        }
-      }
-    }
-    // 중복 허용되지 않을 때 처리
-    else {
-      const updatedLogics = logics.map((logic, index) => {
-        if (index !== Number(selNode)) {
-          return logic;
-        } else {
-          const updatedLogic = {
-            id: logic.id,
-            logics: logic.logics.map((condition, conditionIndex) => {
-              if (conditionIndex !== i) {
-                return condition;
-              } else {
-                return {
-                  conditionOfQuestionAnswers: [value],
-                  nextQuestionNumber: condition.nextQuestionNumber,
-                };
-              }
-            }),
-          };
-          return updatedLogic;
-        }
-      });
-    }
+    targetLogic.conditionOfQuestionAnswers[index] = value;
 
     setLogics(updatedLogics);
+    console.log(logics[selNodeNumber].logics[i]);
   };
 
+  //다음 질문 수정될때 node, edge 바뀜
   const NextQuestionChange = (i: number, value: string) => {
     const updatedLogics = [...logics];
     let updatedEdges = [...edges];
+    let updatedNodes = [...nodes];
+    const newEdge: Edge = {
+      id: "e" + selNode + "-" + value + "-animated",
+      source: String(selNode),
+      target: String(value),
+      animated: true,
+    };
+
+    const originValue =
+      updatedLogics[Number(selNode)].logics[i].nextQuestionNumber;
+    const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
+    console.log(selNode);
+    console.log(updatedNodes[Number(selNode)]);
+    console.log(rootXAxis);
+    updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = value;
+    setLogics(updatedLogics);
+
+    updatedNodes.forEach((node) => {
+      if (
+        node.id === String(selNode) ||
+        node.id === String(value) ||
+        node.id === "0" ||
+        node.id > value
+      ) {
+      } else {
+        node.position.x = rootXAxis + 100;
+      }
+    });
+    updatedEdges = updatedEdges.filter((edge) => {
+      return !(
+        edge.source === selNode &&
+        edge.target == originValue &&
+        edge.animated
+      );
+    });
+
+    updatedEdges.push(newEdge);
+    setEdges(updatedEdges);
+    setNodes(updatedNodes);
+  };
+
+  //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
+  const NoLogicChangeNext = (value: string) => {
+    let updatedEdges = [...edges];
+    let updatedNodes = [...nodes];
     const newEdge: Edge = {
       id: "e" + selNode + "-" + value,
       source: String(selNode),
       target: String(value),
     };
 
-    updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = value;
-    setLogics(updatedLogics);
+    updatedEdges = edges.filter(
+      (edge) =>
+        edge.source === selNode && edge.target === String(Number(selNode) + 1)
+    );
 
-    if (i == 0) {
-      updatedEdges = edges.filter((edge) => edge.source !== selNode);
+    updatedNodes[Number(selNode) - 1].data.nextQ = value;
+
+    let flag = updatedNodes.find((node) => node.id === selNode);
+
+    if (selNode && flag) {
+      const selNodeY = flag.position.y;
+      updatedNodes.forEach((node) => {
+        if (node.id < selNode && node.id > value) {
+          node.position.x = node.position.x + 100;
+          node.position.y = selNodeY;
+        }
+        if (node.id >= value) {
+          node.position.x = node.position.x + 50;
+        }
+      });
     }
+
     updatedEdges.push(newEdge);
     setEdges(updatedEdges);
-
-    console.log(edges);
+    setNodes(updatedNodes);
   };
 
   return (
@@ -255,76 +322,76 @@ export default function Product() {
         ) : (
           <div>
             <div>질문 {selNode}</div>
-            <Button
-              onClick={(e) => {
-                addLogic();
-              }}
-            >
-              로직 추가 하기
-            </Button>
+            <div>
+              이동하기
+              <Select
+                value={nodes[Number(selNode) - 1].data.nextQ}
+                style={{ width: 120 }}
+                onChange={NoLogicChangeNext}
+                options={QuestionList}
+              />
+            </div>
+
+            <Button onClick={addLogic}>로직 추가 하기</Button>
             {count[Number(selNode)] > 0 ? (
               <>
                 {logics[Number(selNode)].logics.map((logic, i) => (
                   <div key={i}>
                     <div>로직 {i + 1}</div>
-                    {multiPossible ? (
-                      <div>
-                        조건 :
-                        <Select
-                          defaultValue={logic.conditionOfQuestionAnswers[0]}
-                          style={{ width: 120 }}
-                          onChange={(e) => ConditionChange(i, e)}
-                          options={[
-                            { value: "1", label: "1" },
-                            { value: "2", label: "2" },
-                            { value: "3", label: "3" },
-                            { value: "4", label: "4" },
-                          ]}
-                        />
-                        <Select
-                          defaultValue={logic.conditionOfQuestionAnswers[1]}
-                          style={{ width: 120 }}
-                          onChange={(e) => ConditionChange(i, e)}
-                          options={[
-                            { value: "1", label: "1" },
-                            { value: "2", label: "2" },
-                            { value: "3", label: "3" },
-                            { value: "4", label: "4" },
-                          ]}
-                        />
-                      </div>
-                    ) : (
-                      <div>
-                        조건 :
-                        <Select
-                          defaultValue={logic.conditionOfQuestionAnswers[0]}
-                          style={{ width: 120 }}
-                          onChange={(e) => ConditionChange(i, e)}
-                          options={[
-                            { value: "1", label: "1" },
-                            { value: "2", label: "2" },
-                            { value: "3", label: "3" },
-                            { value: "4", label: "4" },
-                          ]}
-                        />
-                      </div>
-                    )}
                     <div>
-                      다음질문 :
+                      조건 :
+                      <div>
+                        {isMultiCondition[Number(selNode)] > 0 ? (
+                          <>
+                            {logic.conditionOfQuestionAnswers.map(
+                              (condition, index) => (
+                                <Select
+                                  key={index}
+                                  value={
+                                    logics[Number(selNode)].logics[i]
+                                      .conditionOfQuestionAnswers[index]
+                                  }
+                                  style={{ width: 120 }}
+                                  onChange={(e) => ConditionChange(i, index, e)}
+                                  options={[
+                                    { value: "1", label: "1" },
+                                    { value: "2", label: "2" },
+                                    { value: "3", label: "3" },
+                                    { value: "4", label: "4" },
+                                  ]}
+                                />
+                              )
+                            )}
+                          </>
+                        ) : (
+                          <div></div>
+                        )}
+                      </div>
+                      와 같다면
+                      <br />
+                      <Button
+                        onClick={(e) => {
+                          addCondition(i);
+                        }}
+                      >
+                        조건 추가 하기
+                      </Button>
+                    </div>
+                    <div>
+                      이동 :
                       <Select
-                        defaultValue={logic.nextQuestionNumber}
+                        value={logic.nextQuestionNumber}
                         style={{ width: 120 }}
                         onChange={(e) => NextQuestionChange(i, e)}
                         options={QuestionList}
                       />
                     </div>
-                    {/*<div>{JSON.stringify(logic)}</div>*/}
                   </div>
                 ))}
                 <div>{JSON.stringify(logics[Number(selNode)])}</div>
               </>
             ) : (
-              <div>로직이 없습니다.</div>
+              <div></div>
             )}
           </div>
         )}
