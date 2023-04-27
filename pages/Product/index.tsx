@@ -219,6 +219,7 @@ export default function Product() {
     newEdgeTuple.push(submitEdge);
     QuestionList.push({ value: 0, label: "제출하기" });
 
+    console.log(newNodeTuple);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
   }, []);
@@ -232,7 +233,7 @@ export default function Product() {
     targetLogic.conditionOfQuestionAnswers[index] = value;
 
     setLogics(updatedLogics);
-    console.log(logics[selNodeNumber].logics[i]);
+    //console.log(logics[selNodeNumber].logics[i]);
   };
 
   //다음 질문 수정될때 node, edge 바뀜
@@ -250,23 +251,27 @@ export default function Product() {
     const originValue =
       updatedLogics[Number(selNode)].logics[i].nextQuestionNumber;
     const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
-    console.log(selNode);
-    console.log(updatedNodes[Number(selNode)]);
-    console.log(rootXAxis);
+
     updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = value;
     setLogics(updatedLogics);
 
-    updatedNodes.forEach((node) => {
-      if (
-        node.id === String(selNode) ||
-        node.id === String(value) ||
-        node.id === "0" ||
-        node.id > value
-      ) {
-      } else {
-        node.position.x = rootXAxis + 100;
-      }
-    });
+    //변경이 필요한 노드들의 위치를 수정
+    if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+      updatedNodes.forEach((node) => {
+        if (
+          node.id === String(selNode) ||
+          node.id === String(value) ||
+          node.id === "0" ||
+          node.id > value
+        ) {
+          node.position.x = rootXAxis;
+        } else {
+          node.position.x = rootXAxis + 100;
+        }
+      });
+    }
+
+    //다음질문이 여러번 변경되면 그 전에 저장되었던 다음 질문과 연결된 edge 제거하기
     updatedEdges = updatedEdges.filter((edge) => {
       return !(
         edge.source === selNode &&
@@ -275,7 +280,11 @@ export default function Product() {
       );
     });
 
-    updatedEdges.push(newEdge);
+    //다음질문이 기본이동과 동일하지 않을때만 edge 생성
+    if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+      updatedEdges.push(newEdge);
+    }
+
     setEdges(updatedEdges);
     setNodes(updatedNodes);
   };
