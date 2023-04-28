@@ -31,6 +31,8 @@ import {
   Wrapper,
   SidebarQuestions,
   SidebarQuestion,
+  SidebarQuestionTitle,
+  SidebarQuestionDelete,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
@@ -232,12 +234,25 @@ const CreateSurveyDnd = (): JSX.Element => {
                       : { color: "black" }
                   }
                 >
-                  Q.{index + 1 + " "}
-                  {"title" in item
-                    ? item.title == ""
-                      ? "제목 없음"
-                      : item.title
-                    : "제목 타입 없음"}
+                  <SidebarQuestionTitle>
+                    Q.{index + 1 + " "}
+                    {"title" in item
+                      ? item.title == ""
+                        ? "제목 없음"
+                        : item.title
+                      : "제목 타입 없음"}
+                  </SidebarQuestionTitle>
+                  <SidebarQuestionDelete
+                    onClick={() => {
+                      const newQuestionItems = [
+                        ...questionItems.slice(0, index),
+                        ...questionItems.slice(index + 1),
+                      ];
+                      setQuestionItems(newQuestionItems);
+                    }}
+                  >
+                    X
+                  </SidebarQuestionDelete>
                 </SidebarQuestion>
               </Link>
             ))}

@@ -41,15 +41,26 @@ export const getQuestionsItemStyle = (
 });
 
 export const SidebarQuestion = styled(Button)`
+  display: flex;
   width: 12.3rem;
   height: 3rem;
   margin-top: 0.2rem;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  flex-direction: row;
   border-radius: 0.4rem;
   box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.3);
+`;
+
+export const SidebarQuestionTitle = styled.div`
   overflow: hidden;
   white-space: nowrap;
+  margin-right: 0.2rem;
+`;
+
+export const SidebarQuestionDelete = styled.div`
+  margin-left: 0.1rem;
+  flex-wrap: wrap;
 `;
 
 export const getQuestionsListStyle = (
