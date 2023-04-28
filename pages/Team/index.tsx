@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import HeaderBar from "@components/HeaderBar";
-import { Carousel } from "antd";
+import { Carousel, Input } from "antd";
 import { CarouselRef } from "antd/es/carousel";
 import { Button, ButtonBox } from "@pages/Team/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,10 @@ import {
   faChevronRight,
   faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { MultipleChoiceQuestions } from "@components/SurveyResponseTemplates/MultipleChoice";
+import { RangeBarQuestions } from "@components/SurveyResponseTemplates/RangeBar";
+import { SubjectiveQuestions } from "@components/SurveyResponseTemplates/Subjective";
 
 const contentStyle: React.CSSProperties = {
   height: "480px",
@@ -34,21 +38,24 @@ const Team = () => {
     carouselRef.current?.next();
     setCurrentSlide(currentSlide + 1);
   };
-
   return (
     <div>
       <Carousel dotPosition={"right"} ref={carouselRef}>
         <div>
-          <h3 style={contentStyle}>1</h3>
+          {/*page1*/}
+          <div>{MultipleChoiceQuestions}</div>
         </div>
         <div>
-          <h3 style={contentStyle}>2</h3>
+          {/*page2*/}
+          <div>{MultipleChoiceQuestions}</div>
         </div>
         <div>
-          <h3 style={contentStyle}>3</h3>
+          {/*page3*/}
+          <div>{MultipleChoiceQuestions}</div>
         </div>
         <div>
-          <h3 style={contentStyle}>4</h3>
+          {/*page4*/}
+          <div>{SubjectiveQuestions}</div>
         </div>
       </Carousel>
       <ButtonBox>

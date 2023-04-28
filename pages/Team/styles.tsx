@@ -1,5 +1,31 @@
 import styled from "@emotion/styled";
 
+export const Title = (): React.CSSProperties => ({
+  border: 0,
+  fontSize: 25,
+  fontWeight: "650",
+  marginBottom: "3px",
+});
+
+export const Explain = (): React.CSSProperties => ({
+  border: 0,
+  fontSize: 15,
+  fontWeight: "450",
+  marginBottom: "10px",
+});
+
+export const MultipleQuestionDiv = styled.div`
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+`;
+
+export const MultipleOption = (): React.CSSProperties => ({
+  border: 0,
+  borderRadius: "10px",
+  backgroundColor: "#f5f5f5",
+});
+
 export const ButtonBox = styled.div`
   width: 100%;
   gap: 1.5rem;
