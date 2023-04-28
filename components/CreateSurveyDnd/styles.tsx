@@ -41,16 +41,26 @@ export const getQuestionsItemStyle = (
 });
 
 export const SidebarQuestion = styled(Button)`
+  display: flex;
   width: 12.3rem;
   height: 3rem;
   margin-top: 0.2rem;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  flex-direction: row;
   border-radius: 0.4rem;
-  padding: 1rem;
   box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.3);
+`;
+
+export const SidebarQuestionTitle = styled.div`
   overflow: hidden;
   white-space: nowrap;
+  margin-right: 0.2rem;
+`;
+
+export const SidebarQuestionDelete = styled.div`
+  margin-left: 0.1rem;
+  flex-wrap: wrap;
 `;
 
 export const getQuestionsListStyle = (
@@ -66,8 +76,11 @@ export const getQuestionsListStyle = (
 export const Wrapper = styled.div`
   display: flex;
   flex: 1;
+  justify-content: center;
 `;
 export const QuestionsAndType = styled.div`
+  display: flex;
+  flex: 1;
   position: fixed;
   left: 4rem;
   top: 10rem;
@@ -75,6 +88,8 @@ export const QuestionsAndType = styled.div`
   margin: 0 auto;
   height: 30rem;
   overflow-y: scroll;
+  z-index: 1;
+  background-color: white;
 `;
 
 export const SidebarQuestions = styled.div`
@@ -88,16 +103,17 @@ export const QuestionTypeListDiv = styled.div`
   display: flex;
   position: fixed;
   bottom: 5rem;
+  margin-top: 1rem;
 `;
 
 export const QuestionsListDiv = styled.div`
-  width: 70rem;
+  flex-grow: 1;
   padding-top: 10rem;
-  margin-left: 20rem;
+  margin-left: 33rem;
 `;
 
 export const LogicDiv = styled.div`
-  width: 70rem;
-  margin-left: 20rem;
+  flex-grow: 1;
   padding-top: 10rem;
+  margin-left: 33rem;
 `;

@@ -31,6 +31,8 @@ import {
   Wrapper,
   SidebarQuestions,
   SidebarQuestion,
+  SidebarQuestionTitle,
+  SidebarQuestionDelete,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
@@ -52,6 +54,9 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
   const [questions, setQuestions] = useState<QuestionTypes[]>([]);
+  const isEmptyTitle = (title: string) => {
+    return title === "" || title === "제목 없음";
+  };
 
   const [viewLogic, setViewLogic] = useRecoilState(createSurveyOptionState);
 
@@ -221,8 +226,33 @@ const CreateSurveyDnd = (): JSX.Element => {
                       handleQuestionClick(item, index);
                     }
                   }}
+                  style={
+                    "title" in item
+                      ? {
+                          color: isEmptyTitle(item.title) ? "gray" : "black",
+                        }
+                      : { color: "black" }
+                  }
                 >
-                  {"title" in item ? item.title : item.type}
+                  <SidebarQuestionTitle>
+                    Q.{index + 1 + " "}
+                    {"title" in item
+                      ? item.title == ""
+                        ? "제목 없음"
+                        : item.title
+                      : "제목 타입 없음"}
+                  </SidebarQuestionTitle>
+                  <SidebarQuestionDelete
+                    onClick={() => {
+                      const newQuestionItems = [
+                        ...questionItems.slice(0, index),
+                        ...questionItems.slice(index + 1),
+                      ];
+                      setQuestionItems(newQuestionItems);
+                    }}
+                  >
+                    X
+                  </SidebarQuestionDelete>
                 </SidebarQuestion>
               </Link>
             ))}
