@@ -52,6 +52,9 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
   const [questions, setQuestions] = useState<QuestionTypes[]>([]);
+  const isEmptyTitle = (title: string) => {
+    return title === "" || title === "제목 없음";
+  };
 
   const [viewLogic, setViewLogic] = useRecoilState(createSurveyOptionState);
 
@@ -221,8 +224,20 @@ const CreateSurveyDnd = (): JSX.Element => {
                       handleQuestionClick(item, index);
                     }
                   }}
+                  style={
+                    "title" in item
+                      ? {
+                          color: isEmptyTitle(item.title) ? "gray" : "black",
+                        }
+                      : { color: "black" }
+                  }
                 >
-                  {"title" in item ? item.title : item.type}
+                  Q.{index + 1 + " "}
+                  {"title" in item
+                    ? item.title == ""
+                      ? "제목 없음"
+                      : item.title
+                    : "제목 타입 없음"}
                 </SidebarQuestion>
               </Link>
             ))}

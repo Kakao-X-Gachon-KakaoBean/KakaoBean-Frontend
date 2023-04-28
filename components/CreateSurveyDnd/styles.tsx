@@ -47,7 +47,6 @@ export const SidebarQuestion = styled(Button)`
   justify-content: center;
   align-items: center;
   border-radius: 0.4rem;
-  padding: 1rem;
   box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   white-space: nowrap;
