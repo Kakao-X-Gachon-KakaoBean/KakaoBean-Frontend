@@ -66,8 +66,11 @@ export const getQuestionsListStyle = (
 export const Wrapper = styled.div`
   display: flex;
   flex: 1;
+  justify-content: center;
 `;
 export const QuestionsAndType = styled.div`
+  display: flex;
+  flex: 1;
   position: fixed;
   left: 4rem;
   top: 10rem;
@@ -75,6 +78,8 @@ export const QuestionsAndType = styled.div`
   margin: 0 auto;
   height: 30rem;
   overflow-y: scroll;
+  z-index: 1;
+  background-color: white;
 `;
 
 export const SidebarQuestions = styled.div`
@@ -88,16 +93,17 @@ export const QuestionTypeListDiv = styled.div`
   display: flex;
   position: fixed;
   bottom: 5rem;
+  margin-top: 1rem;
 `;
 
 export const QuestionsListDiv = styled.div`
-  width: 70rem;
+  flex-grow: 1;
   padding-top: 10rem;
-  margin-left: 20rem;
+  margin-left: 33rem;
 `;
 
 export const LogicDiv = styled.div`
-  width: 70rem;
-  margin-left: 20rem;
+  flex-grow: 1;
   padding-top: 10rem;
+  margin-left: 33rem;
 `;
