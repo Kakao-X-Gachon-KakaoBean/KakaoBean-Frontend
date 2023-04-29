@@ -62,17 +62,29 @@ export const Input = styled.input`
 export const SearchBox = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 32rem;
+  width: 30rem;
   font-size: 1rem;
   margin-top: 0.8rem;
   & span {
-    padding: 0.5rem;
     color: #343434;
     & a {
       text-decoration: none;
       color: inherit;
     }
   }
+`;
+
+export const SearchBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  text-align: center;
+  width: 7rem;
+  height: 1.6rem;
+  background-color: white;
+  border: none;
+  font-size: 1rem;
 `;
 
 export const LoginBtn = styled.button`
@@ -116,14 +128,18 @@ export const GoogleBtn = styled.a`
   height: 4rem;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
+  text-decoration: none;
+  color: black;
 `;
 
 export const KakaoBtn = styled.a`
   display: flex;
+  color: black;
   justify-content: center;
   align-items: center;
   font-size: 1.3rem;
   box-sizing: border-box;
+  text-decoration: none;
   width: 32rem;
   height: 4rem;
   background: #ebeca8;

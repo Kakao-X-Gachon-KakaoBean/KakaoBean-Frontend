@@ -6,6 +6,8 @@ import {
   DialogButton,
 } from "@pages/Survey/CreateSurvey/styles";
 import Modal from "@components/Modal";
+import Chatbot from "react-chatbot-kit";
+import CreateSurveySideBar from "@components/CreateSurveySideBar";
 
 const CreateSurvey = (): JSX.Element => {
   const [chatBotModal, setChatBotModal] = useState(false);
@@ -27,10 +29,16 @@ const CreateSurvey = (): JSX.Element => {
   return (
     <CreateSurveyDiv>
       <CreateSurveyDnd />
+      <CreateSurveySideBar />
       {isOpenModal && (
         <Modal onClickToggleModal={onClickToggleModal}>모달 열렸어!</Modal>
       )}
       <DialogButton onClick={onClickToggleModal}>모달</DialogButton>
+      {/*<Chatbot*/}
+      {/*  config={config}*/}
+      {/*  messageParser={MessageParser}*/}
+      {/*  actionProvider={ActionProvider}*/}
+      {/*/>*/}
     </CreateSurveyDiv>
   );
 };

@@ -1,6 +1,9 @@
-export interface Nodes {
+export interface LogicDetail {
+  conditionOfQuestionAnswers: any[];
+  nextQuestionNumber: string;
+}
+
+export interface Logic {
   id: string;
-  position: { x: number; y: number };
-  data: any;
-  //data: { label: string }
+  logics: LogicDetail[];
 }
