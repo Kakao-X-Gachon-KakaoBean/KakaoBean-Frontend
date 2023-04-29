@@ -10,7 +10,7 @@ export interface IUser {
   emailAuthKey: string;
   checkPassword: string;
   birth: string;
-  jwt: string;
+  accessToken: string;
   error: any;
 }
 
@@ -24,7 +24,7 @@ const initialState: IUser = {
   emailAuthKey: "",
   checkPassword: "",
   birth: "",
-  jwt: "",
+  accessToken: "",
   error: "",
 };
 
