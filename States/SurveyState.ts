@@ -9,3 +9,10 @@ export const createSurveyOptionState = atom({
   key: "createSurveyOptionState",
   default: "option",
 });
+
+export const selectedQuestionState = atom({
+  key: "selectedQuestionState",
+  default: {
+    type: "NONE",
+  },
+});

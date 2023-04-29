@@ -12,7 +12,11 @@ import {
   getQuestionType,
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
-import { countState, createSurveyOptionState } from "../../States/SurveyState";
+import {
+  countState,
+  createSurveyOptionState,
+  selectedQuestionState,
+} from "../../States/SurveyState";
 import {
   MultipleQuestion,
   Logic,
@@ -52,6 +56,9 @@ const CreateSurveyDnd = (): JSX.Element => {
     | SubjectiveQuestion
     | RangeBarQuestion;
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
+  const [selectedQuestion, setSelectedQuestion] = useRecoilState(
+    selectedQuestionState
+  );
   const [surveyTitle, setSurveyTitle] = useState<String>("");
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
   const [questions, setQuestions] = useState<QuestionTypes[]>([]);
@@ -75,7 +82,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     clickedQuestion: QuestionTypes,
     index: number
   ) => {
-    console.log(clickedQuestion);
+    setSelectedQuestion(clickedQuestion);
   };
 
   // 질문 리스트 순서 바꾸기
