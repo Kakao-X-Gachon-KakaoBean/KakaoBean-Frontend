@@ -38,7 +38,7 @@ import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionIte
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 import Product from "@pages/Product";
-import { Button } from "antd";
+import { Input } from "antd";
 import { Link, Element } from "react-scroll";
 
 const CreateSurveyDnd = (): JSX.Element => {
@@ -52,6 +52,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     | SubjectiveQuestion
     | RangeBarQuestion;
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
+  const [surveyTitle, setSurveyTitle] = useState<String>("");
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
   const [questions, setQuestions] = useState<QuestionTypes[]>([]);
   const isEmptyTitle = (title: string) => {
@@ -213,7 +214,16 @@ const CreateSurveyDnd = (): JSX.Element => {
       <Wrapper>
         <QuestionsAndType>
           <SidebarQuestions>
-            <div style={{ height: "3rem" }}>전체 문항</div>
+            <Input
+              size="large"
+              placeholder="설문 제목"
+              bordered={false}
+              style={{ fontWeight: "bold" }}
+              onChange={(event) => {
+                setSurveyTitle(event.target.value);
+              }}
+            />
+            <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
             {questionItems.map((item, index) => (
               <Link to={item.id} smooth={true}>
                 <SidebarQuestion
