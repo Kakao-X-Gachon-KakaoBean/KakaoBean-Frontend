@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 0.2fr 1fr;
 
-  min-height: 100vh;
+  min-height: 70vh;
 
   & a {
     text-decoration: none;
@@ -24,7 +24,7 @@ export const Wrapper = styled.div`
 export const SideBar = styled.section`
   padding-top: 5rem;
   padding-right: 1rem;
-
+  width: 13rem;
   margin: 0 auto;
 
   @media screen and (max-width: 769px) {

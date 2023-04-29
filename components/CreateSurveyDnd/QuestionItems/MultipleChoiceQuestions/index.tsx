@@ -36,7 +36,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   //   conditionOfQuestionAnswers: ["yes"],
   //   nextQuestionNumber: "2",
   // };
-  // const addLogic = (newLogic: Logic) => {
+  // const addLogic = (newLogic: LogicControl) => {
   //   setMultipleQuestion((prevMultipleQuestion) => {
   //     const updatedLogics = [...prevMultipleQuestion.logics, newLogic];
   //     return {

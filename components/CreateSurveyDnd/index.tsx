@@ -26,11 +26,18 @@ import {
   getQuestionsListStyle,
   QuestionTypeListDiv,
   QuestionsListDiv,
+  LogicDiv,
+  QuestionsAndType,
+  Wrapper,
+  SidebarQuestions,
+  SidebarQuestion,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 import Product from "@pages/Product";
+import { Button } from "antd";
+import { Link, Element } from "react-scroll";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const [questionTypeItems, setQuestionTypeItems] = useState<
@@ -56,6 +63,13 @@ const CreateSurveyDnd = (): JSX.Element => {
     const newQuestionItems = [...questionItems];
     newQuestionItems[index] = updatedQuestion;
     setQuestionItems(newQuestionItems);
+  };
+
+  const handleQuestionClick = (
+    clickedQuestion: QuestionTypes,
+    index: number
+  ) => {
+    console.log(clickedQuestion);
   };
 
   // 질문 리스트 순서 바꾸기
@@ -169,8 +183,11 @@ const CreateSurveyDnd = (): JSX.Element => {
   useEffect(() => {
     console.log("id 확인용 json", questionItems);
     deleteIdAndValue();
-    console.log("실제 보낼 json", questions);
   }, [questionItems]);
+
+  useEffect(() => {
+    console.log("실제 보낼 json", questions);
+  }, [questions]);
 
   const deleteIdAndValue = () => {
     const updatedQuestions = questionItems.map((item) => {
@@ -188,39 +205,67 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div>
-        <QuestionTypeListDiv>
-          <Droppable droppableId="questionType" isDropDisabled={true}>
-            {(provided, snapshot) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
-              >
-                {questionTypeItems.map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getQuestionTypeItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        {item.content}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </QuestionTypeListDiv>
+      <Wrapper>
+        <QuestionsAndType>
+          <SidebarQuestions>
+            <div style={{ height: "3rem" }}>전체 문항</div>
+            {questionItems.map((item, index) => (
+              <Link to={item.id} smooth={true}>
+                <SidebarQuestion
+                  onClick={() => {
+                    if (
+                      item.type == "MULTIPLE" ||
+                      item.type == "ESSAY" ||
+                      item.type == "RANGE"
+                    ) {
+                      handleQuestionClick(item, index);
+                    }
+                  }}
+                >
+                  {"title" in item ? item.title : item.type}
+                </SidebarQuestion>
+              </Link>
+            ))}
+          </SidebarQuestions>
+          <QuestionTypeListDiv>
+            <Droppable droppableId="questionType" isDropDisabled={true}>
+              {(provided, snapshot) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
+                >
+                  {questionTypeItems.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getQuestionTypeItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                        >
+                          {item.content}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </QuestionTypeListDiv>
+        </QuestionsAndType>
         {viewLogic === "logic" ? (
-          <Product />
+          <LogicDiv>
+            <Product />
+          </LogicDiv>
         ) : (
           <QuestionsListDiv>
             <Droppable droppableId="questions" isDropDisabled={false}>
@@ -237,40 +282,42 @@ const CreateSurveyDnd = (): JSX.Element => {
                       index={index}
                     >
                       {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getQuestionsItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
-                        >
-                          {item.type === "MULTIPLE" && (
-                            <MultipleChoiceQuestions
-                              id={item.id}
-                              onChange={(updatedQuestion) =>
-                                handleQuestionChange(updatedQuestion, index)
-                              }
-                            />
-                          )}
-                          {item.type === "ESSAY" && "title" in item && (
-                            <SubjectiveQuestions
-                              id={item.id}
-                              onChange={(updatedQuestion) =>
-                                handleQuestionChange(updatedQuestion, index)
-                              }
-                            />
-                          )}
-                          {item.type === "RANGE" && (
-                            <RangeBarQuestions
-                              id={item.id}
-                              onChange={(updatedQuestion) =>
-                                handleQuestionChange(updatedQuestion, index)
-                              }
-                            />
-                          )}
-                        </div>
+                        <Element name={item.id}>
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getQuestionsItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.type === "MULTIPLE" && (
+                              <MultipleChoiceQuestions
+                                id={item.id}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                            {item.type === "ESSAY" && "title" in item && (
+                              <SubjectiveQuestions
+                                id={item.id}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                            {item.type === "RANGE" && (
+                              <RangeBarQuestions
+                                id={item.id}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                          </div>
+                        </Element>
                       )}
                     </Draggable>
                   ))}
@@ -280,7 +327,7 @@ const CreateSurveyDnd = (): JSX.Element => {
             </Droppable>
           </QuestionsListDiv>
         )}
-      </div>
+      </Wrapper>
     </DragDropContext>
   );
 };
