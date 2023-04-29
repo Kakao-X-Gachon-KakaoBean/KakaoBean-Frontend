@@ -26,7 +26,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     questionNumber: "",
     finalQuestion: false,
     nextQuestionNumber: "",
-    numberOfAnswerChoices: 0,
+    numberOfAnswerChoices: 1,
     answers: [""],
     logics: [],
   });

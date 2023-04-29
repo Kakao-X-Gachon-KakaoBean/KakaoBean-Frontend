@@ -5,7 +5,7 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   QuestionTypeItem,
   QuestionsItem,
@@ -59,6 +59,7 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
   );
+  const selectedQuestionValue = useRecoilValue(selectedQuestionState);
   const [surveyTitle, setSurveyTitle] = useState<String>("");
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
   const [questions, setQuestions] = useState<QuestionTypes[]>([]);
@@ -76,7 +77,31 @@ const CreateSurveyDnd = (): JSX.Element => {
     const newQuestionItems = [...questionItems];
     newQuestionItems[index] = updatedQuestion;
     setQuestionItems(newQuestionItems);
+    console.log("newQuestionItems: ", newQuestionItems);
+
+    // 값이 변하면 selectedRecoil 업데이트
+    newQuestionItems.map((item, index) => {
+      if ("id" in selectedQuestion) {
+        if (item.id === selectedQuestion.id) {
+          setSelectedQuestion(item);
+        }
+      }
+    });
   };
+
+  // recoilValue가 변하면 questionItems 업데이트
+  useEffect(() => {
+    questionItems.map((item, index) => {
+      if ("id" in selectedQuestionValue) {
+        if (item.id === selectedQuestionValue.id) {
+          const newQuestionItems = [...questionItems];
+          newQuestionItems[index] = selectedQuestionValue;
+          setQuestionItems(newQuestionItems);
+          console.log("Changed to: " + selectedQuestionValue);
+        }
+      }
+    });
+  }, [selectedQuestion]);
 
   const handleQuestionClick = (
     clickedQuestion: QuestionTypes,
