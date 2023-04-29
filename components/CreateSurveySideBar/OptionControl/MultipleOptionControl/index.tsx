@@ -50,7 +50,7 @@ export const MultipleOptionControl = () => {
       </DropDownDiv>
       <OptionDiv>
         다중 답안 선택&nbsp;&nbsp;
-        <Switch defaultChecked onChange={multipleAnswerToggle} />
+        <Switch onChange={multipleAnswerToggle} />
         <InputNumber
           min={1}
           max={5}
@@ -60,6 +60,7 @@ export const MultipleOptionControl = () => {
             marginLeft: "1rem",
             width: "3.4rem",
           }}
+          disabled={!isMultipleAnswer}
         />
       </OptionDiv>
     </div>
