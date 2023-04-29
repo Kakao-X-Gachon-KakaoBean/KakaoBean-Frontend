@@ -69,6 +69,9 @@ export const SelectSection = styled.div`
   flex-direction: column;
   gap: 1rem;
 `;
+export const ConditionSection = styled.div`
+  display: flex;
+`;
 
 export const LogicBottom = styled.div`
   padding: 1rem;
