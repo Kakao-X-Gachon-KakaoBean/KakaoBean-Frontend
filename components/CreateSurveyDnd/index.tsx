@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -59,8 +59,7 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
   );
-  const selectedQuestionValue = useRecoilValue(selectedQuestionState);
-  const [surveyTitle, setSurveyTitle] = useState<String>("");
+  const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
   const [questions, setQuestions] = useState<QuestionTypes[]>([]);
   const isEmptyTitle = (title: string) => {
@@ -77,7 +76,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     const newQuestionItems = [...questionItems];
     newQuestionItems[index] = updatedQuestion;
     setQuestionItems(newQuestionItems);
-    console.log("newQuestionItems: ", newQuestionItems);
 
     // 값이 변하면 selectedRecoil 업데이트
     newQuestionItems.map((item, index) => {
@@ -92,12 +90,12 @@ const CreateSurveyDnd = (): JSX.Element => {
   // recoilValue가 변하면 questionItems 업데이트
   useEffect(() => {
     questionItems.map((item, index) => {
-      if ("id" in selectedQuestionValue) {
-        if (item.id === selectedQuestionValue.id) {
+      if ("id" in selectedQuestion) {
+        if (item.id === selectedQuestion.id) {
           const newQuestionItems = [...questionItems];
-          newQuestionItems[index] = selectedQuestionValue;
+          newQuestionItems[index] = selectedQuestion;
           setQuestionItems(newQuestionItems);
-          console.log("Changed to: " + selectedQuestionValue);
+          console.log("Changed to: " + selectedQuestion);
         }
       }
     });
@@ -367,6 +365,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                             {item.type === "MULTIPLE" && (
                               <MultipleChoiceQuestions
                                 id={item.id}
+                                question={item as MultipleQuestion}
                                 onChange={(updatedQuestion) =>
                                   handleQuestionChange(updatedQuestion, index)
                                 }
@@ -375,6 +374,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                             {item.type === "ESSAY" && "title" in item && (
                               <SubjectiveQuestions
                                 id={item.id}
+                                question={item as SubjectiveQuestion}
                                 onChange={(updatedQuestion) =>
                                   handleQuestionChange(updatedQuestion, index)
                                 }
@@ -383,6 +383,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                             {item.type === "RANGE" && (
                               <RangeBarQuestions
                                 id={item.id}
+                                question={item as RangeBarQuestion}
                                 onChange={(updatedQuestion) =>
                                   handleQuestionChange(updatedQuestion, index)
                                 }

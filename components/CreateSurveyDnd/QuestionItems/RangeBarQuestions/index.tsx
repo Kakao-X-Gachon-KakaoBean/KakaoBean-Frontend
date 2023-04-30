@@ -10,20 +10,23 @@ import {
 interface subProps {
   id: string;
   onChange: (updatedQuestion: RangeBarQuestion) => void;
+  question: {
+    id: string;
+    type: string;
+    title: string;
+    explanation: string;
+    questionNumber: string;
+    finalQuestion: boolean;
+    nextQuestionNumber: string;
+    value: number;
+    min: number;
+    max: number;
+  };
 }
 export const RangeBarQuestions = (props: subProps) => {
-  const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
-    id: props.id,
-    type: "RANGE",
-    title: "",
-    explanation: "",
-    questionNumber: "",
-    finalQuestion: false,
-    nextQuestionNumber: "0",
-    value: 0,
-    min: 0,
-    max: 5,
-  });
+  const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>(
+    props.question
+  );
 
   useEffect(() => {
     props.onChange(rangeBarQuestions);

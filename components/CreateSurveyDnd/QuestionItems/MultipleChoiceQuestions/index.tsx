@@ -12,24 +12,30 @@ import {
   MultipleQuestionDiv,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
+import { useRecoilValue } from "recoil";
+import { selectedQuestionState } from "../../../../States/SurveyState";
 
 interface subProps {
   id: string;
   onChange: (updatedQuestion: MultipleQuestion) => void;
+  question: {
+    id: string;
+    type: string;
+    title: string;
+    explanation: string;
+    finalQuestion: boolean;
+    nextQuestionNumber: string;
+    questionNumber: string; // 문제 번호
+    numberOfAnswerChoices: number; // 다중답안 개수
+    answers: string[]; // 옵션들
+    logics: Logic[];
+  };
 }
 export const MultipleChoiceQuestions = (props: subProps) => {
-  const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
-    id: props.id,
-    type: "MULTIPLE",
-    title: "",
-    explanation: "",
-    questionNumber: "",
-    finalQuestion: false,
-    nextQuestionNumber: "",
-    numberOfAnswerChoices: 1,
-    answers: [""],
-    logics: [],
-  });
+  const selectedQuestion = useRecoilValue(selectedQuestionState);
+  const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>(
+    props.question
+  );
 
   // 새로운 로직 추가 예시 코드
   // const newLogic = {
