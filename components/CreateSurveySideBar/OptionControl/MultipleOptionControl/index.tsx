@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, InputNumber, Space, Switch } from "antd";
 import {
@@ -10,13 +10,13 @@ import { selectedQuestionState } from "../../../../States/SurveyState";
 
 export const MultipleOptionControl = () => {
   const [changeType, setChangeType] = useState<string>("");
+  const [selectedQuestion, setSelectedQuestion] = useRecoilState(
+    selectedQuestionState
+  );
   const [isMultipleAnswer, setIsMultipleAnswer] = useState<boolean>(false);
   const [multipleAnswerNumber, setMultipleAnswerNumber] = useState<number>(1);
   const [minimumAnswerNumber, setMinimumAnswerNumber] = useState<number>(1);
   const [maximumAnswerNumber, setMaximumAnswerNumber] = useState<number>(1);
-  const [selectedQuestion, setSelectedQuestion] = useRecoilState(
-    selectedQuestionState
-  );
 
   useEffect(() => {
     if ("answers" in selectedQuestion) {
@@ -39,7 +39,7 @@ export const MultipleOptionControl = () => {
         ...selectedQuestion,
         numberOfAnswerChoices: multipleAnswerNumber,
       };
-      setSelectedQuestion(updatedQuestion);
+      setSelectedQuestion(() => updatedQuestion);
     }
   }, [multipleAnswerNumber]);
 

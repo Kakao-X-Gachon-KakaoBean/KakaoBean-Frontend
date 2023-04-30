@@ -75,13 +75,13 @@ const CreateSurveyDnd = (): JSX.Element => {
   ) => {
     const newQuestionItems = [...questionItems];
     newQuestionItems[index] = updatedQuestion;
-    setQuestionItems(newQuestionItems);
+    setQuestionItems(() => newQuestionItems);
 
     // 값이 변하면 selectedRecoil 업데이트
     newQuestionItems.map((item, index) => {
       if ("id" in selectedQuestion) {
         if (item.id === selectedQuestion.id) {
-          setSelectedQuestion(item);
+          setSelectedQuestion(() => item);
         }
       }
     });
@@ -94,8 +94,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         if (item.id === selectedQuestion.id) {
           const newQuestionItems = [...questionItems];
           newQuestionItems[index] = selectedQuestion;
-          setQuestionItems(newQuestionItems);
-          console.log("Changed to: " + selectedQuestion);
+          setQuestionItems(() => newQuestionItems);
         }
       }
     });
@@ -105,7 +104,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     clickedQuestion: QuestionTypes,
     index: number
   ) => {
-    setSelectedQuestion(clickedQuestion);
+    setSelectedQuestion(() => clickedQuestion);
   };
 
   // 질문 리스트 순서 바꾸기
@@ -140,15 +139,15 @@ const CreateSurveyDnd = (): JSX.Element => {
       questionNumber: "",
       finalQuestion: false,
       nextQuestionNumber: "0",
-      numberOfAnswerChoices: 0,
+      numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
     };
     const addSubjective = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "ESSAY",
-      title: "-",
-      explanation: "-",
+      title: "",
+      explanation: "",
       questionNumber: "0",
       finalQuestion: false,
       nextQuestionNumber: "0",
@@ -156,8 +155,8 @@ const CreateSurveyDnd = (): JSX.Element => {
     const addRangeBar = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "RANGE",
-      title: "-",
-      explanation: "-",
+      title: "",
+      explanation: "",
       questionNumber: "0",
       finalQuestion: false,
       nextQuestionNumber: "0",
@@ -192,7 +191,7 @@ const CreateSurveyDnd = (): JSX.Element => {
           result.source.index,
           result.destination.index
         );
-        setQuestionItems(newItems1);
+        setQuestionItems(() => newItems1);
       }
     }
 
@@ -203,7 +202,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         result.source.index,
         result.destination.index
       );
-      setQuestionItems(newItems2);
+      setQuestionItems(() => newItems2);
     }
 
     setQuestionItems((prevState) => {
@@ -218,14 +217,6 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   useEffect(() => {
     console.log("id 확인용 json", questionItems);
-    deleteIdAndValue();
-  }, [questionItems]);
-
-  useEffect(() => {
-    console.log("실제 보낼 json", questions);
-  }, [questions]);
-
-  const deleteIdAndValue = () => {
     const updatedQuestions = questionItems.map((item) => {
       if ("id" in item) {
         const { id, ...rest } = item;
@@ -236,8 +227,8 @@ const CreateSurveyDnd = (): JSX.Element => {
       }
       return item;
     });
-    setQuestions(updatedQuestions as QuestionTypes[]);
-  };
+    setQuestions(() => updatedQuestions as QuestionTypes[]);
+  }, [questionItems]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

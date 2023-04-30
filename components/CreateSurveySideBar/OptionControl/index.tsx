@@ -13,9 +13,15 @@ export const OptionControl = () => {
   }, [selectedValue]);
   return (
     <Wrapper>
-      {selectedValue.type === "MULTIPLE" && <MultipleOptionControl />}
-      {selectedValue.type === "ESSAY" && <SubjectiveOptionControl />}
-      {selectedValue.type === "RANGE" && <RangeOptionControl />}
+      {selectedValue.type === "MULTIPLE" && (
+        <MultipleOptionControl key={selectedValue.id} />
+      )}
+      {selectedValue.type === "ESSAY" && (
+        <SubjectiveOptionControl key={selectedValue.id} />
+      )}
+      {selectedValue.type === "RANGE" && (
+        <RangeOptionControl key={selectedValue.id} />
+      )}
       {selectedValue.type === "NONE" && <div></div>}
     </Wrapper>
   );

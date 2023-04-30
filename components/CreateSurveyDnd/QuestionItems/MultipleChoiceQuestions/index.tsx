@@ -56,6 +56,14 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     props.onChange(multipleQuestion);
   }, [multipleQuestion]);
 
+  // 자식 컴포넌트에서 부모 컴포넌트를 수정한다면, 값을 직접 건네주지 않는 이상 초기화될 확률이 높다. 그렇기 때문에 numberOfAnswerChoices를 recoil에서 받아서 다시 정의해줘야 한다.
+  useEffect(() => {
+    setMultipleQuestion((prevState) => ({
+      ...prevState,
+      numberOfAnswerChoices: props.question.numberOfAnswerChoices,
+    }));
+  }, [props.question.numberOfAnswerChoices]);
+
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleQuestion({ ...multipleQuestion, title: event.target.value });
   };
