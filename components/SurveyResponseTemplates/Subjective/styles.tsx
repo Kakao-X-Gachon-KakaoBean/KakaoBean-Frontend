@@ -13,7 +13,10 @@ export const Explanation = styled.div`
   margin-bottom: 10px;
 `;
 
-export const Subjective = styled.div`
-  margin-top: 0px;
-  height: 200px;
+export const Subjective = styled.input`
+  margin-top: 5px;
+  border-color: aqua;
+  height: 30vh;
+  width: 40vw;
+  border-radius: 20px;
 `;

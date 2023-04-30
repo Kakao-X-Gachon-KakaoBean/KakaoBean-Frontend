@@ -12,14 +12,7 @@ import {
 import { MultipleChoiceQuestions } from "@components/SurveyResponseTemplates/MultipleChoice";
 import { RangeBarQuestions } from "@components/SurveyResponseTemplates/RangeBar";
 import { SubjectiveQuestions } from "@components/SurveyResponseTemplates/Subjective";
-
-const contentStyle: React.CSSProperties = {
-  height: "480px",
-  color: "#fff",
-  lineHeight: "480px",
-  textAlign: "center",
-  background: "#364d79",
-};
+import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 
 const Team = () => {
   const carouselRef = useRef<CarouselRef>(null);
@@ -38,25 +31,71 @@ const Team = () => {
     carouselRef.current?.next();
     setCurrentSlide(currentSlide + 1);
   };
+
+  const options = [
+    { checked: false },
+    { checked: false },
+    { checked: false },
+    { checked: false },
+    { checked: false },
+  ];
+
+  const types = [
+    { type: "RANGE" },
+    { type: "ESSAY" },
+    { type: "MULTIPLE" },
+    { type: "MULTIPLE" },
+  ];
+
   return (
     <div>
       <Carousel dotPosition={"right"} ref={carouselRef}>
-        <div>
-          {/*page1*/}
-          <div>{MultipleChoiceQuestions}</div>
-        </div>
-        <div>
-          {/*page2*/}
-          <div>{MultipleChoiceQuestions}</div>
-        </div>
-        <div>
-          {/*page3*/}
-          <div>{MultipleChoiceQuestions}</div>
-        </div>
-        <div>
-          {/*page4*/}
-          <div>{SubjectiveQuestions}</div>
-        </div>
+        {/*TODO:
+            1(해결). 버튼으로 바꾸기 - 해결한 듯?
+            2(해결). 동적 질문 할당
+            2_1(해결). json 입력이 있다고 가정할 때; 쭈욱 넣어놔야하나?
+            2_2(해결). data.type에 따라서 질문 생성; 이후 데이터 넣기 - 데이터만 잘 설정하면 되는 듯
+            3. 리스폰스 값 저장
+            4. 로직 대응 (페이지 이동, 응답 값 출력)
+            */}
+        {types.map((type, index) => {
+          if (type.type === "MULTIPLE") {
+            return (
+              // MULTIPLE 타입에 해당하는 JSX 코드
+              <div>
+                {/*page1*/}
+                <MultipleChoiceQuestions
+                  id={""}
+                  onChange={() => {}}
+                  options={options}
+                />
+              </div>
+            );
+          } else if (type.type === "RANGE") {
+            return (
+              // RANGE 타입에 해당하는 JSX 코드
+              <div>
+                {/*page3*/}
+                <RangeBarQuestions id={""} onChange={() => {}} />
+              </div>
+            );
+          } else if (type.type === "ESSAY") {
+            return (
+              // ESSAY 타입에 해당하는 JSX 코드
+              <div>
+                {/*page2*/}
+                <SubjectiveQuestions id={""} onChange={() => {}} />
+              </div>
+            );
+          } else {
+            console.log("Type is null!");
+            return (
+              <div>
+                <h1>hi</h1>
+              </div>
+            ); // 예외 처리
+          }
+        })}
       </Carousel>
       <ButtonBox>
         <Button disabled={currentSlide === 0} onClick={handlePrevClick}>

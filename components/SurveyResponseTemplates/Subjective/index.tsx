@@ -6,6 +6,18 @@ import {
   Title,
 } from "@components/SurveyResponseTemplates/Subjective/styles";
 
+const contentStyle: React.CSSProperties = {
+  height: "70vh",
+  width: "100%",
+  color: "#fff",
+  textAlign: "center",
+  background: "#364d79",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+};
+
 interface subProps {
   id: string;
   onChange: (updatedQuestion: SubjectiveQuestion) => void;
@@ -23,10 +35,10 @@ export const SubjectiveQuestions = (props: subProps) => {
     });
 
   return (
-    <div style={{ padding: "40px" }}>
+    <div style={contentStyle}>
       <Title>{subjectiveQuestions.title}</Title>
       <Explanation>{subjectiveQuestions.explanation}</Explanation>
-      <Subjective>hi</Subjective>
+      <Subjective />
     </div>
   );
 };
