@@ -257,7 +257,7 @@ const CreateSurveyDnd = (): JSX.Element => {
             />
             <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
             {questionItems.map((item, index) => (
-              <Link to={item.id} smooth={true}>
+              <Link to={item.id} smooth={true} key={index}>
                 <SidebarQuestion
                   onClick={() => {
                     if (

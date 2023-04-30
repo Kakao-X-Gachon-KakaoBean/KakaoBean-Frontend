@@ -5,7 +5,7 @@ import {
   DropDownDiv,
   OptionDiv,
 } from "@components/CreateSurveySideBar/OptionControl/MultipleOptionControl/styles";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { selectedQuestionState } from "../../../../States/SurveyState";
 
 export const MultipleOptionControl = () => {
@@ -14,8 +14,9 @@ export const MultipleOptionControl = () => {
   const [multipleAnswerNumber, setMultipleAnswerNumber] = useState<number>(1);
   const [minimumAnswerNumber, setMinimumAnswerNumber] = useState<number>(1);
   const [maximumAnswerNumber, setMaximumAnswerNumber] = useState<number>(1);
-  const selectedQuestion = useRecoilValue(selectedQuestionState);
-  const setSelectedQuestion = useSetRecoilState(selectedQuestionState);
+  const [selectedQuestion, setSelectedQuestion] = useRecoilState(
+    selectedQuestionState
+  );
 
   useEffect(() => {
     if ("answers" in selectedQuestion) {
@@ -81,6 +82,13 @@ export const MultipleOptionControl = () => {
     setIsMultipleAnswer(checked);
     if (checked) {
       setMinimumAnswerNumber(2);
+      if (multipleAnswerNumber === 1) {
+        if (
+          "answers" in selectedQuestion &&
+          Object.keys(selectedQuestion.answers).length !== 1
+        )
+          setMultipleAnswerNumber(2);
+      }
     } else {
       setMinimumAnswerNumber(1);
       setMultipleAnswerNumber(1);
