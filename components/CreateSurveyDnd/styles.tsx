@@ -109,11 +109,11 @@ export const QuestionTypeListDiv = styled.div`
 export const QuestionsListDiv = styled.div`
   flex-grow: 1;
   padding-top: 10rem;
-  margin-left: 33rem;
+  margin-left: 21rem;
 `;
 
 export const LogicDiv = styled.div`
   flex-grow: 1;
   padding-top: 10rem;
-  margin-left: 33rem;
+  margin-left: 21rem;
 `;

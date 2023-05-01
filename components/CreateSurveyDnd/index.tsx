@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   QuestionTypeItem,
   QuestionsItem,
   getQuestionType,
   getQuestions,
 } from "@components/CreateSurveyDnd/type";
-import { countState, createSurveyOptionState } from "../../States/SurveyState";
+import {
+  countState,
+  createSurveyOptionState,
+  selectedQuestionState,
+} from "../../States/SurveyState";
 import {
   MultipleQuestion,
   Logic,
@@ -38,7 +42,7 @@ import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionIte
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 import Product from "@pages/Product";
-import { Button } from "antd";
+import { Input } from "antd";
 import { Link, Element } from "react-scroll";
 
 const CreateSurveyDnd = (): JSX.Element => {
@@ -52,6 +56,10 @@ const CreateSurveyDnd = (): JSX.Element => {
     | SubjectiveQuestion
     | RangeBarQuestion;
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
+  const [selectedQuestion, setSelectedQuestion] = useRecoilState(
+    selectedQuestionState
+  );
+  const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
   const [questions, setQuestions] = useState<QuestionTypes[]>([]);
   const isEmptyTitle = (title: string) => {
@@ -67,14 +75,36 @@ const CreateSurveyDnd = (): JSX.Element => {
   ) => {
     const newQuestionItems = [...questionItems];
     newQuestionItems[index] = updatedQuestion;
-    setQuestionItems(newQuestionItems);
+    setQuestionItems(() => newQuestionItems);
+
+    // 값이 변하면 selectedRecoil 업데이트
+    newQuestionItems.map((item, index) => {
+      if ("id" in selectedQuestion) {
+        if (item.id === selectedQuestion.id) {
+          setSelectedQuestion(() => item);
+        }
+      }
+    });
   };
+
+  // recoilValue가 변하면 questionItems 업데이트
+  useEffect(() => {
+    questionItems.map((item, index) => {
+      if ("id" in selectedQuestion) {
+        if (item.id === selectedQuestion.id) {
+          const newQuestionItems = [...questionItems];
+          newQuestionItems[index] = selectedQuestion;
+          setQuestionItems(() => newQuestionItems);
+        }
+      }
+    });
+  }, [selectedQuestion]);
 
   const handleQuestionClick = (
     clickedQuestion: QuestionTypes,
     index: number
   ) => {
-    console.log(clickedQuestion);
+    setSelectedQuestion(() => clickedQuestion);
   };
 
   // 질문 리스트 순서 바꾸기
@@ -109,15 +139,15 @@ const CreateSurveyDnd = (): JSX.Element => {
       questionNumber: "",
       finalQuestion: false,
       nextQuestionNumber: "0",
-      numberOfAnswerChoices: 0,
+      numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
     };
     const addSubjective = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "ESSAY",
-      title: "-",
-      explanation: "-",
+      title: "",
+      explanation: "",
       questionNumber: "0",
       finalQuestion: false,
       nextQuestionNumber: "0",
@@ -125,8 +155,8 @@ const CreateSurveyDnd = (): JSX.Element => {
     const addRangeBar = {
       id: `KEA-KakaoBeans-${countQuestion}`,
       type: "RANGE",
-      title: "-",
-      explanation: "-",
+      title: "",
+      explanation: "",
       questionNumber: "0",
       finalQuestion: false,
       nextQuestionNumber: "0",
@@ -161,7 +191,7 @@ const CreateSurveyDnd = (): JSX.Element => {
           result.source.index,
           result.destination.index
         );
-        setQuestionItems(newItems1);
+        setQuestionItems(() => newItems1);
       }
     }
 
@@ -172,7 +202,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         result.source.index,
         result.destination.index
       );
-      setQuestionItems(newItems2);
+      setQuestionItems(() => newItems2);
     }
 
     setQuestionItems((prevState) => {
@@ -187,14 +217,6 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   useEffect(() => {
     console.log("id 확인용 json", questionItems);
-    deleteIdAndValue();
-  }, [questionItems]);
-
-  useEffect(() => {
-    console.log("실제 보낼 json", questions);
-  }, [questions]);
-
-  const deleteIdAndValue = () => {
     const updatedQuestions = questionItems.map((item) => {
       if ("id" in item) {
         const { id, ...rest } = item;
@@ -205,17 +227,26 @@ const CreateSurveyDnd = (): JSX.Element => {
       }
       return item;
     });
-    setQuestions(updatedQuestions as QuestionTypes[]);
-  };
+    setQuestions(() => updatedQuestions as QuestionTypes[]);
+  }, [questionItems]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <QuestionsAndType>
           <SidebarQuestions>
-            <div style={{ height: "3rem" }}>전체 문항</div>
+            <Input
+              size="large"
+              placeholder="설문 제목"
+              bordered={false}
+              style={{ fontWeight: "bold" }}
+              onChange={(event) => {
+                setSurveyTitle(event.target.value);
+              }}
+            />
+            <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
             {questionItems.map((item, index) => (
-              <Link to={item.id} smooth={true}>
+              <Link to={item.id} smooth={true} key={index}>
                 <SidebarQuestion
                   onClick={() => {
                     if (
@@ -325,6 +356,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                             {item.type === "MULTIPLE" && (
                               <MultipleChoiceQuestions
                                 id={item.id}
+                                question={item as MultipleQuestion}
                                 onChange={(updatedQuestion) =>
                                   handleQuestionChange(updatedQuestion, index)
                                 }
@@ -333,6 +365,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                             {item.type === "ESSAY" && "title" in item && (
                               <SubjectiveQuestions
                                 id={item.id}
+                                question={item as SubjectiveQuestion}
                                 onChange={(updatedQuestion) =>
                                   handleQuestionChange(updatedQuestion, index)
                                 }
@@ -341,6 +374,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                             {item.type === "RANGE" && (
                               <RangeBarQuestions
                                 id={item.id}
+                                question={item as RangeBarQuestion}
                                 onChange={(updatedQuestion) =>
                                   handleQuestionChange(updatedQuestion, index)
                                 }

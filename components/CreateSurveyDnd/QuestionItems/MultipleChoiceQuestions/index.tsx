@@ -12,24 +12,30 @@ import {
   MultipleQuestionDiv,
   TitleInput,
 } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
+import { useRecoilValue } from "recoil";
+import { selectedQuestionState } from "../../../../States/SurveyState";
 
 interface subProps {
   id: string;
   onChange: (updatedQuestion: MultipleQuestion) => void;
+  question: {
+    id: string;
+    type: string;
+    title: string;
+    explanation: string;
+    finalQuestion: boolean;
+    nextQuestionNumber: string;
+    questionNumber: string; // 문제 번호
+    numberOfAnswerChoices: number; // 다중답안 개수
+    answers: string[]; // 옵션들
+    logics: Logic[];
+  };
 }
 export const MultipleChoiceQuestions = (props: subProps) => {
-  const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>({
-    id: props.id,
-    type: "MULTIPLE",
-    title: "",
-    explanation: "",
-    questionNumber: "",
-    finalQuestion: false,
-    nextQuestionNumber: "",
-    numberOfAnswerChoices: 0,
-    answers: [""],
-    logics: [],
-  });
+  const selectedQuestion = useRecoilValue(selectedQuestionState);
+  const [multipleQuestion, setMultipleQuestion] = useState<MultipleQuestion>(
+    props.question
+  );
 
   // 새로운 로직 추가 예시 코드
   // const newLogic = {
@@ -49,6 +55,14 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   useEffect(() => {
     props.onChange(multipleQuestion);
   }, [multipleQuestion]);
+
+  // 자식 컴포넌트에서 부모 컴포넌트를 수정한다면, 값을 직접 건네주지 않는 이상 초기화될 확률이 높다. 그렇기 때문에 numberOfAnswerChoices를 recoil에서 받아서 다시 정의해줘야 한다.
+  useEffect(() => {
+    setMultipleQuestion((prevState) => ({
+      ...prevState,
+      numberOfAnswerChoices: props.question.numberOfAnswerChoices,
+    }));
+  }, [props.question.numberOfAnswerChoices]);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleQuestion({ ...multipleQuestion, title: event.target.value });
