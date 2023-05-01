@@ -43,3 +43,37 @@ export const RightSide = styled.section`
     padding: 0;
   }
 `;
+
+export const LogicSection = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const LogicHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 12rem;
+  height: 3rem;
+  padding: 1rem;
+  border: 1px solid black;
+`;
+
+export const LogicBody = styled.div`
+  padding: 1rem;
+  border: 1px solid black;
+`;
+
+export const SelectSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+export const ConditionSection = styled.div`
+  display: flex;
+`;
+
+export const LogicBottom = styled.div`
+  padding: 1rem;
+  border: 1px solid black;
+`;

@@ -11,6 +11,7 @@ import {
   Input,
   KakaoBtn,
   Label,
+  Line,
   LoginBtn,
   SearchBox,
   SearchBtn,
@@ -39,6 +40,10 @@ const LogIn = () => {
   const [user, setUser] = useRecoilState<IUser>(UserState);
   const [checkEmailModal, setCheckEmailModal] = useState(false);
   const [checkPasswordModal, setCheckPasswordModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(
+    localStorage.getItem("accessToken") !== null
+  );
+  const [logInError, setLogInError] = useState(false);
 
   const onCloseEmailModal = useCallback(() => {
     setCheckEmailModal((prev) => !prev);
@@ -62,15 +67,14 @@ const LogIn = () => {
         .then((response) => response.data),
     {
       onMutate() {
-        // setLogInError(false);
+        setLogInError(false);
       },
-      onSuccess() {
-        // queryClient.refetchQueries('user');
-        console.log("성공");
-        setUser(user);
+      onSuccess(data) {
+        localStorage.setItem("accessToken", data?.accessToken);
+        setIsLogin(true);
       },
       onError(error) {
-        // setLogInError(error.response?.data?.code === 401);
+        setLogInError(error.response?.data?.code === 401);
         alert("로그인에 실패하였습니다.");
       },
     }
@@ -81,20 +85,14 @@ const LogIn = () => {
     (e) => {
       e.preventDefault();
       mutation.mutate({ email, password });
-      console.log(mutation);
     },
     [email, password, mutation]
   );
 
-  //
-  // if (isLoading) {
-  //   return <div>로딩중...</div>;
-  // }
-
   //로그인 정보 있을 시 메인으로 리다이렉트
-  // if (user) {
-  //   return <Redirect to="/main" />;
-  // }
+  if (isLogin) {
+    return <Redirect to={"/main"} />;
+  }
 
   return (
     <>
@@ -126,25 +124,23 @@ const LogIn = () => {
             <span
               style={{
                 display: "flex",
-                flexDirection: "row",
               }}
             >
               <SearchBtn type="button" onClick={onCloseEmailModal}>
-                이메일 찾기
+                이메일 찾기 /
               </SearchBtn>
               <SearchBtn type="button" onClick={onClosePasswordModal}>
                 비밀번호 찾기
               </SearchBtn>
             </span>
             <span>
-              <span>신규 회원이신가요? </span>
               <Link style={{ fontWeight: "bold" }} to="/signup">
                 회원 가입
               </Link>
             </span>
           </SearchBox>
         </Form>
-        <div>또는</div>
+        <Line>또는</Line>
         <SocialLogin>
           <GoogleBtn
             href={

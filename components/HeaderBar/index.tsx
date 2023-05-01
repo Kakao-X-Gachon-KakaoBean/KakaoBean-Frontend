@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import Logo from "../../image/beanSolo.png";
 
 import { Link } from "react-router-dom";
@@ -12,6 +12,18 @@ import {
 } from "@components/HeaderBar/styles";
 
 const HeaderBar = () => {
+  const [isLogin, setIsLogin] = useState(
+    localStorage.getItem("accessToken") !== null
+  );
+
+  const onLogout = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      localStorage.removeItem("accessToken");
+      setIsLogin(false);
+    },
+    [isLogin]
+  );
+
   return (
     <Bar>
       <MainBar>
@@ -36,9 +48,11 @@ const HeaderBar = () => {
               </Link>
             </span>
             <span>
-              <Link to="/login">
-                <span>Login</span>
-              </Link>
+              {!isLogin ? (
+                <Link to="/login">Login</Link>
+              ) : (
+                <div onClick={onLogout}>Logout</div>
+              )}
             </span>
             <span>
               <Link to="/createsurvey">
