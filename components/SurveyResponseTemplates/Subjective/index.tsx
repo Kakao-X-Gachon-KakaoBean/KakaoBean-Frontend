@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
+import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import {
   Explanation,
   Subjective,
@@ -19,13 +19,11 @@ const contentStyle: React.CSSProperties = {
 };
 
 interface subProps {
-  id: string;
   onChange: (updatedQuestion: SubjectiveQuestion) => void;
 }
 export const SubjectiveQuestions = (props: subProps) => {
   const [subjectiveQuestions, setSubjectiveQuestions] =
     useState<SubjectiveQuestion>({
-      id: props.id,
       type: "ESSAY",
       title: "Test Subjective Title",
       explanation: "this is subjective",

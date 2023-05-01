@@ -13,15 +13,15 @@ interface CheckboxProps {
   checked: boolean;
 }
 interface subProps {
-  id: string;
-  onChange: (updatedQuestion: MultipleQuestion) => void;
+  thisQuestion: (updatedQuestion: MultipleQuestion) => void;
   options: CheckboxProps[];
+  setOptions: (newOptions: CheckboxProps[]) => void;
 }
 
 export const MultipleChoiceQuestions = (props: subProps) => {
   const [multipleQuestion] = useState<MultipleQuestion>({
-    id: props.id,
     type: "MULTIPLE",
+    // props.type ... 이런식으로 다 넣어야함 원랜
     title: "Test MULTIPLE Title",
     explanation: "Test Explanation",
     questionNumber: "n",
@@ -51,6 +51,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
       newState[index].checked = !newState[index].checked;
       return newState;
     });
+    props.setOptions(checkboxData);
   };
 
   return (
@@ -67,6 +68,9 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
+      <button onClick={() => console.log("real data: ", checkboxData)}>
+        check real data here
+      </button>
     </QuestionBox>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
+import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { Slider } from "antd";
 import {
   Explanation,
@@ -21,12 +21,10 @@ const contentStyle: React.CSSProperties = {
 };
 
 interface subProps {
-  id: string;
   onChange: (updatedQuestion: RangeBarQuestion) => void;
 }
 export const RangeBarQuestions = (props: subProps) => {
   const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
-    id: props.id,
     type: "RANGE",
     title: "Test Rangebar Question",
     explanation: "this is a test",

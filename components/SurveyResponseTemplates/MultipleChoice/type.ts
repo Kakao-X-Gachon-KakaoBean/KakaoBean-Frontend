@@ -4,7 +4,6 @@ export interface Logic {
 }
 
 export interface MultipleQuestion {
-  id: string;
   type: string;
   title: string;
   explanation: string;
