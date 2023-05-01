@@ -34,9 +34,10 @@ import {
   QuestionsAndType,
   Wrapper,
   SidebarQuestions,
-  SidebarQuestion,
   SidebarQuestionTitle,
   SidebarQuestionDelete,
+  SidebarSelectedQuestion,
+  SidebarNoneSelectedQuestion,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
@@ -245,48 +246,54 @@ const CreateSurveyDnd = (): JSX.Element => {
               }}
             />
             <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
-            {questionItems.map((item, index) => (
-              <Link to={item.id} smooth={true} key={index}>
-                <SidebarQuestion
-                  onClick={() => {
-                    if (
-                      item.type == "MULTIPLE" ||
-                      item.type == "ESSAY" ||
-                      item.type == "RANGE"
-                    ) {
-                      handleQuestionClick(item, index);
-                    }
-                  }}
-                  style={
-                    "title" in item
-                      ? {
-                          color: isEmptyTitle(item.title) ? "gray" : "black",
-                        }
-                      : { color: "black" }
-                  }
-                >
-                  <SidebarQuestionTitle>
-                    Q.{index + 1 + " "}
-                    {"title" in item
-                      ? item.title == ""
-                        ? "제목 없음"
-                        : item.title
-                      : "제목 타입 없음"}
-                  </SidebarQuestionTitle>
-                  <SidebarQuestionDelete
+            {questionItems.map((item, index) => {
+              const SidebarQuestion =
+                selectedQuestion.id === item.id
+                  ? SidebarSelectedQuestion
+                  : SidebarNoneSelectedQuestion;
+              return (
+                <Link to={item.id} smooth={true} key={index}>
+                  <SidebarQuestion
                     onClick={() => {
-                      const newQuestionItems = [
-                        ...questionItems.slice(0, index),
-                        ...questionItems.slice(index + 1),
-                      ];
-                      setQuestionItems(newQuestionItems);
+                      if (
+                        item.type == "MULTIPLE" ||
+                        item.type == "ESSAY" ||
+                        item.type == "RANGE"
+                      ) {
+                        handleQuestionClick(item, index);
+                      }
                     }}
+                    style={
+                      "title" in item
+                        ? {
+                            color: isEmptyTitle(item.title) ? "gray" : "black",
+                          }
+                        : { color: "black" }
+                    }
                   >
-                    X
-                  </SidebarQuestionDelete>
-                </SidebarQuestion>
-              </Link>
-            ))}
+                    <SidebarQuestionTitle>
+                      Q.{index + 1 + " "}
+                      {"title" in item
+                        ? item.title == ""
+                          ? "제목 없음"
+                          : item.title
+                        : "제목 타입 없음"}
+                    </SidebarQuestionTitle>
+                    <SidebarQuestionDelete
+                      onClick={() => {
+                        const newQuestionItems = [
+                          ...questionItems.slice(0, index),
+                          ...questionItems.slice(index + 1),
+                        ];
+                        setQuestionItems(newQuestionItems);
+                      }}
+                    >
+                      X
+                    </SidebarQuestionDelete>
+                  </SidebarQuestion>
+                </Link>
+              );
+            })}
           </SidebarQuestions>
           <QuestionTypeListDiv>
             <Droppable droppableId="questionType" isDropDisabled={true}>
