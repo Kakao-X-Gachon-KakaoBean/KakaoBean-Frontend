@@ -5,22 +5,47 @@ import {
   DropDownDiv,
   OptionDiv,
 } from "@components/CreateSurveySideBar/OptionControl/SubjectiveOptionControl/styles";
+import { useRecoilState } from "recoil";
+import { selectedQuestionState } from "../../../../States/SurveyState";
 
 export const SubjectiveOptionControl = () => {
   const [changeType, setChangeType] = useState<string>("");
+  const [selectedQuestion, setSelectedQuestion] = useRecoilState(
+    selectedQuestionState
+  );
   const changeToMultiple = () => {
     setChangeType("MULTIPLE");
+    setSelectedQuestion((prevQuestion) => ({
+      ...prevQuestion,
+      id: prevQuestion.id,
+      type: "MULTIPLE",
+      title: "title" in prevQuestion ? prevQuestion.title : "",
+      explanation:
+        "explanation" in prevQuestion ? prevQuestion.explanation : "",
+      questionNumber: prevQuestion.questionNumber,
+      finalQuestion: false,
+      nextQuestionNumber: "0",
+      numberOfAnswerChoices: 1,
+      answers: [""],
+      logics: [],
+    }));
   };
   const changeToRange = () => {
     setChangeType("RANGE");
-  };
-
-  const multipleAnswerToggle = (checked: boolean) => {
-    console.log("multiple answer toggle selected: ", checked);
-  };
-
-  const multipleAnswerNumberToggle = (value: number) => {
-    console.log("changed: ", value);
+    setSelectedQuestion((prevQuestion) => ({
+      ...prevQuestion,
+      id: prevQuestion.id,
+      type: "RANGE",
+      title: "title" in prevQuestion ? prevQuestion.title : "",
+      explanation:
+        "explanation" in prevQuestion ? prevQuestion.explanation : "",
+      questionNumber: prevQuestion.questionNumber,
+      finalQuestion: false,
+      nextQuestionNumber: "0",
+      value: 0,
+      min: 0,
+      max: 5,
+    }));
   };
 
   const items: MenuProps["items"] = [

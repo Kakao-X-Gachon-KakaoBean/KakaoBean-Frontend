@@ -36,11 +36,6 @@ export const MultipleOptionControl = () => {
         }
       }
     }
-    // if ("numberOfAnswerChoices" in selectedQuestion) {
-    //   if (typeof selectedQuestion.numberOfAnswerChoices === "number") {
-    //     setMultipleAnswerNumber(selectedQuestion.numberOfAnswerChoices);
-    //   }
-    // }
   }, [selectedQuestion]);
 
   useEffect(() => {
