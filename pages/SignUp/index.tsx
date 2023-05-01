@@ -15,6 +15,8 @@ import useInput from "@hooks/useInput";
 import { useMutation, useQuery } from "react-query";
 import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const [name, onChangeName, setName] = useInput("");
@@ -109,6 +111,9 @@ const SignUp = () => {
   const onSubmitEmail = useCallback(
     (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e?.preventDefault();
+      const message = (message: string) => (
+        <div style={{ fontSize: "1rem" }}>{message}</div>
+      );
 
       if (!email || !email.trim()) return;
 
@@ -120,11 +125,12 @@ const SignUp = () => {
         )
         .then((response) => {
           setFailUseEmail(true);
-          alert("이메일을 발송하였습니다.");
-          console.log(response);
+          toast(message("메일로 인증번호가 발송되었습니다."), {
+            type: "success",
+          });
         })
         .catch((error) => {
-          alert("이메일 발송에 실패했습니다.");
+          toast(message("메일 주소를 확인해주세요."), { type: "error" });
           setFailUseEmail(false);
           console.log(error.response);
         });
@@ -132,10 +138,21 @@ const SignUp = () => {
     [email]
   );
 
-  console.log(gender);
   return (
     <>
       <Wrapper>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        ></ToastContainer>
         <Header>회원가입</Header>
         <SubHeader>
           <div>이미 BeanBay 회원이신가요?</div>
