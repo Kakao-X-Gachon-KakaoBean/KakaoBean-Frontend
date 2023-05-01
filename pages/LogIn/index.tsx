@@ -11,6 +11,7 @@ import {
   Input,
   KakaoBtn,
   Label,
+  Line,
   LoginBtn,
   SearchBox,
   SearchBtn,
@@ -123,25 +124,23 @@ const LogIn = () => {
             <span
               style={{
                 display: "flex",
-                flexDirection: "row",
               }}
             >
               <SearchBtn type="button" onClick={onCloseEmailModal}>
-                이메일 찾기
+                이메일 찾기 /
               </SearchBtn>
               <SearchBtn type="button" onClick={onClosePasswordModal}>
                 비밀번호 찾기
               </SearchBtn>
             </span>
             <span>
-              <span>신규 회원이신가요? </span>
               <Link style={{ fontWeight: "bold" }} to="/signup">
                 회원 가입
               </Link>
             </span>
           </SearchBox>
         </Form>
-        <div>또는</div>
+        <Line>또는</Line>
         <SocialLogin>
           <GoogleBtn
             href={
