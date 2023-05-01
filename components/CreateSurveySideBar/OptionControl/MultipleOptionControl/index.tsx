@@ -13,8 +13,18 @@ export const MultipleOptionControl = () => {
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
   );
-  const [isMultipleAnswer, setIsMultipleAnswer] = useState<boolean>(false);
-  const [multipleAnswerNumber, setMultipleAnswerNumber] = useState<number>(1);
+  const [multipleAnswerNumber, setMultipleAnswerNumber] = useState<number>(
+    "numberOfAnswerChoices" in selectedQuestion
+      ? selectedQuestion.numberOfAnswerChoices
+      : 1
+  );
+  const [isMultipleAnswer, setIsMultipleAnswer] = useState<boolean>(
+    "numberOfAnswerChoices" in selectedQuestion
+      ? selectedQuestion.numberOfAnswerChoices >= 2
+        ? true
+        : false
+      : false
+  );
   const [minimumAnswerNumber, setMinimumAnswerNumber] = useState<number>(1);
   const [maximumAnswerNumber, setMaximumAnswerNumber] = useState<number>(1);
 
@@ -26,11 +36,11 @@ export const MultipleOptionControl = () => {
         }
       }
     }
-    if ("numberOfAnswerChoices" in selectedQuestion) {
-      if (typeof selectedQuestion.numberOfAnswerChoices === "number") {
-        setMultipleAnswerNumber(selectedQuestion.numberOfAnswerChoices);
-      }
-    }
+    // if ("numberOfAnswerChoices" in selectedQuestion) {
+    //   if (typeof selectedQuestion.numberOfAnswerChoices === "number") {
+    //     setMultipleAnswerNumber(selectedQuestion.numberOfAnswerChoices);
+    //   }
+    // }
   }, [selectedQuestion]);
 
   useEffect(() => {
@@ -124,7 +134,10 @@ export const MultipleOptionControl = () => {
       </DropDownDiv>
       <OptionDiv>
         다중 답안 선택&nbsp;&nbsp;
-        <Switch onChange={multipleAnswerToggle} />
+        <Switch
+          onChange={multipleAnswerToggle}
+          defaultChecked={isMultipleAnswer}
+        />
         <InputNumber
           min={minimumAnswerNumber}
           max={maximumAnswerNumber}

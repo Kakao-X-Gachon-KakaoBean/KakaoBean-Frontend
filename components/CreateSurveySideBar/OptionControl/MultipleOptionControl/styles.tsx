@@ -4,6 +4,7 @@ export const DropDownDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 3.3rem;
 `;
 
 export const OptionDiv = styled.div`
