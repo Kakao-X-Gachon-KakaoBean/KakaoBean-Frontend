@@ -10,24 +10,35 @@ import {
 interface subProps {
   id: string;
   onChange: (updatedQuestion: RangeBarQuestion) => void;
+  question: {
+    id: string;
+    type: string;
+    title: string;
+    explanation: string;
+    questionNumber: string;
+    finalQuestion: boolean;
+    nextQuestionNumber: string;
+    value: number;
+    min: number;
+    max: number;
+  };
 }
 export const RangeBarQuestions = (props: subProps) => {
-  const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
-    id: props.id,
-    type: "RANGE",
-    title: "",
-    explanation: "",
-    questionNumber: "",
-    finalQuestion: false,
-    nextQuestionNumber: "0",
-    value: 0,
-    min: 0,
-    max: 5,
-  });
+  const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>(
+    props.question
+  );
 
   useEffect(() => {
     props.onChange(rangeBarQuestions);
   }, [rangeBarQuestions]);
+
+  useEffect(() => {
+    setRangeBarQuestions((prevState) => ({
+      ...prevState,
+      min: props.question.min,
+      max: props.question.max,
+    }));
+  }, [props.question.min, props.question.max]);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRangeBarQuestions({
@@ -82,6 +93,7 @@ export const RangeBarQuestions = (props: subProps) => {
       />
       <MinMaxRange style={{ display: "flex", justifyContent: "space-between" }}>
         <InputNumber
+          disabled={true}
           min={0}
           max={1000}
           value={rangeBarQuestions.min}
@@ -91,6 +103,7 @@ export const RangeBarQuestions = (props: subProps) => {
           style={{ width: "50px", borderWidth: 0 }}
         />
         <InputNumber
+          disabled={true}
           min={0}
           max={1000}
           value={rangeBarQuestions.max}

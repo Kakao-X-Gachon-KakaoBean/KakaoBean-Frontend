@@ -10,18 +10,19 @@ import {
 interface subProps {
   id: string;
   onChange: (updatedQuestion: SubjectiveQuestion) => void;
+  question: {
+    id: string;
+    type: string;
+    title: string;
+    explanation: string;
+    questionNumber: string;
+    finalQuestion: boolean;
+    nextQuestionNumber: string;
+  };
 }
 export const SubjectiveQuestions = (props: subProps) => {
   const [subjectiveQuestions, setSubjectiveQuestions] =
-    useState<SubjectiveQuestion>({
-      id: props.id,
-      type: "ESSAY",
-      title: "",
-      explanation: "",
-      questionNumber: "",
-      finalQuestion: false,
-      nextQuestionNumber: "0",
-    });
+    useState<SubjectiveQuestion>(props.question);
 
   useEffect(() => {
     props.onChange(subjectiveQuestions);
