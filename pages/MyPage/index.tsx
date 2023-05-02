@@ -6,8 +6,8 @@ import { Redirect, Route, Switch } from "react-router";
 import loadable from "@loadable/component";
 
 const MyInfo = loadable(() => import("@components/MyInfo"));
-const MySurvey = loadable(() => import("@components/MySurvey"));
 const SurveyInfo = loadable(() => import("@components/SurveyInfo"));
+const MySurvey = loadable(() => import("@components/MySurvey"));
 
 const MyPage = () => {
   const [sideBar, setSideBar] = useState(true);
