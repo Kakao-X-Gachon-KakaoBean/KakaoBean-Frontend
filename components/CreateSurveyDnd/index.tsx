@@ -26,7 +26,6 @@ import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/Rang
 import {
   getQuestionTypeItemStyle,
   getQuestionTypeListStyle,
-  getQuestionsItemStyle,
   getQuestionsListStyle,
   QuestionTypeListDiv,
   QuestionsListDiv,
@@ -38,12 +37,14 @@ import {
   SidebarQuestionDelete,
   SidebarSelectedQuestion,
   SidebarNoneSelectedQuestion,
+  getQuestionsItemSelectedStyle,
+  getQuestionsItemNoneSelectedStyle,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 import Product from "@pages/Product";
-import { Input } from "antd";
+import { Button, Input } from "antd";
 import { Link, Element } from "react-scroll";
 
 const CreateSurveyDnd = (): JSX.Element => {
@@ -355,10 +356,17 @@ const CreateSurveyDnd = (): JSX.Element => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            style={getQuestionsItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
+                            style={
+                              item.id === selectedQuestion.id
+                                ? getQuestionsItemSelectedStyle(
+                                    snapshot.isDragging,
+                                    provided.draggableProps.style
+                                  )
+                                : getQuestionsItemNoneSelectedStyle(
+                                    snapshot.isDragging,
+                                    provided.draggableProps.style
+                                  )
+                            }
                           >
                             {item.type === "MULTIPLE" && (
                               <MultipleChoiceQuestions
@@ -396,6 +404,20 @@ const CreateSurveyDnd = (): JSX.Element => {
                 </div>
               )}
             </Droppable>
+            {questionItems.length >= 1 ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "1rem",
+                  marginBottom: "2rem",
+                }}
+              >
+                <Button type={"primary"}>설문 생성하기</Button>
+              </div>
+            ) : (
+              <div></div>
+            )}
           </QuestionsListDiv>
         )}
       </Wrapper>

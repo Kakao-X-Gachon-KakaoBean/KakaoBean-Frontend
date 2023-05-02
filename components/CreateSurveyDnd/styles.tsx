@@ -27,7 +27,7 @@ export const getQuestionTypeListStyle = (
   padding: 8,
 });
 
-export const getQuestionsItemStyle = (
+export const getQuestionsItemNoneSelectedStyle = (
   isDragging: boolean,
   draggableStyle: any
 ): React.CSSProperties => ({
@@ -38,6 +38,29 @@ export const getQuestionsItemStyle = (
   boxShadow: `0px 2px 4px rgba(0,0,0,0.3)`,
   background: isDragging ? "white" : "white",
   ...draggableStyle,
+});
+
+export const getQuestionsItemSelectedStyle = (
+  isDragging: boolean,
+  draggableStyle: any
+): React.CSSProperties => ({
+  borderRadius: 10,
+  userSelect: "none",
+  padding: 20,
+  margin: `0 0 15px 0`,
+  boxShadow: `0 0 1rem rgba(0,0,255,0.3)`,
+  background: isDragging ? "white" : "white",
+  ...draggableStyle,
+});
+
+export const getQuestionsListStyle = (
+  isDraggingOver: boolean
+): React.CSSProperties => ({
+  borderRadius: 10,
+  border: "1px solid",
+  borderColor: "D3D3D3",
+  background: isDraggingOver ? "white" : "white",
+  padding: `50px 70px 50px 70px`,
 });
 
 export const SidebarNoneSelectedQuestion = styled(Button)`
@@ -74,16 +97,6 @@ export const SidebarQuestionDelete = styled.div`
   margin-left: 0.1rem;
   flex-wrap: wrap;
 `;
-
-export const getQuestionsListStyle = (
-  isDraggingOver: boolean
-): React.CSSProperties => ({
-  borderRadius: 10,
-  border: "1px solid",
-  borderColor: "D3D3D3",
-  background: isDraggingOver ? "white" : "white",
-  padding: `50px 70px 50px 70px`,
-});
 
 export const Wrapper = styled.div`
   display: flex;
