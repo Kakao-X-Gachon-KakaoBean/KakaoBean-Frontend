@@ -9,6 +9,8 @@ import {
   InputGender,
   Label2,
   CheckLabel,
+  EmailLabel,
+  EmailInput,
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
@@ -161,46 +163,37 @@ const SignUp = () => {
           </div>
         </SubHeader>
         <Form onSubmit={onSubmit}>
-          <Label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              value={name}
-              onChange={onChangeName}
-              placeholder="이름"
+          <EmailLabel>
+            <EmailInput
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={onChangeEmail}
+              placeholder="이메일"
             />
-          </Label>
-          <CheckLabel>
-            <Label2>
-              <InputGender
-                type="radio"
-                name="성별"
-                value="MALE"
-                onChange={oncChangeGender}
+            <CheckBtn
+              type="button"
+              onClick={(e) => {
+                onSubmitEmail(e);
+              }}
+            >
+              이메일 인증
+            </CheckBtn>
+          </EmailLabel>
+
+          {failUseEmail && (
+            <Label>
+              <Input
+                type="text"
+                id="authKey"
+                name="authKey"
+                value={emailAuthKey}
+                onChange={onChangeEmailAuthKey}
+                placeholder="인증번호 입력"
               />
-              <span>남자</span>
-            </Label2>
-            <Label2>
-              <InputGender
-                type="radio"
-                name="성별"
-                value="FEMALE"
-                onChange={oncChangeGender}
-              />
-              <span>여자</span>
-            </Label2>
-          </CheckLabel>
-          <Label>
-            <Input
-              type="text"
-              id="birth"
-              name="birth"
-              value={birth}
-              onChange={onchangeBirth}
-              placeholder="생년월일 ex) 1999-10-01"
-            />
-          </Label>
+            </Label>
+          )}
           <Label>
             <Input
               type="password"
@@ -223,49 +216,47 @@ const SignUp = () => {
           </Label>
           <Label>
             <Input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={onChangeEmail}
-              placeholder="이메일"
+              type="text"
+              id="name"
+              name="name"
+              value={name}
+              onChange={onChangeName}
+              placeholder="이름"
             />
           </Label>
-          <CheckBtn
-            type="button"
-            onClick={(e) => {
-              // onCloseEmailModal();
-              onSubmitEmail(e);
-            }}
-          >
-            이메일 인증
-          </CheckBtn>
-          {failUseEmail && (
-            <Label>
-              <Input
-                type="text"
-                id="authKey"
-                name="authKey"
-                value={emailAuthKey}
-                onChange={onChangeEmailAuthKey}
-                placeholder="인증번호 입력"
+          <Label>
+            <Input
+              type="text"
+              id="birth"
+              name="birth"
+              value={birth}
+              onChange={onchangeBirth}
+              placeholder="생년월일 ex) 1999-10-01"
+            />
+          </Label>
+          <CheckLabel>
+            <Label2>
+              <InputGender
+                type="radio"
+                name="성별"
+                value="MALE"
+                onChange={oncChangeGender}
               />
-            </Label>
-          )}
+              <span>남자</span>
+            </Label2>
+            <Label2>
+              <InputGender
+                type="radio"
+                name="성별"
+                value="FEMALE"
+                onChange={oncChangeGender}
+              />
+              <span>여자</span>
+            </Label2>
+          </CheckLabel>
           <LoginBtn type="submit">가입하기</LoginBtn>
           {signUpSuccess && <div>회원가입에 성공하셨습니다.</div>}
         </Form>
-        {/*{emailModal && (*/}
-        {/*  <Menu show={emailModal} onCloseModal={onCloseEmailModal}>*/}
-        {/*    <SearchEmail*/}
-        {/*      email={email}*/}
-        {/*      onChangeEmail={onChangeEmail}*/}
-        {/*      onCloseCheckEmailModal={onCloseEmailModal}*/}
-        {/*      emailAuthKey={emailAuthKey}*/}
-        {/*      onChangeEmailAuthKey={onChangeEmailAuthKey}*/}
-        {/*    />*/}
-        {/*  </Menu>*/}
-        {/*)}*/}
       </Wrapper>
     </>
   );
