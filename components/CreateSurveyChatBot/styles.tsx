@@ -4,8 +4,9 @@ export const DialogButton = styled.button`
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  background-color: rgba(64, 207, 255, 0.8);
-  color: white;
+  background-color: white;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: black;
   font-size: 1rem;
   font-weight: 400;
   border: none;

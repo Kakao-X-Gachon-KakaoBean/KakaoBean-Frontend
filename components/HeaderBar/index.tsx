@@ -4,8 +4,10 @@ import Logo from "../../image/beanSolo.png";
 import { Link } from "react-router-dom";
 import {
   Bar,
+  Header,
   Img,
   LeftMenu,
+  Links,
   MainBar,
   RightMenu,
   TopMenu,
@@ -30,35 +32,36 @@ const HeaderBar = () => {
         <TopMenu>
           <Link to="/main" style={{ textDecoration: "none" }}>
             <LeftMenu>
-              <Img src={Logo} alt="" />
+              {/*<Img src={Logo} alt="" />*/}
+              <Header>BeanBay</Header>
             </LeftMenu>
           </Link>
           <RightMenu>
-            <span>
+            <Links>
               <Link to="/product">Product</Link>
-            </span>
-            <span>
+            </Links>
+            <Links>
               <Link to="/team">
                 <span>Team</span>
               </Link>
-            </span>
-            <span>
+            </Links>
+            <Links>
               <Link to="/mypage">
                 <span>MY PAGE</span>
               </Link>
-            </span>
-            <span>
+            </Links>
+            <Links>
               {!isLogin ? (
                 <Link to="/login">Login</Link>
               ) : (
                 <div onClick={onLogout}>Logout</div>
               )}
-            </span>
-            <span>
+            </Links>
+            <Links>
               <Link to="/createsurvey">
                 <span>Get Start</span>
               </Link>
-            </span>
+            </Links>
           </RightMenu>
         </TopMenu>
       </MainBar>
