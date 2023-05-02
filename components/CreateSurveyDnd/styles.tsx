@@ -98,8 +98,8 @@ export const QuestionsAndType = styled.div`
   top: 10rem;
   padding-right: 1rem;
   margin: 0 auto;
-  height: 30rem;
-  overflow-y: scroll;
+  height: 43%;
+  overflow-y: auto;
   z-index: 1;
   background-color: white;
 `;

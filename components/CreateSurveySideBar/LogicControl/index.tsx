@@ -109,6 +109,7 @@ export const LogicControl = () => {
   //로직 삭제
   const DeleteLogic = (i: number, value: string) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
+
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
 

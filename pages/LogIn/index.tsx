@@ -16,6 +16,7 @@ import {
   SearchBox,
   SearchBtn,
   SocialLogin,
+  Vertical,
   Wrapper,
 } from "@pages/LogIn/styles";
 import { Link } from "react-router-dom";
@@ -127,12 +128,14 @@ const LogIn = () => {
               }}
             >
               <SearchBtn type="button" onClick={onCloseEmailModal}>
-                이메일 찾기 /
+                이메일 찾기
               </SearchBtn>
+              <div>/</div>
               <SearchBtn type="button" onClick={onClosePasswordModal}>
                 비밀번호 찾기
               </SearchBtn>
             </span>
+            <Vertical></Vertical>
             <span>
               <Link style={{ fontWeight: "bold" }} to="/signup">
                 회원 가입

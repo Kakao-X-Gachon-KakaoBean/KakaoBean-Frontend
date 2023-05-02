@@ -1,4 +1,5 @@
-import { Wrapper, Text, TextDiv, Button } from "./styles";
+import { Wrapper, Text, TextDiv } from "./styles";
+import { Button } from "antd";
 import React from "react";
 
 const MainFirst = () => {
