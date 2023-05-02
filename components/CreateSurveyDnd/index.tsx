@@ -343,6 +343,102 @@ const CreateSurveyDnd = (): JSX.Element => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
+        <QuestionsAndType>
+          <SidebarQuestions>
+            <Input
+              size="large"
+              placeholder="설문 제목"
+              bordered={false}
+              style={{ fontWeight: "bold" }}
+              onChange={(event) => {
+                setSurveyTitle(event.target.value);
+              }}
+            />
+            <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
+            {questionItems.map((item, index) => {
+              const SidebarQuestion =
+                selectedQuestion.id === item.id
+                  ? SidebarSelectedQuestion
+                  : SidebarNoneSelectedQuestion;
+              return (
+                <Link to={item.id} smooth={true} key={index} offset={-220}>
+                  <SidebarQuestion
+                    onClick={() => {
+                      if (
+                        item.type == "MULTIPLE" ||
+                        item.type == "ESSAY" ||
+                        item.type == "RANGE"
+                      ) {
+                        handleQuestionClick(item, index);
+                      }
+                    }}
+                    style={
+                      "title" in item
+                        ? {
+                            color: isEmptyTitle(item.title) ? "gray" : "black",
+                          }
+                        : { color: "black" }
+                    }
+                  >
+                    <SidebarQuestionTitle>
+                      Q.{index + 1 + " "}
+                      {"title" in item
+                        ? item.title == ""
+                          ? "제목 없음"
+                          : item.title
+                        : "제목 타입 없음"}
+                    </SidebarQuestionTitle>
+                    <SidebarQuestionDelete
+                      onClick={() => {
+                        const newQuestionItems = [
+                          ...questionItems.slice(0, index),
+                          ...questionItems.slice(index + 1),
+                        ];
+                        setQuestionItems(newQuestionItems);
+                      }}
+                    >
+                      X
+                    </SidebarQuestionDelete>
+                  </SidebarQuestion>
+                </Link>
+              );
+            })}
+          </SidebarQuestions>
+          <QuestionTypeListDiv>
+            <Droppable droppableId="questionType" isDropDisabled={true}>
+              {(provided, snapshot) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
+                >
+                  {questionTypeItems.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getQuestionTypeItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                        >
+                          {item.content}
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </QuestionTypeListDiv>
+        </QuestionsAndType>
         {viewLogic === "logic" ? (
           <LogicDiv>
             <LogicTab />

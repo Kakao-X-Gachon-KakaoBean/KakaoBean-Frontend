@@ -2,8 +2,9 @@ import styled from "@emotion/styled";
 
 // component style
 export const CreateSurveyDiv = styled.div`
-  display: grid;
-  grid-template-columns: 0.7fr 0.3fr;
+  display: flex;
+  flex: 1;
+  justify-content: center;
   min-height: 100vh;
   margin-top: -2rem;
 `;

@@ -34,7 +34,7 @@ export const getQuestionsItemStyle = (
   borderRadius: 10,
   userSelect: "none",
   padding: 20,
-  margin: `0 0 10px 0`,
+  margin: `0 0 15px 0`,
   boxShadow: `0px 2px 4px rgba(0,0,0,0.3)`,
   background: isDragging ? "white" : "white",
   ...draggableStyle,
@@ -82,7 +82,7 @@ export const getQuestionsListStyle = (
   border: "1px solid",
   borderColor: "D3D3D3",
   background: isDraggingOver ? "white" : "white",
-  padding: `50px 100px 50px 100px`,
+  padding: `50px 70px 50px 70px`,
 });
 
 export const Wrapper = styled.div`
@@ -119,13 +119,11 @@ export const QuestionTypeListDiv = styled.div`
 `;
 
 export const QuestionsListDiv = styled.div`
-  flex-grow: 1;
   padding-top: 10rem;
-  margin-left: 21rem;
+  width: 50%;
 `;
 
 export const LogicDiv = styled.div`
-  flex-grow: 1;
-  padding-top: 5rem;
-  margin-left: 5rem;
+  padding-top: 10rem;
+  width: 50%;
 `;
