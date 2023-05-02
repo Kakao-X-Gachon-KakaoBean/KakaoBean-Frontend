@@ -10,6 +10,7 @@
   "author": "SeongJun",
   "license": "MIT",
   "dependencies": {
+    "@emotion/babel-plugin": "^11.10.8",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
