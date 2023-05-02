@@ -25,7 +25,7 @@ export const Form = styled.form`
 `;
 
 export const Label = styled.div`
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.4rem;
 
   & span {
     text-align: left;
@@ -35,6 +35,7 @@ export const Label = styled.div`
     width: 7rem;
   }
 `;
+
 export const Input = styled.input`
   color: #969696;
   background-color: #ffffff;
@@ -79,13 +80,19 @@ export const SearchBox = styled.div`
   }
 `;
 
+export const Vertical = styled.div`
+  border-left: 1px solid #32a1ce;
+
+  height: 1.4rem;
+`;
+
 export const SearchBtn = styled.button`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   vertical-align: middle;
   text-align: center;
-  width: 7rem;
+  width: 6.5rem;
   height: 1.6rem;
   background-color: white;
   border: none;
@@ -141,6 +148,7 @@ export const LoginBtn = styled.button`
   border: none;
   &:hover {
     background-color: #039ba1;
+    color: white;
     border: none;
   }
 `;

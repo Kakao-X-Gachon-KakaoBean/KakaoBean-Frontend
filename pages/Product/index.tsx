@@ -23,8 +23,6 @@ import {
 } from "@pages/Product/styles";
 import { Select } from "antd";
 import { DeleteOption } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -129,6 +127,7 @@ export default function Product() {
   };
   console.log(logics);
 
+  //로직 삭제
   const DeleteLogic = (i: number) => {
     const updatedLogics = [...logics];
     const updatedCounts = [...count];
@@ -174,6 +173,7 @@ export default function Product() {
     setLogics(updatedLogics);
   };
 
+  //조건 삭제
   const DeleteCondition = (i: number, index: number) => {
     const updatedLogics = [...logics];
     const selNodeNumber = Number(selNode);
@@ -262,7 +262,7 @@ export default function Product() {
 
     newNodeTuple.push(submitNode);
     newEdgeTuple.push(submitEdge);
-    QuestionList.push({ value: 0, label: "제출하기" });
+    QuestionList.push({ value: "0", label: "제출하기" });
 
     console.log(newNodeTuple);
     setNodes(newNodeTuple);
@@ -452,6 +452,7 @@ export default function Product() {
                           조건 추가 하기
                         </Button>
                       </LogicBody>
+                      동
                       <LogicBottom>
                         이동 :
                         <Select

@@ -1,9 +1,9 @@
 import styled from "@emotion/styled";
 
 export const Header = styled.div`
-  font-size: 4em;
-  font-weight: 500;
-  margin-bottom: 0.8rem;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
   line-height: 77px;
   letter-spacing: 0.1em;
   text-align: center;
@@ -33,14 +33,69 @@ export const Form = styled.form`
   align-items: flex-start;
   flex-direction: column;
 `;
-export const Input = styled.input`
+
+export const EmailLabel = styled.div`
+  margin-bottom: 0.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+`;
+
+export const EmailInput = styled.input`
   color: #969696;
-  background-color: #ffffff;
+  background: #ffffff;
   position: relative;
   box-sizing: border-box;
-  box-shadow: 0 4px 4px 0 #00000040;
-  border: 1px solid #969696;
-  border-radius: 12px;
+  border: 1px solid #e6e8eb;
+  border-radius: 8px;
+  width: 25rem;
+  height: 3.5rem;
+  outline: none;
+  font-size: 1.3rem;
+  padding: 10px 15px 12px;
+  margin-top: 0.9rem;
+  margin-bottom: 0.3rem;
+  :focus {
+    border: 1px solid gray;
+  }
+  ::placeholder {
+    font-size: 1.3rem;
+    font-weight: 200;
+    color: #969696;
+  }
+`;
+
+export const CheckBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 6rem;
+  height: 3.5rem;
+  background: #f2fcfc;
+  border: 1px solid #b6e4e5;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #b6e4e5;
+  cursor: pointer;
+  margin-top: 0.9rem;
+  margin-bottom: 0.3rem;
+  &:hover {
+    background-color: #039ba1;
+    color: white;
+    border: none;
+  }
+`;
+
+export const Input = styled.input`
+  color: #969696;
+  background: #ffffff;
+  position: relative;
+  box-sizing: border-box;
+  border: 1px solid #e6e8eb;
+  border-radius: 8px;
   width: 32rem;
   height: 3.5rem;
   outline: none;
@@ -67,15 +122,15 @@ export const Label2 = styled.label`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #969696;
-  background-color: #ffffff;
+  color: #6c747a;
+  background: #e6e8eb;
   position: relative;
   box-sizing: border-box;
-  box-shadow: 0 4px 4px 0 #00000040;
-  border: 1px solid #969696;
-  border-radius: 12px;
+  border: 1px solid #e6e8eb;
+  border-radius: 8px;
   width: 15rem;
   height: 3.5rem;
+  font-weight: 600;
   outline: none;
   font-size: 1.3rem;
   padding: 10px 15px 12px;
@@ -83,56 +138,23 @@ export const Label2 = styled.label`
   margin-bottom: 0.3rem;
 
   & input[type="radio"]:checked + span {
-    color: black;
+    color: white;
+  }
+
+  & input[type="radio"]:checked {
+    background-color: black;
   }
 `;
-
 export const InputGender = styled.input`
-  //color: #969696;
-  //background-color: #ffffff;
-  //position: relative;
-  //box-sizing: border-box;
-  //box-shadow: 0 4px 4px 0 #00000040;
-  //border: 1px solid #969696;
-  //gap: 2rem;
-  //border-radius: 12px;
-  //width: 13rem;
-  //height: 3.5rem;
-  //outline: none;
-  //font-size: 1.3rem;
-  //padding: 10px 15px 12px;
-  //margin-top: 0.9rem;
-  //margin-bottom: 0.3rem;
   :focus {
     border: 1px solid gray;
   }
   ::placeholder {
     font-size: 1.3rem;
-    font-weight: 200;
-    color: #969696;
+    font-weight: 600;
+    color: #6c747a;
   }
   &[type="radio"] {
     display: none;
-  }
-`;
-export const CheckBtn = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 6rem;
-  height: 2rem;
-  background-color: #8cafa3;
-  box-shadow: 0 4px 4px 0 #00000040;
-  color: white;
-  border-radius: 10px;
-  outline: none;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  border: none;
-  margin-bottom: 0.3rem;
-  &:hover {
-    background-color: #969696;
-    border: none;
   }
 `;
