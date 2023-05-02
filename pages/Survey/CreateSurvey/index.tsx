@@ -9,8 +9,8 @@ import HeaderBar from "@components/HeaderBar";
 const CreateSurvey = (): JSX.Element => {
   return (
     <>
-      <HeaderBar />
       <CreateSurveyDiv>
+        <HeaderBar />
         <CreateSurveyDnd />
         <CreateSurveySideBar />
         <CreateSurveyChatBot />
