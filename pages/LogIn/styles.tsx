@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
 `;
 export const Header = styled.div`
   font-size: 4em;
-  font-weight: 300;
+  font-weight: 800;
   margin-bottom: 0.8rem;
   line-height: 77px;
   letter-spacing: 0.1em;
@@ -40,9 +40,9 @@ export const Input = styled.input`
   background-color: #ffffff;
   position: relative;
   box-sizing: border-box;
-  box-shadow: 0 4px 4px 0 #00000040;
-  border: 1px solid #969696;
-  border-radius: 12px;
+  //box-shadow: 0 4px 4px 0 #00000040;
+  border: 1px solid #e6e8eb;
+  border-radius: 8px;
   width: 32rem;
   height: 4rem;
   outline: none;
@@ -55,7 +55,7 @@ export const Input = styled.input`
   ::placeholder {
     font-size: 1.3rem;
     font-weight: 200;
-    color: #969696;
+    color: #858d93;
   }
 `;
 
@@ -64,9 +64,14 @@ export const SearchBox = styled.div`
   justify-content: space-between;
   width: 30rem;
   font-size: 1rem;
-  margin-top: 0.8rem;
+  padding: 3rem 0;
   & span {
-    color: #343434;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15rem;
+    color: #858d93;
+
     & a {
       text-decoration: none;
       color: inherit;
@@ -85,6 +90,36 @@ export const SearchBtn = styled.button`
   background-color: white;
   border: none;
   font-size: 1rem;
+  color: #858d93;
+`;
+
+export const Line = styled.div`
+  width: 34rem;
+  display: flex;
+  align-items: center;
+  color: #6c747a;
+  font-size: 1rem;
+  margin: 8px 0;
+
+  ::before {
+    content: "";
+    flex-grow: 1;
+    margin: 0 1rem;
+    background-color: #6c747a;
+    height: 1px;
+    font-size: 0;
+    line-height: 0;
+  }
+
+  ::after {
+    content: "";
+    flex-grow: 1;
+    margin: 0 1rem;
+    background-color: #6c747a;
+    height: 1px;
+    font-size: 0;
+    line-height: 0;
+  }
 `;
 
 export const LoginBtn = styled.button`
@@ -95,10 +130,9 @@ export const LoginBtn = styled.button`
   text-align: center;
   width: 32rem;
   height: 4rem;
-  background-color: #8cafa3;
-  box-shadow: 0 4px 4px 0 #00000040;
-  color: white;
-  border-radius: 10px;
+  background: #f1f3f5;
+  border-radius: 8px;
+  color: #b8c0c5;
   outline: none;
   font-size: 1.5rem;
   font-weight: 700;
@@ -106,7 +140,7 @@ export const LoginBtn = styled.button`
   margin-top: 1rem;
   border: none;
   &:hover {
-    background-color: #969696;
+    background-color: #039ba1;
     border: none;
   }
 `;
@@ -121,13 +155,13 @@ export const GoogleBtn = styled.a`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff;
+  background: #ffffff;
   font-size: 1.3rem;
   box-sizing: border-box;
   width: 32rem;
   height: 4rem;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
+  border: 1px solid #e6e8eb;
+  border-radius: 8px;
   text-decoration: none;
   color: black;
 `;
@@ -142,9 +176,9 @@ export const KakaoBtn = styled.a`
   text-decoration: none;
   width: 32rem;
   height: 4rem;
-  background: #ebeca8;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
+  background: #ffeb3b;
+  border: 1px solid #e6e8eb;
+  border-radius: 8px;
 `;
 
 export const Img = styled.img`

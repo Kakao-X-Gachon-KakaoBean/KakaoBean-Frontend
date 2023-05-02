@@ -1,6 +1,11 @@
-export interface Logic {
-  conditionOfQuestionAnswers: string[];
+export interface LogicDetail {
+  conditionOfQuestionAnswers: any[];
   nextQuestionNumber: string;
+}
+
+export interface Logic {
+  id: string;
+  logics: LogicDetail[];
 }
 
 export interface MultipleQuestion {

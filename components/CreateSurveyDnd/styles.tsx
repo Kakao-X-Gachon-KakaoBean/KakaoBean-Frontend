@@ -40,7 +40,7 @@ export const getQuestionsItemStyle = (
   ...draggableStyle,
 });
 
-export const SidebarQuestion = styled(Button)`
+export const SidebarNoneSelectedQuestion = styled(Button)`
   display: flex;
   width: 12.3rem;
   height: 3rem;
@@ -50,6 +50,18 @@ export const SidebarQuestion = styled(Button)`
   flex-direction: row;
   border-radius: 0.4rem;
   box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.3);
+`;
+export const SidebarSelectedQuestion = styled(Button)`
+  display: flex;
+  width: 12.3rem;
+  height: 3rem;
+  margin-top: 0.2rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  border-radius: 0.4rem;
+  background-color: rgba(0, 0, 200, 0.03);
+  box-shadow: 1px 3px 1px rgb(0, 0, 200, 0.3);
 `;
 
 export const SidebarQuestionTitle = styled.div`
@@ -114,6 +126,6 @@ export const QuestionsListDiv = styled.div`
 
 export const LogicDiv = styled.div`
   flex-grow: 1;
-  padding-top: 10rem;
-  margin-left: 21rem;
+  padding-top: 5rem;
+  margin-left: 5rem;
 `;

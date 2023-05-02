@@ -11,19 +11,16 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { Logic } from "@pages/Product/type";
 import {
+  ConditionSection,
   LogicBody,
   LogicBottom,
-  LogicHeader,
-  LogicSection,
-  RightSide,
+  LogicTab,
   SelectSection,
   SideBar,
   Wrapper,
 } from "@pages/Product/styles";
 import { Select } from "antd";
 import { DeleteOption } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -128,8 +125,66 @@ export default function Product() {
   };
   console.log(logics);
 
-  const DeleteLogic = (i: number) => {
+  //로직 삭제
+  const DeleteLogic = (i: number, value: string) => {
     const updatedLogics = [...logics];
+    let updatedEdges = [...edges];
+    let updatedNodes = [...nodes];
+
+    const newEdge: Edge = {
+      id: "e" + selNode + "-" + value + "-animated",
+      source: String(selNode),
+      target: String(value),
+      animated: true,
+    };
+    const originValue =
+      updatedLogics[Number(selNode)].logics[i].nextQuestionNumber;
+    const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
+
+    updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = "" + value;
+    setLogics(updatedLogics);
+
+    //변경이 필요한 노드들의 위치를 수정
+
+    if (value == "0") {
+      updatedNodes.forEach((node) => {
+        if (Number(node.id) > Number(selNode)) {
+          node.position.x = rootXAxis + 100;
+        }
+      });
+    } else if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+      updatedNodes.forEach((node) => {
+        if (
+          node.id === String(selNode) ||
+          node.id === String(value) ||
+          node.id === "0" ||
+          Number(node.id) < Number(selNode) ||
+          Number(node.id) > Number(value)
+        ) {
+          node.position.x = rootXAxis;
+        } else {
+          node.position.x = rootXAxis + 100;
+        }
+      });
+    }
+
+    //다음질문이 여러번 변경되면 그 전에 저장되었던 다음 질문과 연결된 edge 제거하기
+    updatedEdges = updatedEdges.filter((edge) => {
+      return !(
+        edge.source === selNode &&
+        edge.target == originValue &&
+        edge.animated
+      );
+    });
+
+    //다음질문이 기본이동과 동일하지 않을때만 edge 생성
+    if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+      updatedEdges.push(newEdge);
+    }
+
+    setEdges(updatedEdges);
+    setNodes(updatedNodes);
+
     const updatedCounts = [...count];
     updatedLogics[Number(selNode)].logics.splice(i, 1);
     updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] - 1;
@@ -160,6 +215,28 @@ export default function Product() {
 
     updateMultiCondition[Number(selNode)] = times;
     setIsMultiCondition(updateMultiCondition);
+  };
+
+  //로직->조건 변경시 호출. node위치 및 edge 변경 필요
+  const ConditionChange = (i: number, index: number, value: string) => {
+    const updatedLogics = [...logics];
+    const selNodeNumber = Number(selNode);
+    const targetLogic = updatedLogics[selNodeNumber].logics[i];
+
+    targetLogic.conditionOfQuestionAnswers[index] = value;
+
+    setLogics(updatedLogics);
+  };
+
+  //조건 삭제
+  const DeleteCondition = (i: number, index: number) => {
+    const updatedLogics = [...logics];
+    const selNodeNumber = Number(selNode);
+    const targetLogic = updatedLogics[selNodeNumber].logics[i];
+    console.log(targetLogic);
+
+    targetLogic.conditionOfQuestionAnswers.splice(index, 1);
+    setLogics(updatedLogics);
   };
 
   //노드 클릭하면 selNode에다가 아이디 넣어주기
@@ -207,10 +284,10 @@ export default function Product() {
       const newLogic: Logic = {
         id: String(id_num),
         logics: [
-          {
-            conditionOfQuestionAnswers: [],
-            nextQuestionNumber: "",
-          },
+          // {
+          //   conditionOfQuestionAnswers: [],
+          //   nextQuestionNumber: "",
+          // },
         ],
       };
 
@@ -240,24 +317,12 @@ export default function Product() {
 
     newNodeTuple.push(submitNode);
     newEdgeTuple.push(submitEdge);
-    QuestionList.push({ value: 0, label: "제출하기" });
+    QuestionList.push({ value: "0", label: "제출하기" });
 
     console.log(newNodeTuple);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
   }, []);
-
-  //로직->조건 변경시 호출. node위치 및 edge 변경 필요
-  const ConditionChange = (i: number, index: number, value: string) => {
-    const updatedLogics = [...logics];
-    const selNodeNumber = Number(selNode);
-    const targetLogic = updatedLogics[selNodeNumber].logics[i];
-
-    targetLogic.conditionOfQuestionAnswers[index] = value;
-
-    setLogics(updatedLogics);
-    //console.log(logics[selNodeNumber].logics[i]);
-  };
 
   //다음 질문 수정될때 node, edge 바뀜
   const NextQuestionChange = (i: number, value: string) => {
@@ -382,8 +447,8 @@ export default function Product() {
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography>로직 {i + 1}</Typography>
                       <Button
-                        onClick={() => {
-                          DeleteLogic(i);
+                        onClick={(e: any) => {
+                          DeleteLogic(i, e);
                         }}
                         style={DeleteOption()}
                       >
@@ -398,23 +463,33 @@ export default function Product() {
                             <>
                               {logic.conditionOfQuestionAnswers.map(
                                 (condition, index) => (
-                                  <Select
-                                    key={index}
-                                    value={
-                                      logics[Number(selNode)].logics[i]
-                                        .conditionOfQuestionAnswers[index]
-                                    }
-                                    style={{ width: 120 }}
-                                    onChange={(e) =>
-                                      ConditionChange(i, index, e)
-                                    }
-                                    options={[
-                                      { value: "1", label: "1" },
-                                      { value: "2", label: "2" },
-                                      { value: "3", label: "3" },
-                                      { value: "4", label: "4" },
-                                    ]}
-                                  />
+                                  <ConditionSection>
+                                    <Select
+                                      key={index}
+                                      value={
+                                        logics[Number(selNode)].logics[i]
+                                          .conditionOfQuestionAnswers[index]
+                                      }
+                                      style={{ width: 120 }}
+                                      onChange={(e) =>
+                                        ConditionChange(i, index, e)
+                                      }
+                                      options={[
+                                        { value: "1", label: "1" },
+                                        { value: "2", label: "2" },
+                                        { value: "3", label: "3" },
+                                        { value: "4", label: "4" },
+                                      ]}
+                                    />
+                                    <Button
+                                      onClick={() => {
+                                        DeleteCondition(i, index);
+                                      }}
+                                      style={DeleteOption()}
+                                    >
+                                      X
+                                    </Button>
+                                  </ConditionSection>
                                 )
                               )}
                             </>
@@ -442,70 +517,6 @@ export default function Product() {
                         />
                       </LogicBottom>
                     </AccordionDetails>
-                    {/*<LogicSection key={i}>*/}
-                    {/*  <LogicHeader>*/}
-                    {/*    <FontAwesomeIcon icon={faChevronDown} />*/}
-                    {/*    <div>로직 {i + 1}</div>*/}
-                    {/*    <Button*/}
-                    {/*      onClick={() => {*/}
-                    {/*        DeleteLogic(i);*/}
-                    {/*      }}*/}
-                    {/*      style={DeleteOption()}*/}
-                    {/*    >*/}
-                    {/*      X*/}
-                    {/*    </Button>*/}
-                    {/*  </LogicHeader>*/}
-                    {/*  <LogicBody>*/}
-                    {/*    조건 :*/}
-                    {/*    <SelectSection>*/}
-                    {/*      {isMultiCondition[Number(selNode)] > 0 ? (*/}
-                    {/*        <>*/}
-                    {/*          {logic.conditionOfQuestionAnswers.map(*/}
-                    {/*            (condition, index) => (*/}
-                    {/*              <Select*/}
-                    {/*                key={index}*/}
-                    {/*                value={*/}
-                    {/*                  logics[Number(selNode)].logics[i]*/}
-                    {/*                    .conditionOfQuestionAnswers[index]*/}
-                    {/*                }*/}
-                    {/*                style={{ width: 120 }}*/}
-                    {/*                onChange={(e) =>*/}
-                    {/*                  ConditionChange(i, index, e)*/}
-                    {/*                }*/}
-                    {/*                options={[*/}
-                    {/*                  { value: "1", label: "1" },*/}
-                    {/*                  { value: "2", label: "2" },*/}
-                    {/*                  { value: "3", label: "3" },*/}
-                    {/*                  { value: "4", label: "4" },*/}
-                    {/*                ]}*/}
-                    {/*              />*/}
-                    {/*            )*/}
-                    {/*          )}*/}
-                    {/*        </>*/}
-                    {/*      ) : (*/}
-                    {/*        <div></div>*/}
-                    {/*      )}*/}
-                    {/*    </SelectSection>*/}
-                    {/*    와 같다면*/}
-                    {/*    <br />*/}
-                    {/*    <Button*/}
-                    {/*      onClick={(e) => {*/}
-                    {/*        addCondition(i);*/}
-                    {/*      }}*/}
-                    {/*    >*/}
-                    {/*      조건 추가 하기*/}
-                    {/*    </Button>*/}
-                    {/*  </LogicBody>*/}
-                    {/*  <LogicBottom>*/}
-                    {/*    이동 :*/}
-                    {/*    <Select*/}
-                    {/*      value={logic.nextQuestionNumber}*/}
-                    {/*      style={{ width: 120 }}*/}
-                    {/*      onChange={(e) => NextQuestionChange(i, e)}*/}
-                    {/*      options={QuestionList}*/}
-                    {/*    />*/}
-                    {/*  </LogicBottom>*/}
-                    {/*</LogicSection>*/}
                   </Accordion>
                 ))}
                 <div>{JSON.stringify(logics[Number(selNode)])}</div>
@@ -516,7 +527,7 @@ export default function Product() {
           </div>
         )}
       </SideBar>
-      <RightSide>
+      <LogicTab>
         <ReactFlowProvider>
           <ReactFlow
             nodes={nodes}
@@ -530,7 +541,7 @@ export default function Product() {
             <Background gap={30} size={1} />
           </ReactFlow>
         </ReactFlowProvider>
-      </RightSide>
+      </LogicTab>
     </Wrapper>
   );
 }
