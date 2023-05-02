@@ -14,7 +14,7 @@ import {
   ConditionSection,
   LogicBody,
   LogicBottom,
-  RightSide,
+  LogicTab,
   SelectSection,
   SideBar,
   Wrapper,
@@ -527,7 +527,7 @@ export default function Product() {
           </div>
         )}
       </SideBar>
-      <RightSide>
+      <LogicTab>
         <ReactFlowProvider>
           <ReactFlow
             nodes={nodes}
@@ -541,7 +541,7 @@ export default function Product() {
             <Background gap={30} size={1} />
           </ReactFlow>
         </ReactFlowProvider>
-      </RightSide>
+      </LogicTab>
     </Wrapper>
   );
 }
