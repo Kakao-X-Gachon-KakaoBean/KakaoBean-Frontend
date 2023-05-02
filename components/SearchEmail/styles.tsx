@@ -99,11 +99,18 @@ export const Button = styled.button`
   font-weight: 700;
   cursor: pointer;
   border: none;
-  margin-bottom: 0.3rem;
+  margin-top: 3rem;
   &:hover {
     background-color: #969696;
     border: none;
   }
+`;
+
+export const EmailBody = styled.div`
+  margin-top: 1rem;
+  font-size: 1rem;
+  width: 15rem;
+  height: 2rem;
 `;
 
 export const Input = styled.input`

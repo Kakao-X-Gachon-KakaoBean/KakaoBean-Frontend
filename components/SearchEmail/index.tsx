@@ -3,6 +3,7 @@ import React, { FC, FormEvent, useCallback, useState } from "react";
 import {
   Button,
   Div,
+  EmailBody,
   EmailInput,
   Form,
   Header,
@@ -14,7 +15,7 @@ import axios, { AxiosError } from "axios";
 import { Wrapper } from "@components/SearchEmail/styles";
 import { InputKey } from "@components/SearchEmail/styles";
 import { EmailModal, Search } from "@components/SearchEmail/type";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 const SearchEmail: FC<EmailModal> = ({
   name,
@@ -23,12 +24,15 @@ const SearchEmail: FC<EmailModal> = ({
   birth,
   onChangeBirth,
 }) => {
+  const [email, setEmail] = useState("");
   const stopPropagation = useCallback(
     (e: React.SyntheticEvent<EventTarget>) => {
       e.stopPropagation();
     },
     []
   );
+
+  const queryClient = useQueryClient();
   const mutation = useMutation<
     Search,
     AxiosError,
@@ -45,8 +49,8 @@ const SearchEmail: FC<EmailModal> = ({
       onMutate() {
         // setLogInError(false);
       },
-      onSuccess() {
-        console.log("요청 성공");
+      onSuccess(data) {
+        setEmail(data?.email);
       },
       onError(error) {
         // setLogInError(error.response?.data?.code === 401);
@@ -70,7 +74,6 @@ const SearchEmail: FC<EmailModal> = ({
         <button onClick={onCloseEmailModal}>X</button>
       </Form>
 
-      {/*{failUseEmail && !proveEmail && (*/}
       <InputKey>
         <Form onSubmit={onSubmit}>
           <Input
@@ -89,6 +92,7 @@ const SearchEmail: FC<EmailModal> = ({
             value={birth}
             placeholder="생년월일 ex) 1999-10-01"
           ></Input>
+          {email && <EmailBody>이메일 :{email}</EmailBody>}
           <Button type="submit">인증 하기</Button>
         </Form>
       </InputKey>
