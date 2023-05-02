@@ -203,7 +203,7 @@ export default function Product() {
     let yaxis = 0;
 
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < 3; i++) {
+    for (i; i < 5; i++) {
       let newNode, newEdge;
       if (i == 0) {
         newNode = {
@@ -452,6 +452,7 @@ export default function Product() {
                           조건 추가 하기
                         </Button>
                       </LogicBody>
+                      동
                       <LogicBottom>
                         이동 :
                         <Select
