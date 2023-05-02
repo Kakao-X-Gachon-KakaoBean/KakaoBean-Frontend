@@ -126,6 +126,6 @@ export const QuestionsListDiv = styled.div`
 
 export const LogicDiv = styled.div`
   flex-grow: 1;
-  padding-top: 10rem;
-  margin-left: 21rem;
+  padding-top: 5rem;
+  margin-left: 5rem;
 `;
