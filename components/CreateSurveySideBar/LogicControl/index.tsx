@@ -175,7 +175,7 @@ export const LogicControl = () => {
     setCount(updatedCounts);
   };
 
-  //조건 추가 하기
+  //조건 추가 하기가
   const addCondition = (i: number) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
     const updateMultiCondition = JSON.parse(JSON.stringify(isMultiCondition));
@@ -398,7 +398,7 @@ export const LogicControl = () => {
                         와 같다면
                         <br />
                         <Button
-                          onClick={(e) => {
+                          onClick={() => {
                             addCondition(i);
                           }}
                         >

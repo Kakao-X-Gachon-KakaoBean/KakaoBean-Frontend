@@ -10,4 +10,5 @@ export interface EmailModal {
 export interface Search {
   name: string;
   birth: string;
+  email: string;
 }
