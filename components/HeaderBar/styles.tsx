@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 export const Bar = styled.div`
-  background-color: #f4ebeb;
-  z-index: 999;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 2;
   position: fixed;
   top: 0;
   left: 0;

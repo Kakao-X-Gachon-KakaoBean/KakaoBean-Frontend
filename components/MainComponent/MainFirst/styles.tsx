@@ -16,14 +16,3 @@ export const TextDiv = styled.div`
 export const Text = styled.div`
   font-size: 50px;
 `;
-
-export const Button = styled.button`
-  background-color: #5200ff;
-  border-radius: 12px;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  width: 7rem;
-  height: 2rem;
-  font-weight: bold;
-`;
