@@ -181,6 +181,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     if (!result.destination) {
       return;
     }
+    //테스트
 
     // 질문 유형 리스트 내의 컴포넌트를 drag
     if (result.source.droppableId === "questionType") {
