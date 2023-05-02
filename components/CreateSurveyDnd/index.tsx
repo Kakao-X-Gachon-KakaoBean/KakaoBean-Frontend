@@ -17,7 +17,10 @@ import {
   createSurveyOptionState,
   selectedQuestionState,
 } from "../../States/SurveyState";
-import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import {
+  MultipleQuestion,
+  Logic,
+} from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import {
@@ -39,37 +42,11 @@ import {
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
-import LogicTab from "@components/LogicTab";
+import Product from "@pages/Product";
 import { Input } from "antd";
 import { Link, Element } from "react-scroll";
-import { Logic } from "@components/LogicTab/type";
-import {
-  SelNodeState,
-  IdNumState,
-  NodeState,
-  EdgeState,
-  LogicState,
-  LogicCountState,
-  MultiConditionState,
-  QuestionList,
-} from "../../States/LogicState";
-import { Edge, Node } from "react-flow-renderer";
 
 const CreateSurveyDnd = (): JSX.Element => {
-  const [nodes, setNodes] = useRecoilState(NodeState);
-  const [edges, setEdges] = useRecoilState(EdgeState);
-  // 현재 선택한 노드
-  const [selNode, setSelNode] = useRecoilState(SelNodeState);
-  const [idNum, setIdNum] = useRecoilState(IdNumState);
-  const [logics, setLogics] = useRecoilState(LogicState);
-
-  //로직 개수 count
-  const [count, setCount] = useRecoilState(LogicCountState);
-  //로직 조건 개수 count
-  const [isMultiCondition, setIsMultiCondition] =
-    useRecoilState(MultiConditionState);
-  const [questionList, setQuestionList] = useRecoilState(QuestionList);
-
   const [questionTypeItems, setQuestionTypeItems] = useState<
     QuestionTypeItem[]
   >(getQuestionType());
@@ -254,92 +231,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     setQuestions(() => updatedQuestions as QuestionTypes[]);
   }, [questionItems]);
 
-  //처음 실행될때 node, edge, logic, count, 멀티 로직 count 초기화
-  useEffect(() => {
-    let i = 0;
-    const newNodeTuple: Node[] = [];
-    const newEdgeTuple: Edge[] = [];
-    const newQuestionTuple: any[] = [];
-    setIdNum(1);
-    let yaxis = 0;
-    let newNode, newEdge;
-
-    console.log(countQuestion);
-    // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < countQuestion; i++) {
-      if (i == countQuestion - 1) {
-        newNode = {
-          id: String(i + 1),
-          data: { label: String(i + 1), nextQ: String(0) },
-          position: { x: 400, y: yaxis },
-        };
-      } else {
-        if (i == 0) {
-          newNode = {
-            id: String(i + 1),
-            type: "input",
-            data: { label: String(i + 1), nextQ: String(i + 2) },
-            position: { x: 400, y: yaxis },
-          };
-        } else {
-          newNode = {
-            id: String(i + 1),
-            data: { label: String(i + 1), nextQ: String(i + 2) },
-            position: { x: 400, y: yaxis },
-          };
-        }
-      }
-
-      newEdge = {
-        id: "e" + String(i + 1) + "-" + String(i + 2),
-        source: String(i + 1),
-        target: String(i + 2),
-      };
-
-      const newLogic: Logic = {
-        id: String(i + 1),
-        logics: [
-          {
-            conditionOfQuestionAnswers: [],
-            nextQuestionNumber: "",
-          },
-        ],
-      };
-
-      setCount((prevCount) => [...prevCount, 0]);
-      setIsMultiCondition((prevVal) => [...prevVal, 1]);
-      setLogics((prevLogic) => [...prevLogic, newLogic]);
-      newNodeTuple.push(newNode);
-      newEdgeTuple.push(newEdge);
-      newQuestionTuple.push({ value: i + 1, label: String(i + 1) });
-
-      setIdNum(idNum + 1);
-      yaxis += 100;
-    }
-
-    const submitNode = {
-      id: "0",
-      type: "output",
-      data: { label: "submit" },
-      position: { x: 400, y: yaxis },
-    };
-
-    const submitEdge = {
-      id: "e_submit",
-      source: String(i),
-      target: "0",
-    };
-
-    newNodeTuple.push(submitNode);
-    newEdgeTuple.push(submitEdge);
-    newQuestionTuple.push({ value: 0, label: "제출하기" });
-
-    //console.log(newNodeTuple);
-    setNodes(newNodeTuple);
-    setEdges(newEdgeTuple);
-    setQuestionList(newQuestionTuple);
-  }, [countQuestion]);
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
@@ -441,173 +332,71 @@ const CreateSurveyDnd = (): JSX.Element => {
         </QuestionsAndType>
         {viewLogic === "logic" ? (
           <LogicDiv>
-            <LogicTab />
+            <Product />
           </LogicDiv>
         ) : (
-          <div>
-            <QuestionsAndType>
-              <SidebarQuestions>
-                <Input
-                  size="large"
-                  placeholder="설문 제목"
-                  bordered={false}
-                  style={{ fontWeight: "bold" }}
-                  onChange={(event) => {
-                    setSurveyTitle(event.target.value);
-                  }}
-                />
-                <div style={{ height: "3rem", marginTop: "2rem" }}>
-                  전체 문항
-                </div>
-                {questionItems.map((item, index) => {
-                  const SidebarQuestion =
-                    selectedQuestion.id === item.id
-                      ? SidebarSelectedQuestion
-                      : SidebarNoneSelectedQuestion;
-                  return (
-                    <Link to={item.id} smooth={true} key={index}>
-                      <SidebarQuestion
-                        onClick={() => {
-                          if (
-                            item.type == "MULTIPLE" ||
-                            item.type == "ESSAY" ||
-                            item.type == "RANGE"
-                          ) {
-                            handleQuestionClick(item, index);
-                          }
-                        }}
-                        style={
-                          "title" in item
-                            ? {
-                                color: isEmptyTitle(item.title)
-                                  ? "gray"
-                                  : "black",
-                              }
-                            : { color: "black" }
-                        }
-                      >
-                        <SidebarQuestionTitle>
-                          Q.{index + 1 + " "}
-                          {"title" in item
-                            ? item.title == ""
-                              ? "제목 없음"
-                              : item.title
-                            : "제목 타입 없음"}
-                        </SidebarQuestionTitle>
-                        <SidebarQuestionDelete
-                          onClick={() => {
-                            const newQuestionItems = [
-                              ...questionItems.slice(0, index),
-                              ...questionItems.slice(index + 1),
-                            ];
-                            setQuestionItems(newQuestionItems);
-                          }}
-                        >
-                          X
-                        </SidebarQuestionDelete>
-                      </SidebarQuestion>
-                    </Link>
-                  );
-                })}
-              </SidebarQuestions>
-              <QuestionTypeListDiv>
-                <Droppable droppableId="questionType" isDropDisabled={true}>
-                  {(provided, snapshot) => (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
+          <QuestionsListDiv>
+            <Droppable droppableId="questions" isDropDisabled={false}>
+              {(provided, snapshot) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={getQuestionsListStyle(snapshot.isDraggingOver)}
+                >
+                  {questionItems.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={index}
                     >
-                      {questionTypeItems.map((item, index) => (
-                        <Draggable
-                          key={item.id}
-                          draggableId={item.id}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={getQuestionTypeItemStyle(
-                                snapshot.isDragging,
-                                provided.draggableProps.style
-                              )}
-                            >
-                              {item.content}
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </QuestionTypeListDiv>
-            </QuestionsAndType>
-            <QuestionsListDiv>
-              <Droppable droppableId="questions" isDropDisabled={false}>
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={getQuestionsListStyle(snapshot.isDraggingOver)}
-                  >
-                    {questionItems.map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <Element name={item.id}>
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={getQuestionsItemStyle(
-                                snapshot.isDragging,
-                                provided.draggableProps.style
-                              )}
-                            >
-                              {item.type === "MULTIPLE" && (
-                                <MultipleChoiceQuestions
-                                  id={item.id}
-                                  question={item as MultipleQuestion}
-                                  onChange={(updatedQuestion) =>
-                                    handleQuestionChange(updatedQuestion, index)
-                                  }
-                                />
-                              )}
-                              {item.type === "ESSAY" && "title" in item && (
-                                <SubjectiveQuestions
-                                  id={item.id}
-                                  question={item as SubjectiveQuestion}
-                                  onChange={(updatedQuestion) =>
-                                    handleQuestionChange(updatedQuestion, index)
-                                  }
-                                />
-                              )}
-                              {item.type === "RANGE" && (
-                                <RangeBarQuestions
-                                  id={item.id}
-                                  question={item as RangeBarQuestion}
-                                  onChange={(updatedQuestion) =>
-                                    handleQuestionChange(updatedQuestion, index)
-                                  }
-                                />
-                              )}
-                            </div>
-                          </Element>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </QuestionsListDiv>
-          </div>
+                      {(provided, snapshot) => (
+                        <Element name={item.id}>
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getQuestionsItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.type === "MULTIPLE" && (
+                              <MultipleChoiceQuestions
+                                id={item.id}
+                                question={item as MultipleQuestion}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                            {item.type === "ESSAY" && "title" in item && (
+                              <SubjectiveQuestions
+                                id={item.id}
+                                question={item as SubjectiveQuestion}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                            {item.type === "RANGE" && (
+                              <RangeBarQuestions
+                                id={item.id}
+                                question={item as RangeBarQuestion}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(updatedQuestion, index)
+                                }
+                              />
+                            )}
+                          </div>
+                        </Element>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </QuestionsListDiv>
         )}
       </Wrapper>
     </DragDropContext>
