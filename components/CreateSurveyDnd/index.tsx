@@ -252,7 +252,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   ? SidebarSelectedQuestion
                   : SidebarNoneSelectedQuestion;
               return (
-                <Link to={item.id} smooth={true} key={index}>
+                <Link to={item.id} smooth={true} key={index} offset={-220}>
                   <SidebarQuestion
                     onClick={() => {
                       if (
