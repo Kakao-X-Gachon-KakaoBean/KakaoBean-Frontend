@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
+import React, { useState } from "react";
+import {
+  SubjectiveQuestion,
+  subProps,
+} from "@components/SurveyResponseTemplates/Subjective/type";
 import {
   Explanation,
   Subjective,
@@ -18,19 +21,16 @@ const contentStyle: React.CSSProperties = {
   alignItems: "center",
 };
 
-interface subProps {
-  onChange: (updatedQuestion: SubjectiveQuestion) => void;
-}
 export const SubjectiveQuestions = (props: subProps) => {
-  const [subjectiveQuestions, setSubjectiveQuestions] =
-    useState<SubjectiveQuestion>({
-      type: "ESSAY",
-      title: "Test Subjective Title",
-      explanation: "this is subjective",
-      questionNumber: "",
-      finalQuestion: false,
-      nextQuestionNumber: "0",
-    });
+  const [subjectiveQuestions] = useState<SubjectiveQuestion>({
+    type: props.thisQuestion.type,
+    questionId: props.thisQuestion.questionId,
+    title: props.thisQuestion.title,
+    explanation: props.thisQuestion.explanation,
+    questionNumber: props.thisQuestion.questionNumber,
+    finalQuestion: props.thisQuestion.finalQuestion,
+    nextQuestionNumber: props.thisQuestion.nextQuestionNumber,
+  });
 
   return (
     <div style={contentStyle}>

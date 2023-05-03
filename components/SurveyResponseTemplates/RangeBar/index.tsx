@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
+import React, { useState } from "react";
+import {
+  RangeBarQuestion,
+  subProps,
+} from "@components/SurveyResponseTemplates/RangeBar/type";
 import { Slider } from "antd";
 import {
   Explanation,
@@ -20,31 +23,23 @@ const contentStyle: React.CSSProperties = {
   alignItems: "center",
 };
 
-interface subProps {
-  onChange: (updatedQuestion: RangeBarQuestion) => void;
-}
 export const RangeBarQuestions = (props: subProps) => {
-  const [rangeBarQuestions, setRangeBarQuestions] = useState<RangeBarQuestion>({
-    type: "RANGE",
-    title: "Test Rangebar Question",
-    explanation: "this is a test",
-    questionNumber: "",
-    finalQuestion: false,
-    nextQuestionNumber: "0",
-    value: 0,
-    min: 0,
-    max: 100,
+  const [rangeBarQuestions] = useState<RangeBarQuestion>({
+    type: props.thisQuestion.type,
+    questionId: props.thisQuestion.questionId,
+    title: props.thisQuestion.title,
+    explanation: props.thisQuestion.explanation,
+    questionNumber: props.thisQuestion.questionNumber,
+    finalQuestion: props.thisQuestion.finalQuestion,
+    nextQuestionNumber: props.thisQuestion.nextQuestionNumber,
+    min: props.thisQuestion.min,
+    max: props.thisQuestion.max,
   });
 
-  useEffect(() => {
-    props.onChange(rangeBarQuestions);
-  }, [rangeBarQuestions]);
+  const [value, setValue] = useState(0);
 
   const handleChange = (newValue: number) => {
-    setRangeBarQuestions({
-      ...rangeBarQuestions,
-      value: newValue,
-    });
+    setValue(newValue);
   };
 
   return (
@@ -56,7 +51,7 @@ export const RangeBarQuestions = (props: subProps) => {
           min={rangeBarQuestions.min}
           max={rangeBarQuestions.max}
           onChange={handleChange}
-          value={rangeBarQuestions.value}
+          value={value}
           style={rangeBarStyle}
         />
       </div>
