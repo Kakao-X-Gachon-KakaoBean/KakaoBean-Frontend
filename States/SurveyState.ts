@@ -6,7 +6,7 @@ import { QuestionsItem } from "@components/CreateSurveyDnd/type";
 
 export const countState = atom({
   key: "countQuestions",
-  default: 0,
+  default: 1,
 });
 
 export const createSurveyOptionState = atom({

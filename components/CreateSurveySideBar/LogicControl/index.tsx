@@ -48,11 +48,13 @@ export const LogicControl = () => {
   const questionList = useRecoilValue(QuestionList);
 
   useEffect(() => {
-    console.log("전체 질문 정보: " + surveyQuestions);
+    console.log(surveyQuestions);
   }, [surveyQuestions]);
+
   //로직 추가하기
   const addLogic = () => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
+    const updatedQuestion = JSON.parse(JSON.stringify(surveyQuestions));
     const updatedCounts = [...count];
 
     //처음 추가 하는 경우
@@ -106,16 +108,61 @@ export const LogicControl = () => {
       }
     }
 
+    //수정 코드
+    if (count[Number(selNode)] == 0) {
+      //마지막 질문일 경우 next질문 0 (제출하기)
+      if (selNode == String(idNum - 1)) {
+        updatedQuestion[Number(selNode)].logics.push({
+          conditionOfQuestionAnswers: [""],
+          nextQuestionNumber: "0",
+        });
+      }
+      //마지막 질문 아닌경우 next질문 다음 번호
+      else {
+        updatedQuestion[Number(selNode)].logics.push({
+          conditionOfQuestionAnswers: [""],
+          nextQuestionNumber: String(Number(selNode) + 1),
+        });
+      }
+    }
+    //처음 추가하는게 아닌경우 기존 로직에다가 추가
+    else {
+      //마지막 질문일 경우 next질문 0 (제출하기)
+      if (selNode == String(idNum - 1)) {
+        updatedLogics[Number(selNode)] = {
+          ...updatedLogics[Number(selNode)],
+          logics: [
+            ...updatedLogics[Number(selNode)].logics,
+            { conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
+          ],
+        };
+      }
+      //마지막 질문 아닌경우 next질문 다음 번호
+      else {
+        updatedLogics[Number(selNode)] = {
+          ...updatedLogics[Number(selNode)],
+          logics: [
+            ...updatedLogics[Number(selNode)].logics,
+            {
+              conditionOfQuestionAnswers: [""],
+              nextQuestionNumber: String(Number(selNode) + 1),
+            },
+          ],
+        };
+      }
+    }
+
     //로직 개수 count에 ++
     updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
 
+    updatedQuestion[Number(selNode)].logics = updatedLogics[Number(selNode)];
+    setSurveyQuestions(surveyQuestions);
     setLogics(updatedLogics);
     setCount(updatedCounts);
   };
 
   //로직 삭제
   const DeleteLogic = (i: number, value: string) => {
-  
     let updatedLogics = JSON.parse(JSON.stringify(logics));
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
