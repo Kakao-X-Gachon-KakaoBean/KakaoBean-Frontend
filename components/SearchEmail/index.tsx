@@ -7,8 +7,8 @@ import {
   EmailInput,
   Form,
   Header,
-  Input,
 } from "@components/SearchEmail/styles";
+import { Input } from "antd";
 
 import axios, { AxiosError } from "axios";
 

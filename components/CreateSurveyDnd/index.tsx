@@ -269,13 +269,15 @@ const CreateSurveyDnd = (): JSX.Element => {
     let yaxis = 0;
     let newNode, newEdge;
 
-    console.log(countQuestion);
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < countQuestion; i++) {
-      if (i == countQuestion - 1) {
+    for (i; i < surveyQuestions.length; i++) {
+      if (i == surveyQuestions.length - 1) {
         newNode = {
           id: String(i + 1),
-          data: { label: String(i + 1), nextQ: String(0) },
+          data: {
+            label: surveyQuestions[i].title,
+            nextQ: String(0),
+          },
           position: { x: 270, y: yaxis },
         };
       } else {
@@ -283,13 +285,13 @@ const CreateSurveyDnd = (): JSX.Element => {
           newNode = {
             id: String(i + 1),
             type: "input",
-            data: { label: String(i + 1), nextQ: String(i + 2) },
+            data: { label: surveyQuestions[i].title, nextQ: String(i + 2) },
             position: { x: 270, y: yaxis },
           };
         } else {
           newNode = {
             id: String(i + 1),
-            data: { label: String(i + 1), nextQ: String(i + 2) },
+            data: { label: surveyQuestions[i].title, nextQ: String(i + 2) },
             position: { x: 270, y: yaxis },
           };
         }
@@ -326,7 +328,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: 270, y: yaxis },
+      position: { x: 400, y: yaxis },
     };
 
     const submitEdge = {
@@ -337,13 +339,13 @@ const CreateSurveyDnd = (): JSX.Element => {
 
     newNodeTuple.push(submitNode);
     newEdgeTuple.push(submitEdge);
-    newQuestionTuple.push({ value: 0, label: "제출하기" });
+    newQuestionTuple.push({ value: "0", label: "제출하기" });
 
     //console.log(newNodeTuple);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
     setQuestionList(newQuestionTuple);
-  }, [countQuestion]);
+  }, [surveyQuestions]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -409,40 +411,44 @@ const CreateSurveyDnd = (): JSX.Element => {
               );
             })}
           </SidebarQuestions>
-          <QuestionTypeListDiv>
-            <Droppable droppableId="questionType" isDropDisabled={true}>
-              {(provided, snapshot) => (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
-                >
-                  {questionTypeItems.map((item, index) => (
-                    <Draggable
-                      key={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getQuestionTypeItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
-                        >
-                          {item.content}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </QuestionTypeListDiv>
+          {viewLogic === "logic" ? (
+            <QuestionTypeListDiv></QuestionTypeListDiv>
+          ) : (
+            <QuestionTypeListDiv>
+              <Droppable droppableId="questionType" isDropDisabled={true}>
+                {(provided, snapshot) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
+                  >
+                    {questionTypeItems.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getQuestionTypeItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.content}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </QuestionTypeListDiv>
+          )}
         </QuestionsAndType>
         {viewLogic === "logic" ? (
           <LogicDiv>

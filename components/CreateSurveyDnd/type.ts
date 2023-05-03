@@ -11,6 +11,7 @@ export interface QuestionsItem {
   id: string;
   type: string;
   content: string;
+  title: string;
 }
 
 // droppable list type
