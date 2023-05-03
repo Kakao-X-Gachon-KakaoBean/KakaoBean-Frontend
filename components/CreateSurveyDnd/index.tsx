@@ -409,40 +409,44 @@ const CreateSurveyDnd = (): JSX.Element => {
               );
             })}
           </SidebarQuestions>
-          <QuestionTypeListDiv>
-            <Droppable droppableId="questionType" isDropDisabled={true}>
-              {(provided, snapshot) => (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
-                >
-                  {questionTypeItems.map((item, index) => (
-                    <Draggable
-                      key={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getQuestionTypeItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
-                        >
-                          {item.content}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </QuestionTypeListDiv>
+          {viewLogic === "logic" ? (
+            <QuestionTypeListDiv></QuestionTypeListDiv>
+          ) : (
+            <QuestionTypeListDiv>
+              <Droppable droppableId="questionType" isDropDisabled={true}>
+                {(provided, snapshot) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
+                  >
+                    {questionTypeItems.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={item.id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getQuestionTypeItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {item.content}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </QuestionTypeListDiv>
+          )}
         </QuestionsAndType>
         {viewLogic === "logic" ? (
           <LogicDiv>
