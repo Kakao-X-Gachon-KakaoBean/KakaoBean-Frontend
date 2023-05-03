@@ -196,7 +196,7 @@ export const LogicControl = () => {
     setCount(updatedCounts);
   };
 
-  //조건 추가 하기가
+  //조건 추가 하기
   const addCondition = (i: number) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
     const updateMultiCondition = JSON.parse(JSON.stringify(isMultiCondition));
@@ -319,7 +319,7 @@ export const LogicControl = () => {
         edge.source === selNode && edge.target === String(Number(selNode) + 1)
     );
 
-    updatedNodes[Number(selNode) - 1].data.nextQ = value;
+    updatedNodes[Number(Number(selNode) - 1)].data.nextQ = value;
 
     let flag = updatedNodes.find((node: Node) => node.id === selNode);
 
@@ -328,7 +328,7 @@ export const LogicControl = () => {
       updatedNodes.forEach((node: Node) => {
         if (node.id < selNode && node.id > value) {
           node.position.x = node.position.x + 100;
-          node.position.y = selNodeY;
+          node.position.y = selNodeY + 200;
         }
         if (node.id >= value) {
           node.position.x = node.position.x + 50;
@@ -351,12 +351,12 @@ export const LogicControl = () => {
             <div>질문 {selNode}</div>
             <div>
               이동하기
-              {/*<Select*/}
-              {/*  value={nodes[Number(selNode) - 1].data.nextQ}*/}
-              {/*  style={{ width: 120 }}*/}
-              {/*  onChange={NoLogicChangeNext}*/}
-              {/*  options={questionList}*/}
-              {/*/>*/}
+              <Select
+                value={nodes[Number(Number(selNode) - 1)]?.data?.nextQ}
+                style={{ width: 120 }}
+                onChange={NoLogicChangeNext}
+                options={questionList}
+              />
             </div>
             <Button onClick={addLogic}>로직 추가 하기</Button>
             {count[Number(selNode)] > 0 ? (
