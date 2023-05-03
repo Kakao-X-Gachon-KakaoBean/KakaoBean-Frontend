@@ -15,7 +15,7 @@ export const Header = styled.div`
   line-height: 77px;
   letter-spacing: 0.1em;
   text-align: center;
-  font-family: "Pretendard-Regular", serif;
+  font-family: "Pretendard-Regular";
 `;
 export const Form = styled.form`
   display: flex;
