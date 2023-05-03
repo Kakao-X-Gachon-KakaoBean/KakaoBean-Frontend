@@ -2,11 +2,14 @@ import styled from "@emotion/styled";
 
 export const Wrapper = styled.div``;
 
-export const SideBar = styled.section`
-  padding-top: 5rem;
-  padding-right: 1rem;
-  width: 13rem;
-  margin: 0 auto;
+export const SideBar = styled.div`
+  display: flex;
+  flex: 1;
+  position: fixed;
+  width: 17rem;
+  height: 80%;
+  background-color: white;
+  overflow-y: auto;
 
   @media screen and (max-width: 769px) {
     order: 1;
