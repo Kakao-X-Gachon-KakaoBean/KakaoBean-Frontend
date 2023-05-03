@@ -275,7 +275,10 @@ const CreateSurveyDnd = (): JSX.Element => {
         newNode = {
           id: String(i + 1),
           data: {
-            label: surveyQuestions[i].title,
+            label:
+              surveyQuestions[i].title !== ""
+                ? surveyQuestions[i].title
+                : "제목 없음",
             nextQ: String(0),
           },
           position: { x: 270, y: yaxis },
@@ -285,13 +288,25 @@ const CreateSurveyDnd = (): JSX.Element => {
           newNode = {
             id: String(i + 1),
             type: "input",
-            data: { label: surveyQuestions[i].title, nextQ: String(i + 2) },
+            data: {
+              label:
+                surveyQuestions[i].title !== ""
+                  ? surveyQuestions[i].title
+                  : "제목 없음",
+              nextQ: String(i + 2),
+            },
             position: { x: 270, y: yaxis },
           };
         } else {
           newNode = {
             id: String(i + 1),
-            data: { label: surveyQuestions[i].title, nextQ: String(i + 2) },
+            data: {
+              label:
+                surveyQuestions[i].title !== ""
+                  ? surveyQuestions[i].title
+                  : "제목 없음",
+              nextQ: String(i + 2),
+            },
             position: { x: 270, y: yaxis },
           };
         }
@@ -328,7 +343,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: 400, y: yaxis },
+      position: { x: 270, y: yaxis },
     };
 
     const submitEdge = {
