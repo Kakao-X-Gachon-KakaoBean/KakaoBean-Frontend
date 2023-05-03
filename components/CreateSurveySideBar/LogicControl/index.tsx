@@ -115,7 +115,8 @@ export const LogicControl = () => {
 
   //로직 삭제
   const DeleteLogic = (i: number, value: string) => {
-    const updatedLogics = JSON.parse(JSON.stringify(logics));
+  
+    let updatedLogics = JSON.parse(JSON.stringify(logics));
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
 
@@ -175,9 +176,23 @@ export const LogicControl = () => {
     setNodes(updatedNodes);
 
     const updatedCounts = [...count];
-    updatedLogics[Number(selNode)].logics.splice(i, 1);
-    updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] - 1;
-    setLogics(updatedLogics);
+    //updatedLogics[Number(selNode)].logics.splice(i, 1);
+    const nodeIndex = Number(selNode);
+    const logicIndex = i;
+
+    const newLogics = [
+      ...updatedLogics[nodeIndex].logics.slice(0, logicIndex),
+      ...updatedLogics[nodeIndex].logics.slice(logicIndex + 1),
+    ];
+
+    const newUpdatedLogics = [
+      ...updatedLogics.slice(0, nodeIndex),
+      { ...updatedLogics[nodeIndex], logics: newLogics },
+      ...updatedLogics.slice(nodeIndex + 1),
+    ];
+
+    setLogics(newUpdatedLogics);
+
     setCount(updatedCounts);
   };
 
