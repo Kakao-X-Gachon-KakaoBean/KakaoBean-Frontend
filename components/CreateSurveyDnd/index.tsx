@@ -17,10 +17,7 @@ import {
   createSurveyOptionState,
   selectedQuestionState,
 } from "../../States/SurveyState";
-import {
-  MultipleQuestion,
-  Logic,
-} from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import {
@@ -43,11 +40,37 @@ import {
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
-import Product from "@pages/Product";
 import { Button, Input } from "antd";
+import LogicTab from "@components/LogicTab";
+import { Logic } from "@components/LogicTab/type";
 import { Link, Element } from "react-scroll";
+import {
+  SelNodeState,
+  IdNumState,
+  NodeState,
+  EdgeState,
+  LogicState,
+  LogicCountState,
+  MultiConditionState,
+  QuestionList,
+} from "../../States/LogicState";
+import { Edge, Node } from "react-flow-renderer";
 
 const CreateSurveyDnd = (): JSX.Element => {
+  const [nodes, setNodes] = useRecoilState(NodeState);
+  const [edges, setEdges] = useRecoilState(EdgeState);
+  // 현재 선택한 노드
+  const [selNode, setSelNode] = useRecoilState(SelNodeState);
+  const [idNum, setIdNum] = useRecoilState(IdNumState);
+  const [logics, setLogics] = useRecoilState(LogicState);
+
+  //로직 개수 count
+  const [count, setCount] = useRecoilState(LogicCountState);
+  //로직 조건 개수 count
+  const [isMultiCondition, setIsMultiCondition] =
+    useRecoilState(MultiConditionState);
+  const [questionList, setQuestionList] = useRecoilState(QuestionList);
+
   const [questionTypeItems, setQuestionTypeItems] = useState<
     QuestionTypeItem[]
   >(getQuestionType());
@@ -233,6 +256,92 @@ const CreateSurveyDnd = (): JSX.Element => {
     setQuestions(() => updatedQuestions as QuestionTypes[]);
   }, [questionItems]);
 
+  //설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
+  useEffect(() => {
+    let i = 0;
+    const newNodeTuple: Node[] = [];
+    const newEdgeTuple: Edge[] = [];
+    const newQuestionTuple: any[] = [];
+    setIdNum(1);
+    let yaxis = 0;
+    let newNode, newEdge;
+
+    console.log(countQuestion);
+    // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
+    for (i; i < countQuestion; i++) {
+      if (i == countQuestion - 1) {
+        newNode = {
+          id: String(i + 1),
+          data: { label: String(i + 1), nextQ: String(0) },
+          position: { x: 400, y: yaxis },
+        };
+      } else {
+        if (i == 0) {
+          newNode = {
+            id: String(i + 1),
+            type: "input",
+            data: { label: String(i + 1), nextQ: String(i + 2) },
+            position: { x: 400, y: yaxis },
+          };
+        } else {
+          newNode = {
+            id: String(i + 1),
+            data: { label: String(i + 1), nextQ: String(i + 2) },
+            position: { x: 400, y: yaxis },
+          };
+        }
+      }
+
+      newEdge = {
+        id: "e" + String(i + 1) + "-" + String(i + 2),
+        source: String(i + 1),
+        target: String(i + 2),
+      };
+
+      const newLogic: Logic = {
+        id: String(i + 1),
+        logics: [
+          {
+            conditionOfQuestionAnswers: [],
+            nextQuestionNumber: "",
+          },
+        ],
+      };
+
+      setCount((prevCount) => [...prevCount, 0]);
+      setIsMultiCondition((prevVal) => [...prevVal, 1]);
+      setLogics((prevLogic) => [...prevLogic, newLogic]);
+      newNodeTuple.push(newNode);
+      newEdgeTuple.push(newEdge);
+      newQuestionTuple.push({ value: i + 1, label: String(i + 1) });
+
+      setIdNum(idNum + 1);
+      yaxis += 100;
+    }
+
+    const submitNode = {
+      id: "0",
+      type: "output",
+      data: { label: "submit" },
+      position: { x: 400, y: yaxis },
+    };
+
+    const submitEdge = {
+      id: "e_submit",
+      source: String(i),
+      target: "0",
+    };
+
+    newNodeTuple.push(submitNode);
+    newEdgeTuple.push(submitEdge);
+    newQuestionTuple.push({ value: 0, label: "제출하기" });
+
+    //console.log(newNodeTuple);
+    setNodes(newNodeTuple);
+    setEdges(newEdgeTuple);
+    setQuestionList(newQuestionTuple);
+  }, [countQuestion]);
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
@@ -334,7 +443,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         </QuestionsAndType>
         {viewLogic === "logic" ? (
           <LogicDiv>
-            <Product />
+            <LogicTab />
           </LogicDiv>
         ) : (
           <QuestionsListDiv>
