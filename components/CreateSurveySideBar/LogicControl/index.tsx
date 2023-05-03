@@ -28,17 +28,17 @@ import {
 } from "../../../States/LogicState";
 import { questionsState } from "../../../States/SurveyState";
 import { update } from "autosize";
+import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 
 export const LogicControl = () => {
   // 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState);
-
+  const [logics, setLogics] = useRecoilState(LogicState);
   const [nodes, setNodes] = useRecoilState(NodeState);
   const [edges, setEdges] = useRecoilState(EdgeState);
   // 현재 선택한 노드
   const selNode = useRecoilValue(SelNodeState);
   const idNum = useRecoilValue(IdNumState);
-  const [logics, setLogics] = useRecoilState(LogicState);
 
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
@@ -47,75 +47,79 @@ export const LogicControl = () => {
     useRecoilState(MultiConditionState);
   const questionList = useRecoilValue(QuestionList);
 
-  useEffect(() => {
-    console.log("전체 질문 정보: ", surveyQuestions);
-  }, [surveyQuestions]);
+  // useEffect(() => {
+  //   //console.log("전체 질문 정보: ", surveyQuestions);
+  //   // if ("logics" in surveyQuestions) {
+  //   //   console.log(surveyQuestions[Number(Number(selNode) - 1)].logics);
+  //   // }
+  // }, []);
+
+  surveyQuestions.map((item, index) => {
+    if ("logics" in item) {
+      console.log(item.id, ":", item.logics);
+    }
+  });
+
   //로직 추가하기
   const addLogic = () => {
-    const updatedLogics = JSON.parse(JSON.stringify(logics));
+    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const updatedCounts = [...count];
+    let updatedLogics;
 
     //처음 추가 하는 경우
-    if (count[Number(selNode)] == 0) {
-      //마지막 질문일 경우 next질문 0 (제출하기)
-      if (selNode == String(idNum - 1)) {
-        updatedLogics[Number(selNode)] = {
-          id: String(selNode),
-          logics: [
-            { conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
-          ],
-        };
-      }
-      //마지막 질문 아닌경우 next질문 다음 번호
-      else {
-        updatedLogics[Number(selNode)] = {
-          id: String(selNode),
-          logics: [
-            {
-              conditionOfQuestionAnswers: [""],
-              nextQuestionNumber: String(Number(selNode) + 1),
-            },
-          ],
-        };
-      }
+    // if (count[Number(selNode)] == 0) {
+    //마지막 질문일 경우 next질문 0 (제출하기)
+    if (Number(selNode) == surveyQuestions.length) {
+      updatedLogics = {
+        conditionOfQuestionAnswers: [""],
+        nextQuestionNumber: "0",
+      };
     }
-    //처음 추가하는게 아닌경우 기존 로직에다가 추가
+    //마지막 질문 아닌경우 next질문 다음 번호
     else {
-      //마지막 질문일 경우 next질문 0 (제출하기)
-      if (selNode == String(idNum - 1)) {
-        updatedLogics[Number(selNode)] = {
-          ...updatedLogics[Number(selNode)],
-          logics: [
-            ...updatedLogics[Number(selNode)].logics,
-            { conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
-          ],
-        };
-      }
-      //마지막 질문 아닌경우 next질문 다음 번호
-      else {
-        updatedLogics[Number(selNode)] = {
-          ...updatedLogics[Number(selNode)],
-          logics: [
-            ...updatedLogics[Number(selNode)].logics,
-            {
-              conditionOfQuestionAnswers: [""],
-              nextQuestionNumber: String(Number(selNode) + 1),
-            },
-          ],
-        };
-      }
+      updatedLogics = {
+        conditionOfQuestionAnswers: [""],
+        nextQuestionNumber: String(Number(selNode) + 1),
+      };
     }
+
+    //처음 추가하는게 아닌경우 기존 로직에다가 추가
+    // else {
+    //   //마지막 질문일 경우 next질문 0 (제출하기)
+    //   if (Number(selNode) == surveyQuestions.length) {
+    //     updatedLogics = {[
+    //         ...updatedQuestions[Number(selNode)].logics,
+    //         {conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
+    //     ]};
+    //   }
+    //   //마지막 질문 아닌경우 next질문 다음 번호
+    //   else {
+    //     updatedLogics[Number(selNode)] = {
+    //       logics: [
+    //         ...updatedLogics[Number(selNode)].logics,
+    //         {
+    //           conditionOfQuestionAnswers: [""],
+    //           nextQuestionNumber: String(Number(selNode) + 1),
+    //         },
+    //       ],
+    //     };
+    //   }
+    // }
 
     //로직 개수 count에 ++
     updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
 
-    setLogics(updatedLogics);
+    console.log(updatedQuestions[Number(selNode) - 1]);
+    console.log(updatedLogics);
+    updatedQuestions[Number(selNode) - 1].logics.push(updatedLogics);
+
+    setSurveyQuestions(updatedQuestions);
     setCount(updatedCounts);
   };
 
   //로직 삭제
   const DeleteLogic = (i: number, value: string) => {
-  
+    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     let updatedLogics = JSON.parse(JSON.stringify(logics));
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
@@ -196,7 +200,7 @@ export const LogicControl = () => {
     setCount(updatedCounts);
   };
 
-  //조건 추가 하기가
+  //조건 추가 하기
   const addCondition = (i: number) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
     const updateMultiCondition = JSON.parse(JSON.stringify(isMultiCondition));
@@ -207,7 +211,6 @@ export const LogicControl = () => {
     originList.push("");
 
     updatedLogics[Number(selNode)] = {
-      ...updatedLogics[Number(selNode)],
       logics: [
         ...updatedLogics[Number(selNode)].logics,
         {
@@ -237,7 +240,7 @@ export const LogicControl = () => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
     const selNodeNumber = Number(selNode);
     const targetLogic = updatedLogics[selNodeNumber].logics[i];
-    console.log(targetLogic);
+    //console.log(targetLogic);
 
     targetLogic.conditionOfQuestionAnswers.splice(index, 1);
     setLogics(updatedLogics);
@@ -319,7 +322,7 @@ export const LogicControl = () => {
         edge.source === selNode && edge.target === String(Number(selNode) + 1)
     );
 
-    updatedNodes[Number(selNode) - 1].data.nextQ = value;
+    updatedNodes[Number(Number(selNode) - 1)].data.nextQ = value;
 
     let flag = updatedNodes.find((node: Node) => node.id === selNode);
 
@@ -328,7 +331,7 @@ export const LogicControl = () => {
       updatedNodes.forEach((node: Node) => {
         if (node.id < selNode && node.id > value) {
           node.position.x = node.position.x + 100;
-          node.position.y = selNodeY;
+          node.position.y = selNodeY + 200;
         }
         if (node.id >= value) {
           node.position.x = node.position.x + 50;
@@ -351,97 +354,109 @@ export const LogicControl = () => {
             <div>질문 {selNode}</div>
             <div>
               이동하기
-              {/*<Select*/}
-              {/*  value={nodes[Number(selNode) - 1].data.nextQ}*/}
-              {/*  style={{ width: 120 }}*/}
-              {/*  onChange={NoLogicChangeNext}*/}
-              {/*  options={questionList}*/}
-              {/*/>*/}
+              <Select
+                value={nodes[Number(Number(selNode) - 1)]?.data?.nextQ}
+                style={{ width: 120 }}
+                onChange={NoLogicChangeNext}
+                options={questionList}
+              />
             </div>
-            <Button onClick={addLogic}>로직 추가 하기</Button>
-            {count[Number(selNode)] > 0 ? (
+            {surveyQuestions[Number(Number(selNode) - 1)]?.type ===
+              "MULTIPLE" && (
               <>
-                {logics[Number(selNode)].logics.map((logic, i) => (
-                  <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>로직 {i + 1}</Typography>
-                      <Button
-                        onClick={(e: any) => {
-                          DeleteLogic(i, e);
-                        }}
-                        style={DeleteOption()}
-                      >
-                        X
-                      </Button>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <LogicBody>
-                        조건 :
-                        <SelectSection>
-                          {isMultiCondition[Number(selNode)] > 0 ? (
-                            <>
-                              {logic.conditionOfQuestionAnswers.map(
-                                (condition, index) => (
-                                  <ConditionSection>
-                                    <Select
-                                      key={index}
-                                      value={
-                                        logics[Number(selNode)].logics[i]
-                                          .conditionOfQuestionAnswers[index]
-                                      }
-                                      style={{ width: 120 }}
-                                      onChange={(e) =>
-                                        ConditionChange(i, index, e)
-                                      }
-                                      options={[
-                                        { value: "1", label: "1" },
-                                        { value: "2", label: "2" },
-                                        { value: "3", label: "3" },
-                                        { value: "4", label: "4" },
-                                      ]}
-                                    />
-                                    <Button
-                                      onClick={() => {
-                                        DeleteCondition(i, index);
-                                      }}
-                                      style={DeleteOption()}
-                                    >
-                                      X
-                                    </Button>
-                                  </ConditionSection>
-                                )
-                              )}
-                            </>
-                          ) : (
-                            <div></div>
-                          )}
-                        </SelectSection>
-                        와 같다면
-                        <br />
-                        <Button
-                          onClick={() => {
-                            addCondition(i);
-                          }}
-                        >
-                          조건 추가 하기
-                        </Button>
-                      </LogicBody>
-                      <LogicBottom>
-                        이동 :
-                        <Select
-                          value={logic.nextQuestionNumber}
-                          style={{ width: 120 }}
-                          onChange={(e) => NextQuestionChange(i, e)}
-                          options={questionList}
-                        />
-                      </LogicBottom>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
-                <div>{JSON.stringify(logics[Number(selNode)])}</div>
+                <Button onClick={addLogic}>로직 추가 하기</Button>
+                {count[Number(selNode)] > 0 ? (
+                  <>
+                    {surveyQuestions.map(
+                      (item, i) => {(
+                      }
+                        <Accordion>
+                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography key={i}>로직 {i + 1}</Typography>
+                            <Button
+                              onClick={(e: any) => {
+                                DeleteLogic(i, e);
+                              }}
+                              style={DeleteOption()}
+                            >
+                              X
+                            </Button>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <LogicBody>
+                              조건 :
+                              <SelectSection>
+                                {isMultiCondition[Number(selNode)] > 0 ? (
+                                  <>
+                                    {logic.conditionOfQuestionAnswers.map(
+                                      (condition, index) => (
+                                        <ConditionSection>
+                                          <Select
+                                            key={index}
+                                            value={
+                                              logics[Number(selNode)].logics[i]
+                                                .conditionOfQuestionAnswers[
+                                                index
+                                              ]
+                                            }
+                                            style={{ width: 120 }}
+                                            onChange={(e) =>
+                                              ConditionChange(i, index, e)
+                                            }
+                                            options={[
+                                              { value: "1", label: "1" },
+                                              { value: "2", label: "2" },
+                                              { value: "3", label: "3" },
+                                              { value: "4", label: "4" },
+                                            ]}
+                                          />
+                                          <Button
+                                            onClick={() => {
+                                              DeleteCondition(i, index);
+                                            }}
+                                            style={DeleteOption()}
+                                          >
+                                            X
+                                          </Button>
+                                        </ConditionSection>
+                                      )
+                                    )}
+                                  </>
+                                ) : (
+                                  <div></div>
+                                )}
+                              </SelectSection>
+                              와 같다면
+                              <br />
+                              <Button
+                                onClick={() => {
+                                  addCondition(i);
+                                }}
+                              >
+                                조건 추가 하기
+                              </Button>
+                            </LogicBody>
+                            <LogicBottom>
+                              이동 :
+                              <Select
+                                value={logic.nextQuestionNumber}
+                                style={{ width: 120 }}
+                                onChange={(e) => NextQuestionChange(i, e)}
+                                options={questionList}
+                              />
+                            </LogicBottom>
+                          </AccordionDetails>
+                        </Accordion>
+                      )}
+                    )}
+                    <div>
+                      {JSON.stringify(surveyQuestions[Number(selNode)])}
+                    </div>
+                  </>
+                ) : (
+                  <div></div>
+                )}
               </>
-            ) : (
-              <div></div>
             )}
           </div>
         )}

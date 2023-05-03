@@ -36,8 +36,8 @@ export default function LogicTab() {
   const nodes = useRecoilValue(NodeState);
   const edges = useRecoilValue(EdgeState);
   useEffect(() => {
-    console.log(nodes);
-    console.log(edges);
+    // console.log(nodes);
+    // console.log(edges);
   }, []);
 
   // 현재 선택한 노드

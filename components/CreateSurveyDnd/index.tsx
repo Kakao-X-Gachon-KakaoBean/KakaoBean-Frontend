@@ -318,19 +318,8 @@ const CreateSurveyDnd = (): JSX.Element => {
         target: String(i + 2),
       };
 
-      const newLogic: Logic = {
-        id: String(i + 1),
-        logics: [
-          {
-            conditionOfQuestionAnswers: [],
-            nextQuestionNumber: "",
-          },
-        ],
-      };
-
       setCount((prevCount) => [...prevCount, 0]);
       setIsMultiCondition((prevVal) => [...prevVal, 1]);
-      setLogics((prevLogic) => [...prevLogic, newLogic]);
       newNodeTuple.push(newNode);
       newEdgeTuple.push(newEdge);
       newQuestionTuple.push({ value: i + 1, label: String(i + 1) });
