@@ -16,6 +16,7 @@ import {
   countState,
   createSurveyOptionState,
   selectedQuestionState,
+  questionsState,
 } from "../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
@@ -85,8 +86,9 @@ const CreateSurveyDnd = (): JSX.Element => {
     selectedQuestionState
   );
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]);
-  const [questions, setQuestions] = useState<QuestionTypes[]>([]);
+  const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]); // id, value 포함 전체 질문
+  const [questions, setQuestions] = useState<QuestionTypes[]>([]); // id, value 제거 전체 질문
+  const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState); // 전체 질문 recoil
   const isEmptyTitle = (title: string) => {
     return title === "" || title === "제목 없음";
   };
@@ -243,6 +245,7 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   useEffect(() => {
     console.log("id 확인용 json", questionItems);
+    setSurveyQuestions(() => questionItems);
     const updatedQuestions = questionItems.map((item) => {
       if ("id" in item) {
         const { id, ...rest } = item;

@@ -26,9 +26,13 @@ import {
   MultiConditionState,
   QuestionList,
 } from "../../../States/LogicState";
+import { questionsState } from "../../../States/SurveyState";
 import { update } from "autosize";
 
 export const LogicControl = () => {
+  // 전체 질문
+  const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState);
+
   const [nodes, setNodes] = useRecoilState(NodeState);
   const [edges, setEdges] = useRecoilState(EdgeState);
   // 현재 선택한 노드
@@ -43,6 +47,9 @@ export const LogicControl = () => {
     useRecoilState(MultiConditionState);
   const questionList = useRecoilValue(QuestionList);
 
+  useEffect(() => {
+    console.log("전체 질문 정보: " + surveyQuestions);
+  }, [surveyQuestions]);
   //로직 추가하기
   const addLogic = () => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
@@ -109,7 +116,6 @@ export const LogicControl = () => {
   //로직 삭제
   const DeleteLogic = (i: number, value: string) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
-
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
 

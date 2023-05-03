@@ -28,3 +28,13 @@ export const selectedQuestionState = atom<
     nextQuestionNumber: "0",
   },
 });
+
+type QuestionTypes =
+  | QuestionsItem
+  | MultipleQuestion
+  | SubjectiveQuestion
+  | RangeBarQuestion;
+export const questionsState = atom<QuestionTypes[]>({
+  key: "questionsState",
+  default: [],
+});
