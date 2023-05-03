@@ -33,6 +33,7 @@ export const LogicState = atom<Logic[]>({
   key: "logics",
   default: [
     {
+      id: 1,
       logics: [{ conditionOfQuestionAnswers: [], nextQuestionNumber: "0" }],
     },
   ],

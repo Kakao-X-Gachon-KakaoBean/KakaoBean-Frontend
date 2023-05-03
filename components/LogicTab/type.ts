@@ -4,5 +4,6 @@ export interface LogicDetail {
 }
 
 export interface Logic {
+  id: Number;
   logics: LogicDetail[];
 }
