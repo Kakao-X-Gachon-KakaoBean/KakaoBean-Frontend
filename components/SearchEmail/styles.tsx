@@ -1,14 +1,13 @@
 import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
-  border: 1px solid;
   border-radius: 10px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   position: relative;
 
   background-color: white;
 
-  width: 40vw;
+  width: 25vw;
   min-width: 400px;
   height: 30vh;
   min-height: 180px;

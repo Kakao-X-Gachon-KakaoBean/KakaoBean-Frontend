@@ -269,28 +269,30 @@ const CreateSurveyDnd = (): JSX.Element => {
     let yaxis = 0;
     let newNode, newEdge;
 
-    console.log(countQuestion);
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < countQuestion; i++) {
-      if (i == countQuestion - 1) {
+    for (i; i < surveyQuestions.length; i++) {
+      if (i == surveyQuestions.length - 1) {
         newNode = {
           id: String(i + 1),
-          data: { label: String(i + 1), nextQ: String(0) },
-          position: { x: 400, y: yaxis },
+          data: {
+            label: surveyQuestions[i].title,
+            nextQ: String(0),
+          },
+          position: { x: 270, y: yaxis },
         };
       } else {
         if (i == 0) {
           newNode = {
             id: String(i + 1),
             type: "input",
-            data: { label: String(i + 1), nextQ: String(i + 2) },
-            position: { x: 400, y: yaxis },
+            data: { label: surveyQuestions[i].title, nextQ: String(i + 2) },
+            position: { x: 270, y: yaxis },
           };
         } else {
           newNode = {
             id: String(i + 1),
-            data: { label: String(i + 1), nextQ: String(i + 2) },
-            position: { x: 400, y: yaxis },
+            data: { label: surveyQuestions[i].title, nextQ: String(i + 2) },
+            position: { x: 270, y: yaxis },
           };
         }
       }
@@ -337,13 +339,13 @@ const CreateSurveyDnd = (): JSX.Element => {
 
     newNodeTuple.push(submitNode);
     newEdgeTuple.push(submitEdge);
-    newQuestionTuple.push({ value: 0, label: "제출하기" });
+    newQuestionTuple.push({ value: "0", label: "제출하기" });
 
     //console.log(newNodeTuple);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
     setQuestionList(newQuestionTuple);
-  }, [countQuestion]);
+  }, [surveyQuestions]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
