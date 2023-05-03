@@ -38,7 +38,7 @@ const CreateSurveySideBar = (): JSX.Element => {
             selectedKeys={[optionState]}
             mode="horizontal"
             items={items}
-            style={{ flex: "auto" }}
+            style={{ flex: "auto", marginTop: "-10%" }}
           />
         </MenuDiv>
         <ContentDiv>
