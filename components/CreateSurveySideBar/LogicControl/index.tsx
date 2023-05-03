@@ -48,7 +48,7 @@ export const LogicControl = () => {
   const questionList = useRecoilValue(QuestionList);
 
   useEffect(() => {
-    console.log("전체 질문 정보: " + surveyQuestions);
+    console.log("전체 질문 정보: ", surveyQuestions);
   }, [surveyQuestions]);
   //로직 추가하기
   const addLogic = () => {

@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { DialogButton } from "@components/CreateSurveyChatBot/styles";
 import { Button, Drawer, Input } from "antd";
+import { useRecoilState } from "recoil";
+import { createSurveyOptionState } from "../../States/SurveyState";
 
 const CreateSurveyChatBot = (): JSX.Element => {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [viewLogic, setViewLogic] = useRecoilState(createSurveyOptionState);
   const testButtons = [
     {
       id: 1,
@@ -36,7 +39,12 @@ const CreateSurveyChatBot = (): JSX.Element => {
 
   return (
     <div>
-      <DialogButton onClick={showDrawer}>AI 추천</DialogButton>
+      {viewLogic === "logic" ? (
+        <></>
+      ) : (
+        <DialogButton onClick={showDrawer}>AI 추천</DialogButton>
+      )}
+
       <Drawer
         title="AI로 질문 추천 받기"
         placement="right"
