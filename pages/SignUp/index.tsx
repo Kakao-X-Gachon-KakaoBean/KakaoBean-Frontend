@@ -1,5 +1,5 @@
 import React, { FormEvent, useCallback, useState } from "react";
-import { LoginBtn, Wrapper, Label } from "@pages/LogIn/styles";
+import { Wrapper, Label } from "@pages/LogIn/styles";
 import {
   Header,
   SubHeader,
@@ -7,6 +7,7 @@ import {
   CheckBtn,
   Form,
   InputGender,
+  LoginBtn,
   Label2,
   CheckLabel,
   EmailLabel,

@@ -1,12 +1,37 @@
 import styled from "@emotion/styled";
 
 export const Header = styled.div`
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.4rem;
   line-height: 77px;
   letter-spacing: 0.1em;
   text-align: center;
+  font-family: "Pretendard-Regular";
+`;
+
+export const LoginBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  text-align: center;
+  width: 29rem;
+  height: 3rem;
+  background: #f1f3f5;
+  border-radius: 8px;
+  color: #b8c0c5;
+  outline: none;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1rem;
+  border: none;
+  &:hover {
+    background-color: #039ba1;
+    color: white;
+    border: none;
+  }
 `;
 
 export const SubHeader = styled.div`
@@ -49,8 +74,8 @@ export const EmailInput = styled.input`
   box-sizing: border-box;
   border: 1px solid #e6e8eb;
   border-radius: 8px;
-  width: 25rem;
-  height: 3.5rem;
+  width: 22rem;
+  height: 3rem;
   outline: none;
   font-size: 1.3rem;
   padding: 10px 15px 12px;
@@ -60,7 +85,7 @@ export const EmailInput = styled.input`
     border: 1px solid gray;
   }
   ::placeholder {
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 200;
     color: #969696;
   }
@@ -71,7 +96,7 @@ export const CheckBtn = styled.button`
   justify-content: center;
   align-items: center;
   width: 6rem;
-  height: 3.5rem;
+  height: 3rem;
   background: #f2fcfc;
   border: 1px solid #b6e4e5;
   border-radius: 8px;
@@ -96,8 +121,8 @@ export const Input = styled.input`
   box-sizing: border-box;
   border: 1px solid #e6e8eb;
   border-radius: 8px;
-  width: 32rem;
-  height: 3.5rem;
+  width: 29rem;
+  height: 3rem;
   outline: none;
   font-size: 1.3rem;
   padding: 10px 15px 12px;
@@ -107,7 +132,7 @@ export const Input = styled.input`
     border: 1px solid gray;
   }
   ::placeholder {
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 200;
     color: #969696;
   }
@@ -128,8 +153,8 @@ export const Label2 = styled.label`
   box-sizing: border-box;
   border: 1px solid #e6e8eb;
   border-radius: 8px;
-  width: 15rem;
-  height: 3.5rem;
+  width: 13.6rem;
+  height: 3rem;
   font-weight: 600;
   outline: none;
   font-size: 1.3rem;
@@ -150,7 +175,7 @@ export const InputGender = styled.input`
     border: 1px solid gray;
   }
   ::placeholder {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #6c747a;
   }
