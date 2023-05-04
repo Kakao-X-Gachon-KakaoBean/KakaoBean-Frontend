@@ -1,6 +1,3 @@
-import { atom } from "recoil";
-import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
-
 // item type interface
 export interface QuestionTypeItem {
   id: string;

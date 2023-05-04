@@ -39,7 +39,7 @@ export const LogicControl = () => {
   // 현재 선택한 노드
   const selNode = useRecoilValue(SelNodeState);
   const idNum = useRecoilValue(IdNumState);
-  let select = surveyQuestions[Number(Number(selNode) - 1)];
+  const select = surveyQuestions[Number(Number(selNode) - 1)];
 
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
@@ -110,35 +110,41 @@ export const LogicControl = () => {
   };
 
   //로직 삭제
-  const DeleteLogic = (i: number, value: string) => {
-    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
-    const updatedLogics = JSON.parse(JSON.stringify(logics));
-
-    //let updatedEdges = JSON.parse(JSON.stringify(edges));
-    //let updatedNodes = JSON.parse(JSON.stringify(nodes));
-
-    if ("logics" in select) {
-      const updatedCounts = [...count];
-      //updatedLogics[Number(selNode)].logics.splice(i, 1);
-      const nodeIndex = Number(selNode);
-      const logicIndex = i;
-
-      const newLogics = [
-        ...updatedQuestions[nodeIndex].logics.slice(0, logicIndex),
-        ...updatedQuestions[nodeIndex].logics.slice(logicIndex + 1),
-      ];
-
-      const newUpdatedLogics = [
-        ...updatedQuestions.slice(0, nodeIndex),
-        { ...updatedQuestions[nodeIndex], logics: newLogics },
-        ...updatedQuestions.slice(nodeIndex + 1),
-      ];
-
-      //updatedQuestions[Number(selNode)].logics.slice(i, 0);
-      setSurveyQuestions(newUpdatedLogics);
-
-      setCount(updatedCounts);
+  const DeleteLogic = (logicIndex: number) => {
+    if (Number(selNode) == 0 || selNode === undefined) {
+      console.error("selNode is 0 or undefined");
+      return;
     }
+
+    const questionIndex = Number(selNode);
+    const select = JSON.parse(
+      JSON.stringify(surveyQuestions[questionIndex - 1])
+    );
+
+    if (!select || !("logics" in select)) {
+      console.error("logics is undefined");
+      return;
+    }
+
+    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
+    const updatedCounts = [...count];
+
+    const newLogics = [...select.logics];
+    newLogics.splice(logicIndex, 1);
+
+    const updatedQuestion = {
+      ...select,
+      logics: newLogics,
+    };
+
+    //updatedQuestions[questionIndex].logics = newLogics;
+    updatedQuestions[questionIndex - 1] = updatedQuestion;
+
+    console.log("1");
+    console.log(updatedQuestions);
+    setSurveyQuestions(updatedQuestions);
+    console.log("2");
+    setCount(updatedCounts);
   };
 
   //삭제 예정
@@ -319,7 +325,7 @@ export const LogicControl = () => {
                               <Typography>로직 {i + 1}</Typography>
                               <Button
                                 onClick={(e: any) => {
-                                  DeleteLogic(i, e);
+                                  DeleteLogic(i);
                                 }}
                                 style={DeleteOption()}
                               >
@@ -329,67 +335,80 @@ export const LogicControl = () => {
                             <AccordionDetails>
                               <LogicBody>
                                 조건 :
-                                <SelectSection>
-                                  {isMultiCondition[Number(selNode)] > 0 &&
-                                  "conditionOfQuestionAnswers" in item &&
-                                  item.conditionOfQuestionAnswers != null &&
-                                  Array.isArray(
-                                    item.conditionOfQuestionAnswers
-                                  ) ? (
-                                    <>
-                                      {item.conditionOfQuestionAnswers.map(
-                                        (condition, index) => (
-                                          <ConditionSection key={index}>
-                                            <Select
-                                              value={condition[index]}
-                                              style={{ width: 120 }}
-                                              onChange={(e) =>
-                                                ConditionChange(i, index, e)
-                                              }
-                                              options={[
-                                                {
-                                                  value: "1",
-                                                  label: "1",
-                                                },
-                                                {
-                                                  value: "2",
-                                                  label: "2",
-                                                },
-                                                {
-                                                  value: "3",
-                                                  label: "3",
-                                                },
-                                                {
-                                                  value: "4",
-                                                  label: "4",
-                                                },
-                                              ]}
-                                            />
-                                            <Button
-                                              onClick={() => {
-                                                DeleteCondition(i, index);
-                                              }}
-                                              style={DeleteOption()}
-                                            >
-                                              X
-                                            </Button>
-                                          </ConditionSection>
-                                        )
-                                      )}
-                                    </>
-                                  ) : (
-                                    <div></div>
-                                  )}
-                                </SelectSection>
-                                와 같다면
-                                <br />
-                                <Button
-                                  onClick={() => {
-                                    addCondition(i);
-                                  }}
-                                >
-                                  조건 추가 하기
-                                </Button>
+                                {"nextQuestionNumber" in select ? (
+                                  <SelectSection>
+                                    {isMultiCondition[Number(selNode)] > 0 &&
+                                    "conditionOfQuestionAnswers" in item &&
+                                    item.conditionOfQuestionAnswers != null &&
+                                    Array.isArray(
+                                      item.conditionOfQuestionAnswers
+                                    ) ? (
+                                      <>
+                                        {item.conditionOfQuestionAnswers.map(
+                                          (condition, index) => {
+                                            if (
+                                              "numberOfAnswerChoices" in select
+                                            ) {
+                                              return (
+                                                <ConditionSection key={index}>
+                                                  {[
+                                                    ...Array(
+                                                      parseInt(
+                                                        String(
+                                                          select.numberOfAnswerChoices
+                                                        )
+                                                      )
+                                                    ),
+                                                  ].map((n, index2) => {
+                                                    if ("answers" in select) {
+                                                      return (
+                                                        <Select
+                                                          key={index2}
+                                                          value={
+                                                            select.answers[
+                                                              index2
+                                                            ]
+                                                          }
+                                                          style={{ width: 120 }}
+                                                          onChange={(e) =>
+                                                            ConditionChange(
+                                                              i,
+                                                              index2,
+                                                              e
+                                                            )
+                                                          }
+                                                          options={select.answers.map(
+                                                            (
+                                                              answer,
+                                                              index
+                                                            ) => ({
+                                                              value: index + 1,
+                                                              label: answer,
+                                                            })
+                                                          )}
+                                                        />
+                                                      );
+                                                    } else {
+                                                      return (
+                                                        <div key={index}></div>
+                                                      );
+                                                    }
+                                                  })}
+                                                </ConditionSection>
+                                              );
+                                            } else {
+                                              return <div key={index}></div>;
+                                            }
+                                          }
+                                        )}
+                                      </>
+                                    ) : (
+                                      <div></div>
+                                    )}
+                                  </SelectSection>
+                                ) : (
+                                  <div></div>
+                                )}
                               </LogicBody>
                               <LogicBottom>
                                 이동 :
@@ -412,7 +431,7 @@ export const LogicControl = () => {
                           </Accordion>
                         ))
                       ) : (
-                        <div>wfefweㄹㄷㅁ</div>
+                        <div></div>
                       )}
                       <div>
                         {JSON.stringify(surveyQuestions[Number(selNode) - 1])}

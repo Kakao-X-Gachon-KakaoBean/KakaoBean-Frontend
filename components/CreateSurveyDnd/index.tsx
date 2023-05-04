@@ -405,7 +405,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                           ...questionItems.slice(0, index),
                           ...questionItems.slice(index + 1),
                         ];
-                        setQuestionItems(newQuestionItems);
+                        setSurveyQuestions(newQuestionItems);
                       }}
                     >
                       X
@@ -467,7 +467,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   ref={provided.innerRef}
                   style={getQuestionsListStyle(snapshot.isDraggingOver)}
                 >
-                  {questionItems.map((item, index) => (
+                  {surveyQuestions.map((item, index) => (
                     <Draggable
                       key={item.id}
                       draggableId={item.id}
@@ -527,7 +527,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 </div>
               )}
             </Droppable>
-            {questionItems.length >= 1 ? (
+            {surveyQuestions.length >= 1 ? (
               <div
                 style={{
                   display: "flex",
