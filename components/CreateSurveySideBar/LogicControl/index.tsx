@@ -140,10 +140,8 @@ export const LogicControl = () => {
     //updatedQuestions[questionIndex].logics = newLogics;
     updatedQuestions[questionIndex - 1] = updatedQuestion;
 
-    console.log("1");
     console.log(updatedQuestions);
     setSurveyQuestions(updatedQuestions);
-    console.log("2");
     setCount(updatedCounts);
   };
 
@@ -172,14 +170,16 @@ export const LogicControl = () => {
   };
 
   //로직->조건 변경시 호출. node위치 및 edge 변경 필요
-  const ConditionChange = (i: number, index: number, value: string) => {
+  const ConditionChange = (i: number, index2: number, value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
-    const selNodeNumber = Number(selNode);
+    const selNodeNumber = Number(Number(selNode) - 1);
     const targetLogic = updatedQuestions[selNodeNumber].logics[i];
-
-    targetLogic.conditionOfQuestionAnswers[index] = value;
+    targetLogic.conditionOfQuestionAnswers[index2] = value;
 
     setSurveyQuestions(updatedQuestions);
+    console.log(updatedQuestions);
+    console.log(targetLogic);
+    console.log(surveyQuestions);
   };
 
   //삭제 예정
@@ -365,7 +365,8 @@ export const LogicControl = () => {
                                                         <Select
                                                           key={index2}
                                                           value={
-                                                            select.answers[
+                                                            select.logics[i]
+                                                              .conditionOfQuestionAnswers[
                                                               index2
                                                             ]
                                                           }
@@ -382,8 +383,8 @@ export const LogicControl = () => {
                                                               answer,
                                                               index
                                                             ) => ({
-                                                              value: index + 1,
                                                               label: answer,
+                                                              value: answer,
                                                             })
                                                           )}
                                                         />
