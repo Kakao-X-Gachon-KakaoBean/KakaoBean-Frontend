@@ -177,9 +177,6 @@ export const LogicControl = () => {
     targetLogic.conditionOfQuestionAnswers[index2] = value;
 
     setSurveyQuestions(updatedQuestions);
-    console.log(updatedQuestions);
-    console.log(targetLogic);
-    console.log(surveyQuestions);
   };
 
   //삭제 예정
@@ -335,78 +332,54 @@ export const LogicControl = () => {
                             <AccordionDetails>
                               <LogicBody>
                                 조건 :
-                                {"nextQuestionNumber" in select ? (
-                                  <SelectSection>
-                                    {isMultiCondition[Number(selNode)] > 0 &&
-                                    "conditionOfQuestionAnswers" in item &&
-                                    item.conditionOfQuestionAnswers != null &&
-                                    Array.isArray(
-                                      item.conditionOfQuestionAnswers
-                                    ) ? (
-                                      <>
-                                        {item.conditionOfQuestionAnswers.map(
-                                          (condition, index) => {
-                                            if (
-                                              "numberOfAnswerChoices" in select
-                                            ) {
-                                              return (
-                                                <ConditionSection key={index}>
-                                                  {[
-                                                    ...Array(
-                                                      parseInt(
-                                                        String(
-                                                          select.numberOfAnswerChoices
-                                                        )
-                                                      )
-                                                    ),
-                                                  ].map((n, index2) => {
-                                                    if ("answers" in select) {
-                                                      return (
-                                                        <Select
-                                                          key={index2}
-                                                          value={
-                                                            select.logics[i]
-                                                              .conditionOfQuestionAnswers[
-                                                              index2
-                                                            ]
-                                                          }
-                                                          style={{ width: 120 }}
-                                                          onChange={(e) =>
-                                                            ConditionChange(
-                                                              i,
-                                                              index2,
-                                                              e
-                                                            )
-                                                          }
-                                                          options={select.answers.map(
-                                                            (
-                                                              answer,
-                                                              index
-                                                            ) => ({
-                                                              label: answer,
-                                                              value: answer,
-                                                            })
-                                                          )}
-                                                        />
-                                                      );
-                                                    } else {
-                                                      return (
-                                                        <div key={index}></div>
-                                                      );
-                                                    }
-                                                  })}
-                                                </ConditionSection>
-                                              );
-                                            } else {
-                                              return <div key={index}></div>;
-                                            }
+                                {isMultiCondition[Number(selNode)] > 0 &&
+                                "conditionOfQuestionAnswers" in item &&
+                                item.conditionOfQuestionAnswers != null &&
+                                Array.isArray(
+                                  item.conditionOfQuestionAnswers
+                                ) ? (
+                                  <>
+                                    {item.conditionOfQuestionAnswers.length >
+                                      0 && (
+                                      <ConditionSection>
+                                        {[
+                                          ...Array(
+                                            parseInt(
+                                              String(
+                                                select.numberOfAnswerChoices
+                                              )
+                                            )
+                                          ),
+                                        ].map((n, index) => {
+                                          if ("answers" in select) {
+                                            return (
+                                              <Select
+                                                key={index}
+                                                value={
+                                                  select.logics[i]
+                                                    .conditionOfQuestionAnswers[
+                                                    index
+                                                  ]
+                                                }
+                                                style={{ width: 120 }}
+                                                onChange={(e) =>
+                                                  ConditionChange(i, index, e)
+                                                }
+                                                options={select.answers.map(
+                                                  (answer) => ({
+                                                    label: answer,
+                                                    value: answer,
+                                                  })
+                                                )}
+                                              />
+                                            );
+                                          } else {
+                                            return <div key={index}></div>;
                                           }
-                                        )}
-                                      </>
-                                    ) : (
-                                      <div></div>
+                                        })}
+                                      </ConditionSection>
                                     )}
-                                  </SelectSection>
+                                  </>
                                 ) : (
                                   <div></div>
                                 )}
