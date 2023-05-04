@@ -86,7 +86,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     selectedQuestionState
   );
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  const [questionItems, setQuestionItems] = useState<QuestionTypes[]>([]); // id, value 포함 전체 질문
   const [questions, setQuestions] = useState<QuestionTypes[]>([]); // id, value 제거 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState); // 전체 질문 recoil
   const isEmptyTitle = (title: string) => {
@@ -100,9 +99,9 @@ const CreateSurveyDnd = (): JSX.Element => {
     updatedQuestion: MultipleQuestion | SubjectiveQuestion | RangeBarQuestion,
     index: number
   ) => {
-    const newQuestionItems = [...questionItems];
+    const newQuestionItems = [...surveyQuestions];
     newQuestionItems[index] = updatedQuestion;
-    setQuestionItems(() => newQuestionItems);
+    setSurveyQuestions(() => newQuestionItems);
 
     // 값이 변하면 selectedRecoil 업데이트
     newQuestionItems.map((item, index) => {
@@ -114,14 +113,14 @@ const CreateSurveyDnd = (): JSX.Element => {
     });
   };
 
-  // recoilValue가 변하면 questionItems 업데이트
+  // recoilValue가 변하면 surveyQuestions 업데이트
   useEffect(() => {
-    questionItems.map((item, index) => {
+    surveyQuestions.map((item, index) => {
       if ("id" in selectedQuestion) {
         if (item.id === selectedQuestion.id) {
-          const newQuestionItems = [...questionItems];
+          const newQuestionItems = [...surveyQuestions];
           newQuestionItems[index] = selectedQuestion;
-          setQuestionItems(() => newQuestionItems);
+          setSurveyQuestions(() => newQuestionItems);
         }
       }
     });
@@ -215,25 +214,25 @@ const CreateSurveyDnd = (): JSX.Element => {
       if (result.destination.droppableId === "questions") {
         setCountQuestion(countQuestion + 1);
         const newItems1 = reorderAddQuestions(
-          questionItems,
+          surveyQuestions,
           result.source.index,
           result.destination.index
         );
-        setQuestionItems(() => newItems1);
+        setSurveyQuestions(() => newItems1);
       }
     }
 
     // 질문 유형 내의 컴포넌트를 drag
     if (result.source.droppableId === "questions") {
       const newItems2 = reorderQuestions(
-        questionItems,
+        surveyQuestions,
         result.source.index,
         result.destination.index
       );
-      setQuestionItems(() => newItems2);
+      setSurveyQuestions(() => newItems2);
     }
 
-    setQuestionItems((prevState) => {
+    setSurveyQuestions((prevState) => {
       return prevState.map((item, index) => {
         return {
           ...item,
@@ -244,9 +243,8 @@ const CreateSurveyDnd = (): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log("id 확인용 json", questionItems);
-    setSurveyQuestions(() => questionItems);
-    const updatedQuestions = questionItems.map((item) => {
+    console.log("id 확인용 json", surveyQuestions);
+    const updatedQuestions = surveyQuestions.map((item) => {
       if ("id" in item) {
         const { id, ...rest } = item;
         return rest;
@@ -257,7 +255,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       return item;
     });
     setQuestions(() => updatedQuestions as QuestionTypes[]);
-  }, [questionItems]);
+  }, [surveyQuestions]);
 
   //설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
   useEffect(() => {
@@ -366,7 +364,7 @@ const CreateSurveyDnd = (): JSX.Element => {
               }}
             />
             <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
-            {questionItems.map((item, index) => {
+            {surveyQuestions.map((item, index) => {
               const SidebarQuestion =
                 selectedQuestion.id === item.id
                   ? SidebarSelectedQuestion
@@ -402,10 +400,10 @@ const CreateSurveyDnd = (): JSX.Element => {
                     <SidebarQuestionDelete
                       onClick={() => {
                         const newQuestionItems = [
-                          ...questionItems.slice(0, index),
-                          ...questionItems.slice(index + 1),
+                          ...surveyQuestions.slice(0, index),
+                          ...surveyQuestions.slice(index + 1),
                         ];
-                        setQuestionItems(newQuestionItems);
+                        setSurveyQuestions(newQuestionItems);
                       }}
                     >
                       X
@@ -467,7 +465,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   ref={provided.innerRef}
                   style={getQuestionsListStyle(snapshot.isDraggingOver)}
                 >
-                  {questionItems.map((item, index) => (
+                  {surveyQuestions.map((item, index) => (
                     <Draggable
                       key={item.id}
                       draggableId={item.id}
@@ -527,7 +525,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 </div>
               )}
             </Droppable>
-            {questionItems.length >= 1 ? (
+            {surveyQuestions.length >= 1 ? (
               <div
                 style={{
                   display: "flex",
