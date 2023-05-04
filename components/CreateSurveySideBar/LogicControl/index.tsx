@@ -140,10 +140,8 @@ export const LogicControl = () => {
     //updatedQuestions[questionIndex].logics = newLogics;
     updatedQuestions[questionIndex - 1] = updatedQuestion;
 
-    console.log("1");
     console.log(updatedQuestions);
     setSurveyQuestions(updatedQuestions);
-    console.log("2");
     setCount(updatedCounts);
   };
 
@@ -172,12 +170,11 @@ export const LogicControl = () => {
   };
 
   //로직->조건 변경시 호출. node위치 및 edge 변경 필요
-  const ConditionChange = (i: number, index: number, value: string) => {
+  const ConditionChange = (i: number, index2: number, value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
-    const selNodeNumber = Number(selNode);
+    const selNodeNumber = Number(Number(selNode) - 1);
     const targetLogic = updatedQuestions[selNodeNumber].logics[i];
-
-    targetLogic.conditionOfQuestionAnswers[index] = value;
+    targetLogic.conditionOfQuestionAnswers[index2] = value;
 
     setSurveyQuestions(updatedQuestions);
   };
@@ -335,77 +332,54 @@ export const LogicControl = () => {
                             <AccordionDetails>
                               <LogicBody>
                                 조건 :
-                                {"nextQuestionNumber" in select ? (
-                                  <SelectSection>
-                                    {isMultiCondition[Number(selNode)] > 0 &&
-                                    "conditionOfQuestionAnswers" in item &&
-                                    item.conditionOfQuestionAnswers != null &&
-                                    Array.isArray(
-                                      item.conditionOfQuestionAnswers
-                                    ) ? (
-                                      <>
-                                        {item.conditionOfQuestionAnswers.map(
-                                          (condition, index) => {
-                                            if (
-                                              "numberOfAnswerChoices" in select
-                                            ) {
-                                              return (
-                                                <ConditionSection key={index}>
-                                                  {[
-                                                    ...Array(
-                                                      parseInt(
-                                                        String(
-                                                          select.numberOfAnswerChoices
-                                                        )
-                                                      )
-                                                    ),
-                                                  ].map((n, index2) => {
-                                                    if ("answers" in select) {
-                                                      return (
-                                                        <Select
-                                                          key={index2}
-                                                          value={
-                                                            select.answers[
-                                                              index2
-                                                            ]
-                                                          }
-                                                          style={{ width: 120 }}
-                                                          onChange={(e) =>
-                                                            ConditionChange(
-                                                              i,
-                                                              index2,
-                                                              e
-                                                            )
-                                                          }
-                                                          options={select.answers.map(
-                                                            (
-                                                              answer,
-                                                              index
-                                                            ) => ({
-                                                              value: index + 1,
-                                                              label: answer,
-                                                            })
-                                                          )}
-                                                        />
-                                                      );
-                                                    } else {
-                                                      return (
-                                                        <div key={index}></div>
-                                                      );
-                                                    }
-                                                  })}
-                                                </ConditionSection>
-                                              );
-                                            } else {
-                                              return <div key={index}></div>;
-                                            }
+                                {isMultiCondition[Number(selNode)] > 0 &&
+                                "conditionOfQuestionAnswers" in item &&
+                                item.conditionOfQuestionAnswers != null &&
+                                Array.isArray(
+                                  item.conditionOfQuestionAnswers
+                                ) ? (
+                                  <>
+                                    {item.conditionOfQuestionAnswers.length >
+                                      0 && (
+                                      <ConditionSection>
+                                        {[
+                                          ...Array(
+                                            parseInt(
+                                              String(
+                                                select.numberOfAnswerChoices
+                                              )
+                                            )
+                                          ),
+                                        ].map((n, index) => {
+                                          if ("answers" in select) {
+                                            return (
+                                              <Select
+                                                key={index}
+                                                value={
+                                                  select.logics[i]
+                                                    .conditionOfQuestionAnswers[
+                                                    index
+                                                  ]
+                                                }
+                                                style={{ width: 120 }}
+                                                onChange={(e) =>
+                                                  ConditionChange(i, index, e)
+                                                }
+                                                options={select.answers.map(
+                                                  (answer) => ({
+                                                    label: answer,
+                                                    value: answer,
+                                                  })
+                                                )}
+                                              />
+                                            );
+                                          } else {
+                                            return <div key={index}></div>;
                                           }
-                                        )}
-                                      </>
-                                    ) : (
-                                      <div></div>
+                                        })}
+                                      </ConditionSection>
                                     )}
-                                  </SelectSection>
+                                  </>
                                 ) : (
                                   <div></div>
                                 )}
