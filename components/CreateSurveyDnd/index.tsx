@@ -50,7 +50,6 @@ import {
   IdNumState,
   NodeState,
   EdgeState,
-  LogicState,
   LogicCountState,
   MultiConditionState,
   QuestionList,
@@ -63,7 +62,6 @@ const CreateSurveyDnd = (): JSX.Element => {
   // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
   const [idNum, setIdNum] = useRecoilState(IdNumState);
-  const [logics, setLogics] = useRecoilState(LogicState);
 
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
