@@ -407,38 +407,39 @@ export const LogicControl = () => {
                                                         )
                                                       )
                                                     ),
-                                                  ].map((n, index2) => (
-                                                    <Select
-                                                      key={index2}
-                                                      value={condition[index2]}
-                                                      style={{ width: 120 }}
-                                                      onChange={(e) =>
-                                                        ConditionChange(
-                                                          i,
-                                                          index2,
-                                                          e
-                                                        )
-                                                      }
-                                                      options={[
-                                                        {
-                                                          value: "1",
-                                                          label: "1",
-                                                        },
-                                                        {
-                                                          value: "2",
-                                                          label: "2",
-                                                        },
-                                                        {
-                                                          value: "3",
-                                                          label: "3",
-                                                        },
-                                                        {
-                                                          value: "4",
-                                                          label: "4",
-                                                        },
-                                                      ]}
-                                                    />
-                                                  ))}
+                                                  ].map((n, index2) => {
+                                                    if ("answers" in select) {
+                                                      return (
+                                                        <Select
+                                                          key={index2}
+                                                          value={
+                                                            condition[index2]
+                                                          }
+                                                          style={{ width: 120 }}
+                                                          onChange={(e) =>
+                                                            ConditionChange(
+                                                              i,
+                                                              index2,
+                                                              e
+                                                            )
+                                                          }
+                                                          options={select.answers.map(
+                                                            (
+                                                              answer,
+                                                              index
+                                                            ) => ({
+                                                              value: index + 1,
+                                                              label: answer,
+                                                            })
+                                                          )}
+                                                        />
+                                                      );
+                                                    } else {
+                                                      return (
+                                                        <div key={index}></div>
+                                                      );
+                                                    }
+                                                  })}
                                                 </ConditionSection>
                                               );
                                             } else {
