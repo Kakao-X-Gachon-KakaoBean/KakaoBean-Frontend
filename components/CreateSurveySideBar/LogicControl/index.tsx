@@ -316,7 +316,7 @@ export const LogicControl = () => {
                 "MULTIPLE" && (
                 <>
                   <Button onClick={addLogic}>로직 추가 하기</Button>
-                  {count[Number(selNode)] > 0 ? (
+                  {count[Number(selNode)] >= 0 ? (
                     <>
                       {"logics" in select ? (
                         select.logics.map((item, i) => (
