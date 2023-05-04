@@ -52,12 +52,6 @@ export const LogicControl = () => {
     //console.log(Number(Number(selNode) - 1));
   }, []);
 
-  surveyQuestions.map((item, index) => {
-    if ("logics" in item) {
-      //console.log(item.id, ":", item.logics);
-    }
-  });
-
   //로직 추가하기
   const addLogic = () => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
@@ -118,87 +112,36 @@ export const LogicControl = () => {
   //로직 삭제
   const DeleteLogic = (i: number, value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
-    let updatedLogics = JSON.parse(JSON.stringify(logics));
-    let updatedEdges = JSON.parse(JSON.stringify(edges));
-    let updatedNodes = JSON.parse(JSON.stringify(nodes));
+    const updatedLogics = JSON.parse(JSON.stringify(logics));
 
-    const newEdge: Edge = {
-      id: "e" + selNode + "-" + value + "-animated",
-      source: String(selNode),
-      target: String(value),
-      animated: true,
-    };
+    //let updatedEdges = JSON.parse(JSON.stringify(edges));
+    //let updatedNodes = JSON.parse(JSON.stringify(nodes));
 
-    const originValue =
-      updatedLogics[Number(selNode)].logics[i].nextQuestionNumber;
-    const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
+    if ("logics" in select) {
+      const updatedCounts = [...count];
+      //updatedLogics[Number(selNode)].logics.splice(i, 1);
+      const nodeIndex = Number(selNode);
+      const logicIndex = i;
 
-    updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = "" + value;
-    setLogics(updatedLogics);
+      const newLogics = [
+        ...updatedQuestions[nodeIndex].logics.slice(0, logicIndex),
+        ...updatedQuestions[nodeIndex].logics.slice(logicIndex + 1),
+      ];
 
-    //변경이 필요한 노드들의 위치를 수정
+      const newUpdatedLogics = [
+        ...updatedQuestions.slice(0, nodeIndex),
+        { ...updatedQuestions[nodeIndex], logics: newLogics },
+        ...updatedQuestions.slice(nodeIndex + 1),
+      ];
 
-    if (value == "0") {
-      updatedNodes.forEach((node: Node) => {
-        if (Number(node.id) > Number(selNode)) {
-          node.position.x = rootXAxis + 100;
-        }
-      });
-    } else if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
-      updatedNodes.forEach((node: Node) => {
-        if (
-          node.id === String(selNode) ||
-          node.id === String(value) ||
-          node.id === "0" ||
-          Number(node.id) < Number(selNode) ||
-          Number(node.id) > Number(value)
-        ) {
-          node.position.x = rootXAxis;
-        } else {
-          node.position.x = rootXAxis + 100;
-        }
-      });
+      //updatedQuestions[Number(selNode)].logics.slice(i, 0);
+      setSurveyQuestions(newUpdatedLogics);
+
+      setCount(updatedCounts);
     }
-
-    //다음질문이 여러번 변경되면 그 전에 저장되었던 다음 질문과 연결된 edge 제거하기
-    updatedEdges = updatedEdges.filter((edge: Edge) => {
-      return !(
-        edge.source === selNode &&
-        edge.target == originValue &&
-        edge.animated
-      );
-    });
-
-    //다음질문이 기본이동과 동일하지 않을때만 edge 생성
-    if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
-      updatedEdges.push(newEdge);
-    }
-
-    setEdges(updatedEdges);
-    setNodes(updatedNodes);
-
-    const updatedCounts = [...count];
-    //updatedLogics[Number(selNode)].logics.splice(i, 1);
-    const nodeIndex = Number(selNode);
-    const logicIndex = i;
-
-    const newLogics = [
-      ...updatedLogics[nodeIndex].logics.slice(0, logicIndex),
-      ...updatedLogics[nodeIndex].logics.slice(logicIndex + 1),
-    ];
-
-    const newUpdatedLogics = [
-      ...updatedLogics.slice(0, nodeIndex),
-      { ...updatedLogics[nodeIndex], logics: newLogics },
-      ...updatedLogics.slice(nodeIndex + 1),
-    ];
-
-    setLogics(newUpdatedLogics);
-
-    setCount(updatedCounts);
   };
 
-  //조건 추가 하기
+  //삭제 예정
   const addCondition = (i: number) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
     const updateMultiCondition = JSON.parse(JSON.stringify(isMultiCondition));
@@ -224,16 +167,16 @@ export const LogicControl = () => {
 
   //로직->조건 변경시 호출. node위치 및 edge 변경 필요
   const ConditionChange = (i: number, index: number, value: string) => {
-    const updatedLogics = JSON.parse(JSON.stringify(logics));
+    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const selNodeNumber = Number(selNode);
-    const targetLogic = updatedLogics[selNodeNumber].logics[i];
+    const targetLogic = updatedQuestions[selNodeNumber].logics[i];
 
     targetLogic.conditionOfQuestionAnswers[index] = value;
 
-    setLogics(updatedLogics);
+    setSurveyQuestions(updatedQuestions);
   };
 
-  //조건 삭제
+  //삭제 예정
   const DeleteCondition = (i: number, index: number) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
     const selNodeNumber = Number(selNode);
@@ -247,6 +190,7 @@ export const LogicControl = () => {
   //다음 질문 수정될때 node, edge 바뀜
   const NextQuestionChange = (i: number, value: string) => {
     const updatedLogics = JSON.parse(JSON.stringify(logics));
+    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -257,11 +201,13 @@ export const LogicControl = () => {
     };
 
     const originValue =
-      updatedLogics[Number(selNode)].logics[i].nextQuestionNumber;
+      updatedQuestions[Number(selNode)].logics[i].nextQuestionNumber;
     const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
 
-    updatedLogics[Number(selNode)].logics[i].nextQuestionNumber = "" + value;
-    setLogics(updatedLogics);
+    updatedQuestions[Number(selNode)].logics[i].nextQuestionNumber = "" + value;
+
+    console.log(updatedQuestions[Number(selNode)].logics[i]);
+    setSurveyQuestions(updatedQuestions);
 
     //변경이 필요한 노드들의 위치를 수정
 
