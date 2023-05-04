@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { report } from "@pages/Team/index";
+
 import {
+  Answer,
   MultipleQuestion,
   subProps,
 } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import {
-  MultipleQuestionDiv,
-  Title,
-  Explanation,
   ChoiceBtn,
+  Explanation,
+  MultipleQuestionDiv,
   QuestionBox,
+  Title,
 } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
 
 export const MultipleChoiceQuestions = (props: subProps) => {
@@ -28,15 +32,39 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   const [checkboxData, setCheckboxData] = useState(
     question.answers.map(() => ({ checked: false }))
   );
+  const [makeData, setMakeData] = useState<Answer[]>([]);
+  const [reportData, setReportData] = useRecoilState(report);
 
+  //버튼 클릭에 따른 바뀐 스테이트 적용
   const handleCheckboxChange = (index: number) => {
     setCheckboxData((prevState) => {
       const newState = [...prevState];
       newState[index].checked = !newState[index].checked;
       return newState;
     });
-    props.setOptions(checkboxData);
   };
+
+  //바뀐 스테이트에 따라 해당 항목 값 저장
+  useEffect(() => {
+    checkboxData.map((boolean, index) => {
+      if (boolean.checked) {
+        setMakeData((prevState) => {
+          if (!prevState.includes(question.answers[index])) {
+            return [...prevState, question.answers[index]];
+          } else return prevState;
+        });
+      } else {
+        setMakeData((prevState) => {
+          return prevState.filter((value) => value !== question.answers[index]);
+        });
+      }
+    });
+  }, [checkboxData]);
+
+  //저장 값을 recoil로 넘겨주는 useEffect
+  useEffect(() => {
+    setReportData(makeData);
+  }, [makeData]);
 
   return (
     <QuestionBox>
@@ -52,9 +80,9 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
-      <button onClick={() => console.log("real data: ", checkboxData)}>
-        check real data here
-      </button>
+      {/*<button onClick={() => console.log("real data: ", checkboxData)}>*/}
+      {/*  check real data here*/}
+      {/*</button>*/}
     </QuestionBox>
   );
 };

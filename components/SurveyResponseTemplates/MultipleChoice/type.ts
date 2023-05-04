@@ -1,4 +1,4 @@
-interface Answer {
+export interface Answer {
   answerId: number;
   content: string;
 }
@@ -8,14 +8,8 @@ interface Logic {
   nextQuestionNumber: string;
 }
 
-interface CheckboxProps {
-  checked: boolean;
-}
-
 export interface subProps {
   thisQuestion: MultipleQuestion;
-  options: CheckboxProps[];
-  setOptions: (newOptions: CheckboxProps[]) => void;
 }
 
 export interface MultipleQuestion {

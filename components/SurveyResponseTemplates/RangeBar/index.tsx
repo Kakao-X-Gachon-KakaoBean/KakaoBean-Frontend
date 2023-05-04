@@ -47,6 +47,16 @@ export const RangeBarQuestions = (props: subProps) => {
       <div style={contentStyle}>
         <Title>{rangeBarQuestions.title}</Title>
         <Explanation>{rangeBarQuestions.explanation}</Explanation>
+        <MinMaxRange
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <div style={{ width: "50px", borderWidth: 0 }}>
+            {rangeBarQuestions.min}
+          </div>
+          <div style={{ width: "50px", borderWidth: 0 }}>
+            {rangeBarQuestions.max}
+          </div>
+        </MinMaxRange>
         <Slider
           min={rangeBarQuestions.min}
           max={rangeBarQuestions.max}
