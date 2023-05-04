@@ -7,19 +7,7 @@ import ReactFlow, {
   ReactFlowProvider,
 } from "react-flow-renderer";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
-import { Logic } from "@components/LogicTab/type";
 import { SelNodeState, NodeState, EdgeState } from "../../States/LogicState";
-
-const initialNodes: Node[] = [
-  {
-    id: "0",
-    type: "input",
-    data: { label: "Submit", nextQ: "0" },
-    position: { x: 400, y: 0 },
-  },
-];
-
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function LogicTab() {
   const nodes = useRecoilValue(NodeState);
@@ -51,8 +39,9 @@ export default function LogicTab() {
           edges={edges}
           elementsSelectable={true}
           nodesConnectable={false}
-          nodesDraggable={true}
           onNodeClick={onNodeClick}
+          onNodeDoubleClick={onNodeClick}
+          fitView
         >
           <Controls />
           <Background gap={30} size={1} />

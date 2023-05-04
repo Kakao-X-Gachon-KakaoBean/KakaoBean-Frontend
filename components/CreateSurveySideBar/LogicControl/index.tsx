@@ -41,6 +41,10 @@ export const LogicControl = () => {
   const [isMultiCondition, setIsMultiCondition] =
     useRecoilState(MultiConditionState);
   const questionList = useRecoilValue(QuestionList);
+  const questionListExceptMe = questionList.filter((question) => {
+    if (Number(selNode) != 0)
+      return nodes[Number(selNode) - 1].id != question.value;
+  });
 
   useEffect(() => {
     //console.log(Number(Number(selNode) - 1));
@@ -138,16 +142,16 @@ export const LogicControl = () => {
     const rootXAxis = updatedNodes[questionIndex].position.x;
     updatedQuestions[questionIndex].logics[i].nextQuestionNumber = "" + value;
     setSurveyQuestions(updatedQuestions);
-
+    console.log(nodes);
     //변경이 필요한 노드들의 위치를 수정
-
     if (value == "0") {
       updatedNodes.forEach((node: Node) => {
         if (Number(node.id) > Number(selNode)) {
           node.position.x = rootXAxis + 100;
+          console.log(node);
         }
       });
-    } else if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+    } else if (value != updatedQuestions[questionIndex].nextQuestionNumber) {
       updatedNodes.forEach((node: Node) => {
         if (
           node.id === String(selNode) ||
@@ -173,7 +177,7 @@ export const LogicControl = () => {
     });
 
     //다음질문이 기본이동과 동일하지 않을때만 edge 생성
-    if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+    if (value != updatedQuestions[questionIndex].nextQuestionNumber) {
       updatedEdges.push(newEdge);
     }
 
@@ -242,7 +246,7 @@ export const LogicControl = () => {
                 }
                 style={{ width: 120 }}
                 onChange={NoLogicChangeNext}
-                options={questionList}
+                options={questionListExceptMe}
               />
             </div>
             {surveyQuestions[Number(Number(selNode) - 1)] &&
@@ -333,7 +337,7 @@ export const LogicControl = () => {
                                   onChange={(e: string) =>
                                     NextQuestionChange(i, e)
                                   }
-                                  options={questionList}
+                                  options={questionListExceptMe}
                                 />
                               </LogicBottom>
                             </AccordionDetails>
