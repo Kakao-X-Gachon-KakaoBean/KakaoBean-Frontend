@@ -39,6 +39,7 @@ export const LogicControl = () => {
   // 현재 선택한 노드
   const selNode = useRecoilValue(SelNodeState);
   const idNum = useRecoilValue(IdNumState);
+  let select = surveyQuestions[Number(Number(selNode) - 1)];
 
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
@@ -47,16 +48,13 @@ export const LogicControl = () => {
     useRecoilState(MultiConditionState);
   const questionList = useRecoilValue(QuestionList);
 
-  // useEffect(() => {
-  //   //console.log("전체 질문 정보: ", surveyQuestions);
-  //   // if ("logics" in surveyQuestions) {
-  //   //   console.log(surveyQuestions[Number(Number(selNode) - 1)].logics);
-  //   // }
-  // }, []);
+  useEffect(() => {
+    console.log(surveyQuestions);
+  }, [surveyQuestions]);
 
   surveyQuestions.map((item, index) => {
     if ("logics" in item) {
-      console.log(item.id, ":", item.logics);
+      //console.log(item.id, ":", item.logics);
     }
   });
 
@@ -109,8 +107,8 @@ export const LogicControl = () => {
     //로직 개수 count에 ++
     updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
 
-    console.log(updatedQuestions[Number(selNode) - 1]);
-    console.log(updatedLogics);
+    //console.log(updatedQuestions[Number(selNode) - 1]);
+    //console.log(updatedLogics);
     updatedQuestions[Number(selNode) - 1].logics.push(updatedLogics);
 
     setSurveyQuestions(updatedQuestions);
@@ -361,103 +359,124 @@ export const LogicControl = () => {
                 options={questionList}
               />
             </div>
-            {surveyQuestions[Number(Number(selNode) - 1)]?.type ===
-              "MULTIPLE" && (
-              <>
-                <Button onClick={addLogic}>로직 추가 하기</Button>
-                {count[Number(selNode)] > 0 ? (
-                  <>
-                    {surveyQuestions.map(
-                      (item, i) => {(
-                      }
-                        <Accordion>
-                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography key={i}>로직 {i + 1}</Typography>
-                            <Button
-                              onClick={(e: any) => {
-                                DeleteLogic(i, e);
-                              }}
-                              style={DeleteOption()}
-                            >
-                              X
-                            </Button>
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <LogicBody>
-                              조건 :
-                              <SelectSection>
-                                {isMultiCondition[Number(selNode)] > 0 ? (
-                                  <>
-                                    {logic.conditionOfQuestionAnswers.map(
-                                      (condition, index) => (
-                                        <ConditionSection>
-                                          <Select
-                                            key={index}
-                                            value={
-                                              logics[Number(selNode)].logics[i]
-                                                .conditionOfQuestionAnswers[
-                                                index
-                                              ]
-                                            }
-                                            style={{ width: 120 }}
-                                            onChange={(e) =>
-                                              ConditionChange(i, index, e)
-                                            }
-                                            options={[
-                                              { value: "1", label: "1" },
-                                              { value: "2", label: "2" },
-                                              { value: "3", label: "3" },
-                                              { value: "4", label: "4" },
-                                            ]}
-                                          />
-                                          <Button
-                                            onClick={() => {
-                                              DeleteCondition(i, index);
-                                            }}
-                                            style={DeleteOption()}
-                                          >
-                                            X
-                                          </Button>
-                                        </ConditionSection>
-                                      )
-                                    )}
-                                  </>
-                                ) : (
-                                  <div></div>
-                                )}
-                              </SelectSection>
-                              와 같다면
-                              <br />
+            {surveyQuestions[Number(Number(selNode) - 1)] &&
+              surveyQuestions[Number(Number(selNode) - 1)].type ===
+                "MULTIPLE" && (
+                <>
+                  <Button onClick={addLogic}>로직 추가 하기</Button>
+                  {count[Number(selNode)] > 0 ? (
+                    <>
+                      {"logics" in select ? (
+                        select.logics.map((item, i) => (
+                          <Accordion key={i}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                              <Typography>로직 {i + 1}</Typography>
                               <Button
-                                onClick={() => {
-                                  addCondition(i);
+                                onClick={(e: any) => {
+                                  DeleteLogic(i, e);
                                 }}
+                                style={DeleteOption()}
                               >
-                                조건 추가 하기
+                                X
                               </Button>
-                            </LogicBody>
-                            <LogicBottom>
-                              이동 :
-                              <Select
-                                value={logic.nextQuestionNumber}
-                                style={{ width: 120 }}
-                                onChange={(e) => NextQuestionChange(i, e)}
-                                options={questionList}
-                              />
-                            </LogicBottom>
-                          </AccordionDetails>
-                        </Accordion>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <LogicBody>
+                                조건 :
+                                <SelectSection>
+                                  {isMultiCondition[Number(selNode)] > 0 &&
+                                  "conditionOfQuestionAnswers" in item &&
+                                  item.conditionOfQuestionAnswers != null &&
+                                  Array.isArray(
+                                    item.conditionOfQuestionAnswers
+                                  ) ? (
+                                    <>
+                                      {item.conditionOfQuestionAnswers.map(
+                                        (condition, index) => (
+                                          <ConditionSection key={index}>
+                                            <Select
+                                              value={condition[index]}
+                                              style={{ width: 120 }}
+                                              onChange={(e) =>
+                                                ConditionChange(i, index, e)
+                                              }
+                                              options={[
+                                                {
+                                                  value: "1",
+                                                  label: "1",
+                                                },
+                                                {
+                                                  value: "2",
+                                                  label: "2",
+                                                },
+                                                {
+                                                  value: "3",
+                                                  label: "3",
+                                                },
+                                                {
+                                                  value: "4",
+                                                  label: "4",
+                                                },
+                                              ]}
+                                            />
+                                            <Button
+                                              onClick={() => {
+                                                DeleteCondition(i, index);
+                                              }}
+                                              style={DeleteOption()}
+                                            >
+                                              X
+                                            </Button>
+                                          </ConditionSection>
+                                        )
+                                      )}
+                                    </>
+                                  ) : (
+                                    <div></div>
+                                  )}
+                                </SelectSection>
+                                와 같다면
+                                <br />
+                                <Button
+                                  onClick={() => {
+                                    addCondition(i);
+                                  }}
+                                >
+                                  조건 추가 하기
+                                </Button>
+                              </LogicBody>
+                              <LogicBottom>
+                                이동 :
+                                <Select
+                                  value={
+                                    "logics" in item &&
+                                    "nextQuestionNumber" in item &&
+                                    typeof item.nextQuestionNumber === "string"
+                                      ? item.nextQuestionNumber
+                                      : "0"
+                                  }
+                                  style={{ width: 120 }}
+                                  onChange={(e: string) =>
+                                    NextQuestionChange(i, e)
+                                  }
+                                  options={questionList}
+                                />
+                              </LogicBottom>
+                            </AccordionDetails>
+                          </Accordion>
+                        ))
+                      ) : (
+                        <div>wfefweㄹㄷㅁ</div>
                       )}
-                    )}
-                    <div>
-                      {JSON.stringify(surveyQuestions[Number(selNode)])}
-                    </div>
-                  </>
-                ) : (
-                  <div></div>
-                )}
-              </>
-            )}
+                      <div>
+                        {JSON.stringify(surveyQuestions[Number(selNode) - 1])}
+                      </div>
+                    </>
+                  ) : (
+                    <div></div>
+                  )}
+                </>
+              )}
           </div>
         )}
       </SideBar>
