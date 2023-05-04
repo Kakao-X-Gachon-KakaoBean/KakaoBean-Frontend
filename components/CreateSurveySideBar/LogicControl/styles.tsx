@@ -55,6 +55,8 @@ export const SelectSection = styled.div`
 `;
 export const ConditionSection = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 export const LogicBottom = styled.div`
