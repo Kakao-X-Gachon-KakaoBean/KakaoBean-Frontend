@@ -10,7 +10,7 @@ import {
 
 import axios, { AxiosError } from "axios";
 
-import { Wrapper } from "@components/SearchEmail/styles";
+import { Wrapper } from "@components/PasswordModal/styles";
 import { InputKey } from "@components/SearchEmail/styles";
 import { PaswwordModal } from "@components/PasswordModal/type";
 import { useMutation } from "react-query";
@@ -19,7 +19,7 @@ import { Search } from "@components/SearchEmail/type";
 const SearchPassword: FC<PaswwordModal> = ({
   name,
   onChangeName,
-  onCloseEmailModal,
+  onClosePasswordModal,
   birth,
   onChangeBirth,
 }) => {
@@ -68,7 +68,7 @@ const SearchPassword: FC<PaswwordModal> = ({
         <Div>
           <Header>비밀번호 찾기?</Header>
         </Div>
-        <button onClick={onCloseEmailModal}>X</button>
+        <button onClick={onClosePasswordModal}>X</button>
       </Form>
 
       {/*{failUseEmail && !proveEmail && (*/}
