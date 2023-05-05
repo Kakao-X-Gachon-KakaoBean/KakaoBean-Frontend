@@ -31,10 +31,6 @@ const Main = () => {
     }, [token]);
   }
 
-  //유저 정보 get
-  // const { data: MainUser } = useQuery(["MainUser"], () =>
-  //   fetcher({ queryKey: "??" })
-  // );
   return (
     <>
       <PC>
