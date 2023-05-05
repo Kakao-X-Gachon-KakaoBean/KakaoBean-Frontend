@@ -1,4 +1,10 @@
-import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Wrapper, Label } from "@pages/LogIn/styles";
 import {
   Header,
@@ -14,6 +20,7 @@ import {
   EmailInput,
   Error,
   Correct,
+  GenderSpan,
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
@@ -28,7 +35,7 @@ const SignUp = () => {
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
   const [age, onChangeAge, setAge] = useInput(0);
-  const [gender, oncChangeGender, setGender] = useInput("");
+  const [gender, onChangeGender, setGender] = useInput("");
   const [password, , setPassword] = useInput("");
   const [checkPassword, , setCheckPassword] = useInput("");
   const [emailAuthKey, onChangeEmailAuthKey, seyAuthKey] = useInput("");
@@ -273,18 +280,18 @@ const SignUp = () => {
                 type="radio"
                 name="성별"
                 value="MALE"
-                onChange={oncChangeGender}
+                onChange={onChangeGender}
               />
-              <span>남자</span>
+              <GenderSpan>남자</GenderSpan>
             </Label2>
             <Label2>
               <InputGender
                 type="radio"
                 name="성별"
                 value="FEMALE"
-                onChange={oncChangeGender}
+                onChange={onChangeGender}
               />
-              <span>여자</span>
+              <GenderSpan>여자</GenderSpan>
             </Label2>
           </CheckLabel>
           <LoginBtn type="submit">가입하기</LoginBtn>
