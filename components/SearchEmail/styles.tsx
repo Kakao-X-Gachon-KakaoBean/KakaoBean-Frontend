@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Input } from "antd";
+import { keyframes } from "@emotion/react";
 
 export const Wrapper = styled.div`
   background-color: white;
@@ -104,16 +105,25 @@ export const Header = styled.header`
   font-size: 1.3rem;
   font-weight: bold;
 `;
+const buttonAnimation = keyframes`
+  from {
+    background-color: #f1f3f5;
+  }
 
+  to {
+    background-color: #039ba1;
+    color: white;
+    border: none;
+  }
+`;
 export const Button = styled.button`
+  color: #b8c0c5;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 7rem;
   height: 2.3rem;
-  background-color: #f1f3f5;
   box-shadow: 0 4px 4px 0 #00000040;
-  color: #b8c0c5;
   border-radius: 10px;
   font-size: 0.8rem;
   font-weight: 700;
@@ -121,9 +131,7 @@ export const Button = styled.button`
   border: none;
   margin-top: 1.5rem;
   &:hover {
-    background-color: #039ba1;
-    color: white;
-    border: none;
+    animation: ${buttonAnimation} 0.2s ease-in-out forwards;
   }
 `;
 

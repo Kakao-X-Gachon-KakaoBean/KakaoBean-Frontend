@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -129,7 +130,19 @@ export const Line = styled.div`
   }
 `;
 
+const buttonAnimation = keyframes`
+  from {
+    background-color: #f1f3f5;
+  }
+
+  to {
+    background-color: #039ba1;
+    color: white;
+    border: none;
+  }
+`;
 export const LoginBtn = styled.button`
+  color: #b8c0c5;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,9 +150,7 @@ export const LoginBtn = styled.button`
   text-align: center;
   width: 25rem;
   height: 3rem;
-  background: #f1f3f5;
   border-radius: 8px;
-  color: #b8c0c5;
   outline: none;
   font-size: 1.3rem;
   font-weight: 700;
@@ -147,9 +158,7 @@ export const LoginBtn = styled.button`
   margin-top: 1rem;
   border: none;
   &:hover {
-    background-color: #039ba1;
-    color: white;
-    border: none;
+    animation: ${buttonAnimation} 0.2s ease-in-out forwards;
   }
 `;
 

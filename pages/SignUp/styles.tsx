@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
 
 export const Header = styled.div`
   font-size: 2.5rem;
@@ -10,6 +11,18 @@ export const Header = styled.div`
   font-family: "Pretendard-Regular";
 `;
 
+const submitButtonAnimation = keyframes`
+  from {
+    background-color: #b8c0c5;
+  }
+
+  to {
+    background-color: #039ba1;
+    color: white;
+    border: none;
+  }
+`;
+
 export const LoginBtn = styled.button`
   display: flex;
   justify-content: center;
@@ -18,7 +31,6 @@ export const LoginBtn = styled.button`
   text-align: center;
   width: 29rem;
   height: 3rem;
-  background: #f1f3f5;
   border-radius: 8px;
   color: #b8c0c5;
   outline: none;
@@ -28,9 +40,7 @@ export const LoginBtn = styled.button`
   margin-top: 1rem;
   border: none;
   &:hover {
-    background-color: #039ba1;
-    color: white;
-    border: none;
+    animation: ${submitButtonAnimation} 0.2s ease-in-out forwards;
   }
 `;
 
@@ -90,6 +100,13 @@ export const EmailInput = styled.input`
     color: #969696;
   }
 `;
+const checkButtonAnimation = keyframes`
+    to{
+      background-color: #039ba1;
+      color: white;
+      border: none;
+    }
+`;
 
 export const CheckBtn = styled.button`
   display: flex;
@@ -108,9 +125,7 @@ export const CheckBtn = styled.button`
   margin-top: 0.9rem;
   margin-bottom: 0.3rem;
   &:hover {
-    background-color: #039ba1;
-    color: white;
-    border: none;
+    animation: ${checkButtonAnimation} 0.2s ease-in-out forwards;
   }
 `;
 
@@ -143,12 +158,19 @@ export const CheckLabel = styled.div`
   gap: 2rem;
 `;
 
+const genderLabelAnimation = keyframes`
+  to{
+    background-color: black;
+    color: white;
+  }
+`;
+
 export const Label2 = styled.label`
+  color: #969696;
+  background-color: #e6e8eb;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6c747a;
-  background: #e6e8eb;
   position: relative;
   box-sizing: border-box;
   border: 1px solid #e6e8eb;
@@ -168,6 +190,10 @@ export const Label2 = styled.label`
 
   & input[type="radio"]:checked {
     background-color: black;
+  }
+
+  &:hover {
+    animation: ${genderLabelAnimation} 0.2s ease-in-out forwards;
   }
 `;
 export const InputGender = styled.input`
