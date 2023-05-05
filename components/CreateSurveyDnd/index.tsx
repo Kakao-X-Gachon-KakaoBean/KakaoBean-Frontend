@@ -280,7 +280,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 : "제목 없음",
             nextQ: String(i + 2),
           },
-          position: { x: 270, y: yaxis },
+          position: { x: 580, y: yaxis },
         };
       } else {
         if (i == surveyQuestions.length - 1) {
@@ -293,7 +293,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(0),
             },
-            position: { x: 270, y: yaxis },
+            position: { x: 580, y: yaxis },
           };
         } else {
           newNode = {
@@ -305,7 +305,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(i + 2),
             },
-            position: { x: 270, y: yaxis },
+            position: { x: 580, y: yaxis },
           };
         }
       }
@@ -330,7 +330,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: 270, y: yaxis },
+      position: { x: 580, y: yaxis },
     };
 
     const submitEdge = {
