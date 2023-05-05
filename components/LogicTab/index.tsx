@@ -32,22 +32,19 @@ export default function LogicTab() {
   }, []);
 
   return (
-    <div>
-      <ReactFlowProvider>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          elementsSelectable={true}
-          nodesDraggable={true}
-          nodesConnectable={false}
-          onNodeClick={onNodeClick}
-          onNodeDoubleClick={onNodeClick}
-          fitView
-        >
-          <Controls />
-          <Background gap={30} size={1} />
-        </ReactFlow>
-      </ReactFlowProvider>
-    </div>
+    <ReactFlowProvider>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        elementsSelectable={true}
+        nodesConnectable={false}
+        nodesDraggable={true}
+        onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeClick}
+      >
+        <Controls />
+        <Background gap={30} size={1} />
+      </ReactFlow>
+    </ReactFlowProvider>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -43,7 +43,6 @@ import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/S
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 import { Button, Input } from "antd";
 import LogicTab from "@components/LogicTab";
-import { Logic } from "@components/LogicTab/type";
 import { Link, Element } from "react-scroll";
 import {
   SelNodeState,
@@ -165,7 +164,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
+      nextQuestionNumber: "0",
       numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
@@ -175,9 +174,9 @@ const CreateSurveyDnd = (): JSX.Element => {
       type: "ESSAY",
       title: "",
       explanation: "",
-      questionNumber: "0",
+      questionNumber: "1",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
+      nextQuestionNumber: "0",
     };
     const addRangeBar = {
       id: `KEA-KakaoBeans-${countQuestion}`,
@@ -186,8 +185,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
-      value: 0,
+      nextQuestionNumber: "0",
       min: 0,
       max: 5,
     };
@@ -232,27 +230,41 @@ const CreateSurveyDnd = (): JSX.Element => {
       );
       setSurveyQuestions(() => newItems2);
     }
-
-    setSurveyQuestions((prevState) => {
-      return prevState.map((item, index) => {
-        return {
-          ...item,
-          questionNumber: index.toString(),
-        };
-      });
-    });
   };
 
   useEffect(() => {
-    console.log("id 확인용 json", surveyQuestions);
+    console.log("questions", questions);
+  }, [questions]);
+  useEffect(() => {
+    // setSurveyQuestions((prevState) => {
+    //   return prevState.map((item, index) => {
+    //     return {
+    //       ...item,
+    //       questionNumber: (index + 1).toString(),
+    //     };
+    //   });
+    // });
+
     setSurveyQuestions(() => surveyQuestions);
-    const updatedQuestions = surveyQuestions.map((item) => {
+    const updatedQuestions = surveyQuestions.map((item, index) => {
       if ("id" in item) {
         const { id, ...rest } = item;
-        return rest;
-      } else if ("value" in item) {
-        const { value, ...rest } = item as RangeBarQuestion;
-        return rest;
+        const updatedItem = Object.assign({}, item, {
+          questionNumber: (index + 1).toString(),
+          nextQuestionNumber: (index + 2).toString(),
+        });
+        item = updatedItem;
+        if (
+          index == surveyQuestions.length - 1 &&
+          "finalQuestion" in item &&
+          "nextQuestionNumber"
+        ) {
+          const updatedItem = Object.assign({}, item, {
+            finalQuestion: true,
+            nextQuestionNumber: "0",
+          });
+          item = updatedItem;
+        }
       }
       return item;
     });
@@ -270,7 +282,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     let newNode, newEdge;
 
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < surveyQuestions.length; i++) {
+    for (i = 0; i < surveyQuestions.length; i++) {
       if (i == 0) {
         newNode = {
           id: String(i + 1),
@@ -282,7 +294,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 : "제목 없음",
             nextQ: String(i + 2),
           },
-          position: { x: 270, y: yaxis },
+          position: { x: 580, y: yaxis },
         };
       } else {
         if (i == surveyQuestions.length - 1) {
@@ -295,7 +307,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(0),
             },
-            position: { x: 270, y: yaxis },
+            position: { x: 580, y: yaxis },
           };
         } else {
           newNode = {
@@ -307,7 +319,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(i + 2),
             },
-            position: { x: 270, y: yaxis },
+            position: { x: 580, y: yaxis },
           };
         }
       }
@@ -332,7 +344,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: 270, y: yaxis },
+      position: { x: 580, y: yaxis },
     };
 
     const submitEdge = {
@@ -350,34 +362,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     setEdges(newEdgeTuple);
     setQuestionList(newQuestionTuple);
   }, [surveyQuestions.length]);
-
-  useEffect(() => {
-    let i = 0;
-    let yaxis = 0;
-    let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    updatedNodes.pop();
-    console.log(updatedNodes);
-    for (i; i < surveyQuestions.length; i++) {
-      updatedNodes[i].data.label =
-        surveyQuestions[i].title !== ""
-          ? surveyQuestions[i].title
-          : "제목 없음";
-      yaxis = yaxis + 100;
-    }
-
-    const submitNode = {
-      id: "0",
-      type: "output",
-      data: { label: "submit" },
-      position: { x: 270, y: yaxis },
-    };
-
-    updatedNodes.push(submitNode);
-
-    setNodes(updatedNodes);
-    //setEdges(newEdgeTuple);
-    //setQuestionList(newQuestionTuple);
-  }, [surveyQuestions.map((question) => question.title).join("")]);
 
   const mutation = useMutation<
     QuestionTypes[],
@@ -489,7 +473,6 @@ const CreateSurveyDnd = (): JSX.Element => {
               );
             })}
           </SidebarQuestions>
-
           {viewLogic === "logic" ? (
             <QuestionTypeListDiv></QuestionTypeListDiv>
           ) : (
@@ -611,7 +594,9 @@ const CreateSurveyDnd = (): JSX.Element => {
                   marginBottom: "2rem",
                 }}
               >
-                <Button type={"primary"}>설문 생성하기</Button>
+                <Button type={"primary"} onClick={onSubmit}>
+                  설문 생성하기
+                </Button>
               </div>
             ) : (
               <div></div>

@@ -18,7 +18,6 @@ interface subProps {
     questionNumber: string;
     finalQuestion: boolean;
     nextQuestionNumber: string;
-    value: number;
     min: number;
     max: number;
   };
@@ -50,12 +49,6 @@ export const RangeBarQuestions = (props: subProps) => {
     setRangeBarQuestions({
       ...rangeBarQuestions,
       explanation: event.target.value,
-    });
-  };
-  const handleRangeChange = (newValue: number) => {
-    setRangeBarQuestions({
-      ...rangeBarQuestions,
-      value: newValue,
     });
   };
   const handleMinChange = (value: number | null) => {
@@ -116,12 +109,7 @@ export const RangeBarQuestions = (props: subProps) => {
       <Slider
         min={rangeBarQuestions.min}
         max={rangeBarQuestions.max}
-        onChange={handleRangeChange}
-        value={
-          typeof rangeBarQuestions.value === "number"
-            ? rangeBarQuestions.value
-            : 0
-        }
+        value={0}
       />
     </div>
   );
