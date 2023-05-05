@@ -194,7 +194,13 @@ const SignUp = () => {
         ></ToastContainer>
         <Header>회원가입</Header>
         <SubHeader>
-          <div>이미 BeanBay 회원이신가요?</div>
+          <div>
+            이미{" "}
+            <Link to={"/main"} style={{ color: "#039ba1", fontWeight: "bold" }}>
+              BeanBay
+            </Link>{" "}
+            회원이신가요?
+          </div>
           <div>
             <Link to="/login">로그인</Link>
           </div>
