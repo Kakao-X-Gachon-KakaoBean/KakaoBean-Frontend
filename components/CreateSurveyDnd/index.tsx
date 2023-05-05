@@ -162,7 +162,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       type: "MULTIPLE",
       title: "",
       explanation: "",
-      questionNumber: "",
+      questionNumber: "0",
       finalQuestion: false,
       nextQuestionNumber: "0",
       numberOfAnswerChoices: 1,
@@ -174,7 +174,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       type: "ESSAY",
       title: "",
       explanation: "",
-      questionNumber: "1",
+      questionNumber: "0",
       finalQuestion: false,
       nextQuestionNumber: "0",
     };
@@ -190,11 +190,23 @@ const CreateSurveyDnd = (): JSX.Element => {
       max: 5,
     };
     if (questionTypeItems[startIndex].content === "객관식") {
-      result.splice(endIndex, 0, addMultiple);
+      result.splice(endIndex, 0, {
+        ...addMultiple,
+        questionNumber: (endIndex + 1).toString(),
+        nextQuestionNumber: (endIndex + 2).toString(),
+      });
     } else if (questionTypeItems[startIndex].content === "주관식") {
-      result.splice(endIndex, 0, addSubjective);
+      result.splice(endIndex, 0, {
+        ...addSubjective,
+        questionNumber: (endIndex + 1).toString(),
+        nextQuestionNumber: (endIndex + 2).toString(),
+      });
     } else if (questionTypeItems[startIndex].content === "선형배율") {
-      result.splice(endIndex, 0, addRangeBar);
+      result.splice(endIndex, 0, {
+        ...addRangeBar,
+        questionNumber: (endIndex + 1).toString(),
+        nextQuestionNumber: (endIndex + 2).toString(),
+      });
     }
     return result;
   };
