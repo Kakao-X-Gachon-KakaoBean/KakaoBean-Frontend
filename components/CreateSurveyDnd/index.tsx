@@ -55,6 +55,8 @@ import {
   QuestionList,
 } from "../../States/LogicState";
 import { Edge, Node } from "react-flow-renderer";
+import { useMutation } from "react-query";
+import axios, { AxiosError } from "axios";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const [nodes, setNodes] = useRecoilState(NodeState);
@@ -376,6 +378,49 @@ const CreateSurveyDnd = (): JSX.Element => {
     //setEdges(newEdgeTuple);
     //setQuestionList(newQuestionTuple);
   }, [surveyQuestions.map((question) => question.title).join("")]);
+
+  const mutation = useMutation<
+    QuestionTypes[],
+    AxiosError,
+    {
+      surveyTitle: string;
+      questions: any;
+    }
+  >(
+    "createSurvey",
+    (data) =>
+      axios
+        .post("http://localhost:8080/surveys", data, {
+          withCredentials: true,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => response.data),
+    {
+      onMutate() {},
+      onSuccess() {
+        alert("성공");
+      },
+      onError(error) {
+        alert("양식을 알맞게 작성해주세요");
+      },
+    }
+  );
+
+  const onSubmit = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      if (surveyTitle && questions) {
+        mutation.mutate({
+          surveyTitle,
+          questions: questions,
+        });
+      }
+    },
+    [surveyTitle, surveyQuestions, mutation]
+  );
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
