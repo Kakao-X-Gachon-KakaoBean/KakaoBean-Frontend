@@ -8,9 +8,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   QuestionTypeItem,
-  QuestionsItem,
   getQuestionType,
-  getQuestions,
 } from "@components/CreateSurveyDnd/type";
 import {
   countState,
@@ -75,11 +73,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     QuestionTypeItem[]
   >(getQuestionType());
 
-  type QuestionTypes =
-    | QuestionsItem
-    | MultipleQuestion
-    | SubjectiveQuestion
-    | RangeBarQuestion;
+  type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
@@ -138,16 +132,15 @@ const CreateSurveyDnd = (): JSX.Element => {
     list: QuestionTypes[],
     startIndex: number,
     endIndex: number
-  ): (
-    | QuestionsItem
-    | MultipleQuestion
-    | SubjectiveQuestion
-    | RangeBarQuestion
-  )[] => {
-    const result = Array.from(list);
+  ): (MultipleQuestion | SubjectiveQuestion | RangeBarQuestion)[] => {
+    const result = JSON.parse(JSON.stringify(list)) as QuestionTypes[];
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-    return result;
+
+    return result.map((question, index) => ({
+      ...(question as QuestionTypes),
+      nextQuestionNumber: list[index].nextQuestionNumber,
+    }));
   };
 
   // 새로운 질문 추가
@@ -193,19 +186,16 @@ const CreateSurveyDnd = (): JSX.Element => {
       result.splice(endIndex, 0, {
         ...addMultiple,
         questionNumber: (endIndex + 1).toString(),
-        nextQuestionNumber: (endIndex + 2).toString(),
       });
     } else if (questionTypeItems[startIndex].content === "주관식") {
       result.splice(endIndex, 0, {
         ...addSubjective,
         questionNumber: (endIndex + 1).toString(),
-        nextQuestionNumber: (endIndex + 2).toString(),
       });
     } else if (questionTypeItems[startIndex].content === "선형배율") {
       result.splice(endIndex, 0, {
         ...addRangeBar,
         questionNumber: (endIndex + 1).toString(),
-        nextQuestionNumber: (endIndex + 2).toString(),
       });
     }
     return result;
@@ -217,7 +207,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     if (!result.destination) {
       return;
     }
-    //테스트
 
     // 질문 유형 리스트 내의 컴포넌트를 drag
     if (result.source.droppableId === "questionType") {
@@ -230,6 +219,15 @@ const CreateSurveyDnd = (): JSX.Element => {
           result.destination.index
         );
         setSurveyQuestions(() => newItems1);
+        setSurveyQuestions((prevState) => {
+          return prevState.map((item, index) => {
+            return {
+              ...item,
+              questionNumber: (index + 1).toString(),
+              nextQuestionNumber: (index + 2).toString(),
+            };
+          });
+        });
       }
     }
 
@@ -247,23 +245,14 @@ const CreateSurveyDnd = (): JSX.Element => {
   useEffect(() => {
     console.log("questions", questions);
   }, [questions]);
-  useEffect(() => {
-    // setSurveyQuestions((prevState) => {
-    //   return prevState.map((item, index) => {
-    //     return {
-    //       ...item,
-    //       questionNumber: (index + 1).toString(),
-    //     };
-    //   });
-    // });
 
+  useEffect(() => {
     setSurveyQuestions(() => surveyQuestions);
     const updatedQuestions = surveyQuestions.map((item, index) => {
       if ("id" in item) {
         const { id, ...rest } = item;
         const updatedItem = Object.assign({}, item, {
           questionNumber: (index + 1).toString(),
-          nextQuestionNumber: (index + 2).toString(),
         });
         item = updatedItem;
         if (
