@@ -162,9 +162,9 @@ const CreateSurveyDnd = (): JSX.Element => {
       type: "MULTIPLE",
       title: "",
       explanation: "",
-      questionNumber: "",
+      questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
+      nextQuestionNumber: "0",
       numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
@@ -174,9 +174,9 @@ const CreateSurveyDnd = (): JSX.Element => {
       type: "ESSAY",
       title: "",
       explanation: "",
-      questionNumber: "1",
+      questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
+      nextQuestionNumber: "0",
     };
     const addRangeBar = {
       id: `KEA-KakaoBeans-${countQuestion}`,
@@ -185,17 +185,28 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
-      value: 0,
+      nextQuestionNumber: "0",
       min: 0,
       max: 5,
     };
     if (questionTypeItems[startIndex].content === "객관식") {
-      result.splice(endIndex, 0, addMultiple);
+      result.splice(endIndex, 0, {
+        ...addMultiple,
+        questionNumber: (endIndex + 1).toString(),
+        nextQuestionNumber: (endIndex + 2).toString(),
+      });
     } else if (questionTypeItems[startIndex].content === "주관식") {
-      result.splice(endIndex, 0, addSubjective);
+      result.splice(endIndex, 0, {
+        ...addSubjective,
+        questionNumber: (endIndex + 1).toString(),
+        nextQuestionNumber: (endIndex + 2).toString(),
+      });
     } else if (questionTypeItems[startIndex].content === "선형배율") {
-      result.splice(endIndex, 0, addRangeBar);
+      result.splice(endIndex, 0, {
+        ...addRangeBar,
+        questionNumber: (endIndex + 1).toString(),
+        nextQuestionNumber: (endIndex + 2).toString(),
+      });
     }
     return result;
   };
@@ -231,27 +242,41 @@ const CreateSurveyDnd = (): JSX.Element => {
       );
       setSurveyQuestions(() => newItems2);
     }
-
-    setSurveyQuestions((prevState) => {
-      return prevState.map((item, index) => {
-        return {
-          ...item,
-          questionNumber: (index + 1).toString(),
-        };
-      });
-    });
   };
 
   useEffect(() => {
-    console.log("id 확인용 json", surveyQuestions);
+    console.log("questions", questions);
+  }, [questions]);
+  useEffect(() => {
+    // setSurveyQuestions((prevState) => {
+    //   return prevState.map((item, index) => {
+    //     return {
+    //       ...item,
+    //       questionNumber: (index + 1).toString(),
+    //     };
+    //   });
+    // });
+
     setSurveyQuestions(() => surveyQuestions);
-    const updatedQuestions = surveyQuestions.map((item) => {
+    const updatedQuestions = surveyQuestions.map((item, index) => {
       if ("id" in item) {
         const { id, ...rest } = item;
-        return rest;
-      } else if ("value" in item) {
-        const { value, ...rest } = item as RangeBarQuestion;
-        return rest;
+        const updatedItem = Object.assign({}, item, {
+          questionNumber: (index + 1).toString(),
+          nextQuestionNumber: (index + 2).toString(),
+        });
+        item = updatedItem;
+        if (
+          index == surveyQuestions.length - 1 &&
+          "finalQuestion" in item &&
+          "nextQuestionNumber"
+        ) {
+          const updatedItem = Object.assign({}, item, {
+            finalQuestion: true,
+            nextQuestionNumber: "0",
+          });
+          item = updatedItem;
+        }
       }
       return item;
     });
@@ -281,7 +306,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 : "제목 없음",
             nextQ: String(i + 2),
           },
-          position: { x: 270, y: yaxis },
+          position: { x: 580, y: yaxis },
         };
       } else {
         if (i == surveyQuestions.length - 1) {
@@ -294,7 +319,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(0),
             },
-            position: { x: 270, y: yaxis },
+            position: { x: 580, y: yaxis },
           };
         } else {
           newNode = {
@@ -306,7 +331,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(i + 2),
             },
-            position: { x: 270, y: yaxis },
+            position: { x: 580, y: yaxis },
           };
         }
       }
@@ -331,7 +356,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: 270, y: yaxis },
+      position: { x: 580, y: yaxis },
     };
 
     const submitEdge = {
