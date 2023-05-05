@@ -1,27 +1,23 @@
 import styled from "@emotion/styled";
-import { EmailModal } from "@components/SearchEmail/type";
+import { Input } from "antd";
 
 export const Wrapper = styled.div`
   background-color: white;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
 
-  width: 25vw;
-  min-width: 400px;
-  height: 30vh;
-  min-height: 180px;
+  width: 30vw;
+  height: 35vh;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  box-sizing: border-box;
 
   transform: translate(-50%, -50%);
   animation-duration: 0.3s;
@@ -55,7 +51,7 @@ export const Wrapper = styled.div`
     top: 1rem;
     right: 1rem;
 
-    font-size: 2rem;
+    font-size: 1rem;
   }
 `;
 
@@ -119,12 +115,11 @@ export const Button = styled.button`
   box-shadow: 0 4px 4px 0 #00000040;
   color: white;
   border-radius: 10px;
-  outline: none;
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
   border: none;
-  margin-top: 3rem;
+  margin-top: 1rem;
   &:hover {
     background-color: #969696;
     border: none;
@@ -132,20 +127,16 @@ export const Button = styled.button`
 `;
 
 export const EmailBody = styled.div`
-  margin-top: 1rem;
   font-size: 1rem;
   width: 15rem;
-  height: 2rem;
+  margin-top: 0.3rem;
 `;
 
-export const Input = styled.input`
+export const InputInfo = styled(Input)`
   box-sizing: border-box;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid black;
   width: 20rem;
   height: 2rem;
   outline: none;
   font-size: 1rem;
+  margin-top: 0.4rem;
 `;

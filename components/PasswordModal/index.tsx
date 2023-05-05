@@ -5,7 +5,7 @@ import {
   Div,
   Form,
   Header,
-  Input,
+  InputInfo,
 } from "@components/SearchEmail/styles";
 
 import axios, { AxiosError } from "axios";
