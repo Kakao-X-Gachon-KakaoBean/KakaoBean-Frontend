@@ -183,3 +183,13 @@ export const InputGender = styled.input`
     display: none;
   }
 `;
+
+export const Error = styled.div`
+  color: red;
+  font-weight: bold;
+`;
+
+export const Correct = styled.div`
+  color: dodgerblue;
+  font-weight: bold;
+`;

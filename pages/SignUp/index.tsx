@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Wrapper, Label } from "@pages/LogIn/styles";
 import {
   Header,
@@ -12,6 +12,8 @@ import {
   CheckLabel,
   EmailLabel,
   EmailInput,
+  Error,
+  Correct,
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
@@ -25,14 +27,17 @@ const SignUp = () => {
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
-  const [age, onChangeAge, setAge] = useInput<any>(0);
+  const [age, onChangeAge, setAge] = useInput(0);
   const [gender, oncChangeGender, setGender] = useInput("");
-  const [password, onChangePassword, setPassword] = useInput("");
-  const [checkPassword, onChangeCheckPassword, setCheckPassword] = useInput("");
+  const [password, , setPassword] = useInput("");
+  const [checkPassword, , setCheckPassword] = useInput("");
   const [emailAuthKey, onChangeEmailAuthKey, seyAuthKey] = useInput("");
+
   const [failUseEmail, setFailUseEmail] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [signUpError, setSignUpError] = useState("");
+
+  const [mismatchError, setMismatchError] = useState(false);
 
   const today = new Date();
   const mutation = useMutation<
@@ -61,17 +66,41 @@ const SignUp = () => {
       },
       onSuccess() {
         setSignUpSuccess(true);
-        console.log("성공");
         alert("회원가입에 성공하셨습니다.");
       },
       onError(error) {
         setSignUpError(error.response?.data);
-        console.log("에러");
         alert("양식을 알맞게 작성해주세요");
       },
     }
   );
   const birthYear = Number(birth.slice(0, 4));
+
+  function formatBirthday(birthday: string): string {
+    const year = birthday.slice(0, 4);
+    const month = birthday.slice(4, 6);
+    const day = birthday.slice(6, 8);
+    return `${year}-${month}-${day}`;
+  }
+
+  const formattedBirthday = formatBirthday(birth);
+
+  const onChangePassword = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value === checkPassword);
+    },
+    [password, setPassword]
+  );
+
+  const onChangeCheckPassword = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setCheckPassword(e.target.value);
+      setMismatchError(e.target.value === password);
+    },
+    [password, setCheckPassword]
+  );
+
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -83,8 +112,6 @@ const SignUp = () => {
         checkPassword &&
         emailAuthKey
       ) {
-        console.log("회원가입 시도");
-        console.log(age);
         mutation.mutate({
           name,
           age: today.getFullYear() - birthYear + 1,
@@ -92,11 +119,10 @@ const SignUp = () => {
           email,
           password,
           checkPassword,
-          birth,
+          birth: formattedBirthday,
           emailAuthKey,
         });
       }
-      console.log(mutation);
     },
     [email, name, password, checkPassword, birth, emailAuthKey, mutation]
   );
@@ -214,6 +240,12 @@ const SignUp = () => {
               onChange={onChangeCheckPassword}
               placeholder="비밀번호 확인"
             />
+            {!mismatchError && checkPassword.length >= 1 && (
+              <Error>비밀번호가 일치하지 않습니다!</Error>
+            )}
+            {mismatchError && checkPassword.length >= 1 && (
+              <Correct>비밀번호가 일치합니다!</Correct>
+            )}
           </Label>
           <Label>
             <Input
@@ -232,7 +264,7 @@ const SignUp = () => {
               name="birth"
               value={birth}
               onChange={onchangeBirth}
-              placeholder="생년월일 ex) 1999-10-01"
+              placeholder="생년월일 8자리"
             />
           </Label>
           <CheckLabel>
