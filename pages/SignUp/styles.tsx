@@ -173,29 +173,34 @@ export const Label2 = styled.label`
   justify-content: center;
   position: relative;
   box-sizing: border-box;
-  border: 1px solid #e6e8eb;
   border-radius: 8px;
   width: 13.6rem;
   height: 3rem;
   font-weight: 600;
   outline: none;
   font-size: 1.3rem;
-  padding: 10px 15px 12px;
   margin-top: 0.9rem;
   margin-bottom: 0.3rem;
-
-  & input[type="radio"]:checked + span {
-    color: white;
-  }
-
-  & input[type="radio"]:checked {
-    background-color: black;
-  }
 
   &:hover {
     animation: ${genderLabelAnimation} 0.2s ease-in-out forwards;
   }
+
+  & input[type="radio"]:checked + span {
+    color: white;
+    background-color: black;
+  }
 `;
+
+export const GenderSpan = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  width: 13.6rem;
+  height: 3rem;
+`;
+
 export const InputGender = styled.input`
   :focus {
     border: 1px solid gray;
