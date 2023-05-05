@@ -111,17 +111,18 @@ export const Button = styled.button`
   align-items: center;
   width: 7rem;
   height: 2.3rem;
-  background-color: #8cafa3;
+  background-color: #f1f3f5;
   box-shadow: 0 4px 4px 0 #00000040;
-  color: white;
+  color: #b8c0c5;
   border-radius: 10px;
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
   border: none;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   &:hover {
-    background-color: #969696;
+    background-color: #039ba1;
+    color: white;
     border: none;
   }
 `;
@@ -134,7 +135,7 @@ export const EmailBody = styled.div`
 
 export const InputInfo = styled(Input)`
   box-sizing: border-box;
-  width: 20rem;
+  width: 15rem;
   height: 2rem;
   outline: none;
   font-size: 1rem;
