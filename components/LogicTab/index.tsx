@@ -5,21 +5,10 @@ import ReactFlow, {
   Edge,
   Node,
   ReactFlowProvider,
-  useEdgesState,
-  useNodesState,
 } from "react-flow-renderer";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { Logic } from "@components/LogicTab/type";
-import {
-  SelNodeState,
-  IdNumState,
-  NodeState,
-  EdgeState,
-  LogicState,
-  LogicCountState,
-  MultiConditionState,
-  QuestionList,
-} from "../../States/LogicState";
+import { SelNodeState, NodeState, EdgeState } from "../../States/LogicState";
 
 const initialNodes: Node[] = [
   {
@@ -35,10 +24,6 @@ const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 export default function LogicTab() {
   const nodes = useRecoilValue(NodeState);
   const edges = useRecoilValue(EdgeState);
-  useEffect(() => {
-    // console.log(nodes);
-    // console.log(edges);
-  }, []);
 
   // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);

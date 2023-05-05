@@ -29,11 +29,6 @@ export const EdgeState = atom<Edge[]>({
   default: [{ id: "e1-2", source: "1", target: "2" }],
 });
 
-export const LogicState = atom<Logic[]>({
-  key: "logics",
-  default: [{ conditionOfQuestionAnswers: [], nextQuestionNumber: "0" }],
-});
-
 export const LogicCountState = atom<number[]>({
   key: "count",
   default: [0],

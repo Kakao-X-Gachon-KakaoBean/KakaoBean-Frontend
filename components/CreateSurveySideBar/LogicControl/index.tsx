@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Edge, Node } from "react-flow-renderer";
-import { Logic } from "@components/CreateSurveySideBar/LogicControl/type";
 import {
   ConditionSection,
   LogicBody,
   LogicBottom,
-  SelectSection,
   SideBar,
 } from "@components/CreateSurveySideBar/LogicControl/styles";
 import { Button, Select } from "antd";
@@ -21,19 +19,15 @@ import {
   IdNumState,
   NodeState,
   EdgeState,
-  LogicState,
   LogicCountState,
   MultiConditionState,
   QuestionList,
 } from "../../../States/LogicState";
 import { questionsState } from "../../../States/SurveyState";
-import { update } from "autosize";
-import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 
 export const LogicControl = () => {
   // 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState);
-  const [logics, setLogics] = useRecoilState(LogicState);
   const [nodes, setNodes] = useRecoilState(NodeState);
   const [edges, setEdges] = useRecoilState(EdgeState);
   // 현재 선택한 노드
@@ -58,8 +52,6 @@ export const LogicControl = () => {
     const updatedCounts = [...count];
     let updatedLogics;
 
-    //처음 추가 하는 경우
-    // if (count[Number(selNode)] == 0) {
     //마지막 질문일 경우 next질문 0 (제출하기)
     if (Number(selNode) == surveyQuestions.length) {
       updatedLogics = {
@@ -75,34 +67,7 @@ export const LogicControl = () => {
       };
     }
 
-    //처음 추가하는게 아닌경우 기존 로직에다가 추가
-    // else {
-    //   //마지막 질문일 경우 next질문 0 (제출하기)
-    //   if (Number(selNode) == surveyQuestions.length) {
-    //     updatedLogics = {[
-    //         ...updatedQuestions[Number(selNode)].logics,
-    //         {conditionOfQuestionAnswers: [""], nextQuestionNumber: "0" },
-    //     ]};
-    //   }
-    //   //마지막 질문 아닌경우 next질문 다음 번호
-    //   else {
-    //     updatedLogics[Number(selNode)] = {
-    //       logics: [
-    //         ...updatedLogics[Number(selNode)].logics,
-    //         {
-    //           conditionOfQuestionAnswers: [""],
-    //           nextQuestionNumber: String(Number(selNode) + 1),
-    //         },
-    //       ],
-    //     };
-    //   }
-    // }
-
-    //로직 개수 count에 ++
     updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
-
-    //console.log(updatedQuestions[Number(selNode) - 1]);
-    //console.log(updatedLogics);
     updatedQuestions[Number(selNode) - 1].logics.push(updatedLogics);
 
     setSurveyQuestions(updatedQuestions);
@@ -140,33 +105,9 @@ export const LogicControl = () => {
     //updatedQuestions[questionIndex].logics = newLogics;
     updatedQuestions[questionIndex - 1] = updatedQuestion;
 
-    console.log(updatedQuestions);
+    //console.log(updatedQuestions);
     setSurveyQuestions(updatedQuestions);
     setCount(updatedCounts);
-  };
-
-  //삭제 예정
-  const addCondition = (i: number) => {
-    const updatedLogics = JSON.parse(JSON.stringify(logics));
-    const updateMultiCondition = JSON.parse(JSON.stringify(isMultiCondition));
-    const times = updateMultiCondition[Number(selNode)] + 1;
-
-    const originList =
-      updatedLogics[Number(selNode)].logics[i].conditionOfQuestionAnswers;
-    originList.push("");
-
-    updatedLogics[Number(selNode)] = {
-      logics: [
-        ...updatedLogics[Number(selNode)].logics,
-        {
-          conditionOfQuestionAnswers: originList,
-          nextQuestionNumber: String(Number(selNode) + 1),
-        },
-      ],
-    };
-
-    updateMultiCondition[Number(selNode)] = times;
-    setIsMultiCondition(updateMultiCondition);
   };
 
   //로직->조건 변경시 호출. node위치 및 edge 변경 필요
@@ -179,21 +120,10 @@ export const LogicControl = () => {
     setSurveyQuestions(updatedQuestions);
   };
 
-  //삭제 예정
-  const DeleteCondition = (i: number, index: number) => {
-    const updatedLogics = JSON.parse(JSON.stringify(logics));
-    const selNodeNumber = Number(selNode);
-    const targetLogic = updatedLogics[selNodeNumber].logics[i];
-    //console.log(targetLogic);
-
-    targetLogic.conditionOfQuestionAnswers.splice(index, 1);
-    setLogics(updatedLogics);
-  };
-
   //다음 질문 수정될때 node, edge 바뀜
   const NextQuestionChange = (i: number, value: string) => {
-    const updatedLogics = JSON.parse(JSON.stringify(logics));
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
+    const questionIndex = Number(selNode) - 1;
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -204,12 +134,9 @@ export const LogicControl = () => {
     };
 
     const originValue =
-      updatedQuestions[Number(selNode)].logics[i].nextQuestionNumber;
-    const rootXAxis = updatedNodes[Number(selNode) - 1].position.x;
-
-    updatedQuestions[Number(selNode)].logics[i].nextQuestionNumber = "" + value;
-
-    console.log(updatedQuestions[Number(selNode)].logics[i]);
+      updatedQuestions[questionIndex].logics[i].nextQuestionNumber;
+    const rootXAxis = updatedNodes[questionIndex].position.x;
+    updatedQuestions[questionIndex].logics[i].nextQuestionNumber = "" + value;
     setSurveyQuestions(updatedQuestions);
 
     //변경이 필요한 노드들의 위치를 수정
@@ -256,6 +183,12 @@ export const LogicControl = () => {
 
   //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
   const NoLogicChangeNext = (value: string) => {
+    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
+    const questionIndex = Number(selNode) - 1;
+
+    updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
+    setSurveyQuestions(updatedQuestions);
+
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -294,7 +227,7 @@ export const LogicControl = () => {
   return (
     <div>
       <SideBar>
-        {selNode === undefined || selNode === "0" ? (
+        {selNode === undefined || selNode === "0" || select === undefined ? (
           <div>질문을 선택해 주세요</div>
         ) : (
           <div>
@@ -302,7 +235,11 @@ export const LogicControl = () => {
             <div>
               이동하기
               <Select
-                value={nodes[Number(Number(selNode) - 1)]?.data?.nextQ}
+                value={
+                  "nextQuestionNumber" in select
+                    ? select.nextQuestionNumber
+                    : "-1"
+                }
                 style={{ width: 120 }}
                 onChange={NoLogicChangeNext}
                 options={questionList}
@@ -388,9 +325,7 @@ export const LogicControl = () => {
                                 이동 :
                                 <Select
                                   value={
-                                    "logics" in item &&
-                                    "nextQuestionNumber" in item &&
-                                    typeof item.nextQuestionNumber === "string"
+                                    "nextQuestionNumber" in item
                                       ? item.nextQuestionNumber
                                       : "0"
                                   }
