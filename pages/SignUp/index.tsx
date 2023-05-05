@@ -29,6 +29,8 @@ import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Button, Modal } from "antd";
+import { Redirect } from "react-router";
 
 const SignUp = () => {
   const [name, onChangeName, setName] = useInput("");
@@ -138,11 +140,6 @@ const SignUp = () => {
   //   return <div>로딩중...</div>;
   // }
 
-  //로그인 정보 있을 시 메인으로 리다이렉트
-  // if (data) {
-  //   return <Redirect to="/main" />;
-  // }
-
   //입력한 이메일로 인증번호 보내기
   const onSubmitEmail = useCallback(
     (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -173,6 +170,12 @@ const SignUp = () => {
     },
     [email]
   );
+
+  const redirectToMain = () => {
+    if (signUpSuccess) {
+      return <Link to="/login"></Link>;
+    }
+  };
 
   return (
     <>
@@ -295,9 +298,21 @@ const SignUp = () => {
             </Label2>
           </CheckLabel>
           <LoginBtn type="submit">가입하기</LoginBtn>
-          {signUpSuccess && <div>회원가입에 성공하셨습니다.</div>}
         </Form>
       </Wrapper>
+      <Modal
+        title="BeanBay"
+        closeIcon={" "}
+        footer={[
+          <Link key="submit" to="/login">
+            <Button type="primary">로그인 하러 가기</Button>
+          </Link>,
+        ]}
+        open={signUpSuccess}
+        centered
+      >
+        <p>BeanBay의 회원이 되신 것을 환영합니다.</p>
+      </Modal>
     </>
   );
 };
