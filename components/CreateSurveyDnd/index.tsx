@@ -351,7 +351,7 @@ const CreateSurveyDnd = (): JSX.Element => {
   }, [surveyQuestions.length]);
 
   const mutation = useMutation<
-    any,
+    QuestionTypes[],
     AxiosError,
     {
       surveyTitle: string;
@@ -381,7 +381,7 @@ const CreateSurveyDnd = (): JSX.Element => {
   );
 
   const onSubmit = useCallback(
-    (e: any) => {
+    (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       if (surveyTitle && questions) {
         mutation.mutate({
@@ -581,7 +581,6 @@ const CreateSurveyDnd = (): JSX.Element => {
                 <Button type={"primary"} onClick={onSubmit}>
                   설문 생성하기
                 </Button>
-                기
               </div>
             ) : (
               <div></div>
