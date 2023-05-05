@@ -268,7 +268,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     let newNode, newEdge;
 
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i = 0; i < surveyQuestions.length; i++) {
+    for (i; i < surveyQuestions.length; i++) {
       if (i == 0) {
         newNode = {
           id: String(i + 1),
@@ -349,6 +349,34 @@ const CreateSurveyDnd = (): JSX.Element => {
     setQuestionList(newQuestionTuple);
   }, [surveyQuestions.length]);
 
+  useEffect(() => {
+    let i = 0;
+    let yaxis = 0;
+    let updatedNodes = JSON.parse(JSON.stringify(nodes));
+    updatedNodes.pop();
+    console.log(updatedNodes);
+    for (i; i < surveyQuestions.length; i++) {
+      updatedNodes[i].data.label =
+        surveyQuestions[i].title !== ""
+          ? surveyQuestions[i].title
+          : "제목 없음";
+      yaxis = yaxis + 100;
+    }
+
+    const submitNode = {
+      id: "0",
+      type: "output",
+      data: { label: "submit" },
+      position: { x: 270, y: yaxis },
+    };
+
+    updatedNodes.push(submitNode);
+
+    setNodes(updatedNodes);
+    //setEdges(newEdgeTuple);
+    //setQuestionList(newQuestionTuple);
+  }, [surveyQuestions.map((question) => question.title).join("")]);
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
@@ -397,22 +425,26 @@ const CreateSurveyDnd = (): JSX.Element => {
                           : item.title
                         : "제목 타입 없음"}
                     </SidebarQuestionTitle>
-                    <SidebarQuestionDelete
-                      onClick={() => {
-                        const newQuestionItems = [
-                          ...surveyQuestions.slice(0, index),
-                          ...surveyQuestions.slice(index + 1),
-                        ];
-                        setSurveyQuestions(newQuestionItems);
-                      }}
-                    >
-                      X
-                    </SidebarQuestionDelete>
+                    {viewLogic !== "logic" && (
+                      <SidebarQuestionDelete
+                        onClick={() => {
+                          const newQuestionItems = [
+                            ...surveyQuestions.slice(0, index),
+                            ...surveyQuestions.slice(index + 1),
+                          ];
+                          setSurveyQuestions(newQuestionItems);
+                        }}
+                      >
+                        X
+                      </SidebarQuestionDelete>
+                    )}
+                    {viewLogic === "logic" && <div></div>}
                   </SidebarQuestion>
                 </Link>
               );
             })}
           </SidebarQuestions>
+
           {viewLogic === "logic" ? (
             <QuestionTypeListDiv></QuestionTypeListDiv>
           ) : (

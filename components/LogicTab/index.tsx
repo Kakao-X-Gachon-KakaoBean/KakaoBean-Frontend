@@ -38,6 +38,7 @@ export default function LogicTab() {
           nodes={nodes}
           edges={edges}
           elementsSelectable={true}
+          nodesDraggable={true}
           nodesConnectable={false}
           onNodeClick={onNodeClick}
           onNodeDoubleClick={onNodeClick}
