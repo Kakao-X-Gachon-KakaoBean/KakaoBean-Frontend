@@ -181,7 +181,7 @@ const LogIn = () => {
               <SearchPassword
                 name={email}
                 onChangeName={onChangeName}
-                onCloseEmailModal={onCloseEmailModal}
+                onClosePasswordModal={onClosePasswordModal}
                 birth={birth}
                 onChangeBirth={onChangeBirth}
               />

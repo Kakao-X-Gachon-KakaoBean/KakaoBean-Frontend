@@ -1,4 +1,10 @@
-import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { Wrapper, Label } from "@pages/LogIn/styles";
 import {
   Header,
@@ -14,6 +20,7 @@ import {
   EmailInput,
   Error,
   Correct,
+  GenderSpan,
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
@@ -22,13 +29,15 @@ import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Button, Modal } from "antd";
+import { Redirect } from "react-router";
 
 const SignUp = () => {
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
   const [age, onChangeAge, setAge] = useInput(0);
-  const [gender, oncChangeGender, setGender] = useInput("");
+  const [gender, onChangeGender, setGender] = useInput("");
   const [password, , setPassword] = useInput("");
   const [checkPassword, , setCheckPassword] = useInput("");
   const [emailAuthKey, onChangeEmailAuthKey, seyAuthKey] = useInput("");
@@ -131,11 +140,6 @@ const SignUp = () => {
   //   return <div>로딩중...</div>;
   // }
 
-  //로그인 정보 있을 시 메인으로 리다이렉트
-  // if (data) {
-  //   return <Redirect to="/main" />;
-  // }
-
   //입력한 이메일로 인증번호 보내기
   const onSubmitEmail = useCallback(
     (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -167,6 +171,12 @@ const SignUp = () => {
     [email]
   );
 
+  const redirectToMain = () => {
+    if (signUpSuccess) {
+      return <Link to="/login"></Link>;
+    }
+  };
+
   return (
     <>
       <Wrapper>
@@ -184,7 +194,13 @@ const SignUp = () => {
         ></ToastContainer>
         <Header>회원가입</Header>
         <SubHeader>
-          <div>이미 BeanBay 회원이신가요?</div>
+          <div>
+            이미{" "}
+            <Link to={"/main"} style={{ color: "#039ba1", fontWeight: "bold" }}>
+              BeanBay
+            </Link>{" "}
+            회원이신가요?
+          </div>
           <div>
             <Link to="/login">로그인</Link>
           </div>
@@ -273,24 +289,36 @@ const SignUp = () => {
                 type="radio"
                 name="성별"
                 value="MALE"
-                onChange={oncChangeGender}
+                onChange={onChangeGender}
               />
-              <span>남자</span>
+              <GenderSpan>남자</GenderSpan>
             </Label2>
             <Label2>
               <InputGender
                 type="radio"
                 name="성별"
                 value="FEMALE"
-                onChange={oncChangeGender}
+                onChange={onChangeGender}
               />
-              <span>여자</span>
+              <GenderSpan>여자</GenderSpan>
             </Label2>
           </CheckLabel>
           <LoginBtn type="submit">가입하기</LoginBtn>
-          {signUpSuccess && <div>회원가입에 성공하셨습니다.</div>}
         </Form>
       </Wrapper>
+      <Modal
+        title="BeanBay"
+        closeIcon={" "}
+        footer={[
+          <Link key="submit" to="/login">
+            <Button type="primary">로그인 하러 가기</Button>
+          </Link>,
+        ]}
+        open={signUpSuccess}
+        centered
+      >
+        <p>BeanBay의 회원이 되신 것을 환영합니다.</p>
+      </Modal>
     </>
   );
 };

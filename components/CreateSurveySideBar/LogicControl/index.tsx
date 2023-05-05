@@ -24,6 +24,7 @@ import {
   QuestionList,
 } from "../../../States/LogicState";
 import { questionsState } from "../../../States/SurveyState";
+import { target } from "react-chatbot-kit/build/webpack.config";
 
 export const LogicControl = () => {
   // 전체 질문
@@ -41,6 +42,10 @@ export const LogicControl = () => {
   const [isMultiCondition, setIsMultiCondition] =
     useRecoilState(MultiConditionState);
   const questionList = useRecoilValue(QuestionList);
+  const questionListExceptMe = questionList.filter((question) => {
+    if (Number(selNode) != 0)
+      return nodes[Number(selNode) - 1].id != question.value;
+  });
 
   useEffect(() => {
     //console.log(Number(Number(selNode) - 1));
@@ -136,18 +141,19 @@ export const LogicControl = () => {
     const originValue =
       updatedQuestions[questionIndex].logics[i].nextQuestionNumber;
     const rootXAxis = updatedNodes[questionIndex].position.x;
+
     updatedQuestions[questionIndex].logics[i].nextQuestionNumber = "" + value;
     setSurveyQuestions(updatedQuestions);
 
     //변경이 필요한 노드들의 위치를 수정
-
     if (value == "0") {
       updatedNodes.forEach((node: Node) => {
         if (Number(node.id) > Number(selNode)) {
           node.position.x = rootXAxis + 100;
+          console.log(node);
         }
       });
-    } else if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+    } else if (value != updatedQuestions[questionIndex].nextQuestionNumber) {
       updatedNodes.forEach((node: Node) => {
         if (
           node.id === String(selNode) ||
@@ -173,7 +179,7 @@ export const LogicControl = () => {
     });
 
     //다음질문이 기본이동과 동일하지 않을때만 edge 생성
-    if (value != updatedNodes[Number(selNode) - 1].data.nextQ) {
+    if (value != updatedQuestions[questionIndex].nextQuestionNumber) {
       updatedEdges.push(newEdge);
     }
 
@@ -185,10 +191,6 @@ export const LogicControl = () => {
   const NoLogicChangeNext = (value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
-
-    updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
-    setSurveyQuestions(updatedQuestions);
-
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -197,29 +199,51 @@ export const LogicControl = () => {
       target: String(value),
     };
 
-    updatedEdges = edges.filter(
-      (edge: Edge) =>
-        edge.source === selNode && edge.target === String(Number(selNode) + 1)
-    );
+    const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
+    const submitUpperNodeYAxis = updatedNodes[idNum - 2].position.y;
 
-    updatedNodes[Number(Number(selNode) - 1)].data.nextQ = value;
+    updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
+    setSurveyQuestions(updatedQuestions);
 
-    let flag = updatedNodes.find((node: Node) => node.id === selNode);
+    //선택한 값이 기존 값과 다를때만 Node, Edge 변경
+    if (value != originValue) {
+      console.log("!");
+      if (Number(value) == 0) {
+        console.log("!!");
+        updatedNodes.forEach((node: Node) => {
+          if (Number(node.id) == Number(selNode)) {
+            console.log("1");
+            node.position.x = node.position.x - 100;
+            node.position.y = submitUpperNodeYAxis;
+          } else if (Number(node.id) != idNum - 2) {
+            console.log("2");
+            node.position.x = node.position.x + 100;
+          }
+        });
 
-    if (selNode && flag) {
-      const selNodeY = flag.position.y;
-      updatedNodes.forEach((node: Node) => {
-        if (node.id < selNode && node.id > value) {
-          node.position.x = node.position.x + 100;
-          node.position.y = selNodeY + 200;
-        }
-        if (node.id >= value) {
-          node.position.x = node.position.x + 50;
-        }
-      });
+        updatedEdges = updatedEdges.filter((edge: Edge) => {
+          return !(edge.source === selNode && edge.target == originValue);
+        });
+        updatedEdges.push(newEdge);
+      } else {
+        console.log("!!!");
+        updatedNodes.forEach((node: Node) => {
+          if (Number(node.id) == Number(selNode)) {
+            console.log("3");
+            node.position.x = node.position.x - 100;
+            node.position.y = updatedNodes[value].position.y;
+          } else if (Number(node.id) < Number(value)) {
+            console.log("4");
+            node.position.x = node.position.x + 100;
+          }
+        });
+
+        updatedEdges = updatedEdges.filter((edge: Edge) => {
+          return !(edge.source === selNode && edge.target == originValue);
+        });
+        updatedEdges.push(newEdge);
+      }
     }
-
-    updatedEdges.push(newEdge);
     setEdges(updatedEdges);
     setNodes(updatedNodes);
   };
@@ -242,7 +266,7 @@ export const LogicControl = () => {
                 }
                 style={{ width: 120 }}
                 onChange={NoLogicChangeNext}
-                options={questionList}
+                options={questionListExceptMe}
               />
             </div>
             {surveyQuestions[Number(Number(selNode) - 1)] &&
@@ -333,7 +357,7 @@ export const LogicControl = () => {
                                   onChange={(e: string) =>
                                     NextQuestionChange(i, e)
                                   }
-                                  options={questionList}
+                                  options={questionListExceptMe}
                                 />
                               </LogicBottom>
                             </AccordionDetails>
