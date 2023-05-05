@@ -42,7 +42,6 @@ export const SubjectiveOptionControl = () => {
       questionNumber: prevQuestion.questionNumber,
       finalQuestion: false,
       nextQuestionNumber: "0",
-      value: 0,
       min: 0,
       max: 5,
     }));

@@ -163,7 +163,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
+      nextQuestionNumber: "0",
       numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
@@ -175,7 +175,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
+      nextQuestionNumber: "0",
     };
     const addRangeBar = {
       id: `KEA-KakaoBeans-${countQuestion}`,
@@ -184,8 +184,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: (countQuestion + 1).toString(),
-      value: 0,
+      nextQuestionNumber: "0",
       min: 0,
       max: 5,
     };
@@ -230,27 +229,41 @@ const CreateSurveyDnd = (): JSX.Element => {
       );
       setSurveyQuestions(() => newItems2);
     }
-
-    setSurveyQuestions((prevState) => {
-      return prevState.map((item, index) => {
-        return {
-          ...item,
-          questionNumber: index.toString(),
-        };
-      });
-    });
   };
 
   useEffect(() => {
-    console.log("id 확인용 json", surveyQuestions);
+    console.log("questions", questions);
+  }, [questions]);
+  useEffect(() => {
+    // setSurveyQuestions((prevState) => {
+    //   return prevState.map((item, index) => {
+    //     return {
+    //       ...item,
+    //       questionNumber: (index + 1).toString(),
+    //     };
+    //   });
+    // });
+
     setSurveyQuestions(() => surveyQuestions);
-    const updatedQuestions = surveyQuestions.map((item) => {
+    const updatedQuestions = surveyQuestions.map((item, index) => {
       if ("id" in item) {
         const { id, ...rest } = item;
-        return rest;
-      } else if ("value" in item) {
-        const { value, ...rest } = item as RangeBarQuestion;
-        return rest;
+        const updatedItem = Object.assign({}, item, {
+          questionNumber: (index + 1).toString(),
+          nextQuestionNumber: (index + 2).toString(),
+        });
+        item = updatedItem;
+        if (
+          index == surveyQuestions.length - 1 &&
+          "finalQuestion" in item &&
+          "nextQuestionNumber"
+        ) {
+          const updatedItem = Object.assign({}, item, {
+            finalQuestion: true,
+            nextQuestionNumber: "0",
+          });
+          item = updatedItem;
+        }
       }
       return item;
     });
