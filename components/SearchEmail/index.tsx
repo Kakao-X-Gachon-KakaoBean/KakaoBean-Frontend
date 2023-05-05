@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 
 import {
   Button,
@@ -24,13 +24,16 @@ const SearchEmail: FC<EmailModal> = ({
   onChangeBirth,
 }) => {
   const [email, setEmail] = useState("");
+  const [submitOrClose, setSubmitOrClose] = useState("인증 하기");
   const stopPropagation = useCallback(
     (e: React.SyntheticEvent<EventTarget>) => {
       e.stopPropagation();
     },
     []
   );
-
+  useEffect(() => {
+    if (email) setSubmitOrClose("닫기");
+  }, [email]);
   const queryClient = useQueryClient();
   const mutation = useMutation<
     Search,
@@ -97,7 +100,11 @@ const SearchEmail: FC<EmailModal> = ({
           ) : (
             <EmailBody></EmailBody>
           )}
-          <Button type="submit">인증 하기</Button>
+          {email ? (
+            <Button onClick={onCloseEmailModal}>{submitOrClose}</Button>
+          ) : (
+            <Button type="submit">{submitOrClose}</Button>
+          )}
         </Form>
       </InputKey>
     </Wrapper>
