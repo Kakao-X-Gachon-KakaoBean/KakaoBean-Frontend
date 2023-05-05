@@ -1,6 +1,7 @@
 import { Wrapper, Text, TextDiv } from "./styles";
 import { Button } from "antd";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const MainFirst = () => {
   return (
@@ -14,10 +15,12 @@ const MainFirst = () => {
           BeanBay
           <br />
         </Text>
-        <Button>
-          Get Start
-          <br />
-        </Button>
+        <Link to="/createsurvey" style={{ textDecoration: "none" }}>
+          <Button>
+            Get Start
+            <br />
+          </Button>
+        </Link>
       </TextDiv>
     </Wrapper>
   );
