@@ -466,20 +466,17 @@ const CreateSurveyDnd = (): JSX.Element => {
                           : item.title
                         : "제목 타입 없음"}
                     </SidebarQuestionTitle>
-                    {viewLogic !== "logic" && (
-                      <SidebarQuestionDelete
-                        onClick={() => {
-                          const newQuestionItems = [
-                            ...surveyQuestions.slice(0, index),
-                            ...surveyQuestions.slice(index + 1),
-                          ];
-                          setSurveyQuestions(newQuestionItems);
-                        }}
-                      >
-                        X
-                      </SidebarQuestionDelete>
-                    )}
-                    {viewLogic === "logic" && <div></div>}
+                    <SidebarQuestionDelete
+                      onClick={() => {
+                        const newQuestionItems = [
+                          ...surveyQuestions.slice(0, index),
+                          ...surveyQuestions.slice(index + 1),
+                        ];
+                        setSurveyQuestions(newQuestionItems);
+                      }}
+                    >
+                      X
+                    </SidebarQuestionDelete>
                   </SidebarQuestion>
                 </Link>
               );
