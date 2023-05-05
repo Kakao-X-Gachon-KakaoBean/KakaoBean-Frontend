@@ -10,6 +10,10 @@ export type QuestionTypes =
   | SubjectiveQuestion
   | RangeBarQuestion;
 
+export type answerTypes = Answer[] | answerValue | answer;
+
+export type answer = string;
+export type answerValue = number;
 //응답 데이터 리스트 형식
 export interface responseDataList {
   surveyId: number;
@@ -18,7 +22,7 @@ export interface responseDataList {
 export interface responseQuestionType {
   type: string;
   questionId: number;
-  answers: Answer[];
+  answers: answerTypes;
 }
 
 //들어오는 데이터 리스트 형식
