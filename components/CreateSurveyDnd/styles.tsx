@@ -113,7 +113,7 @@ export const QuestionsAndType = styled.div`
   margin: 0 auto;
   height: 43%;
   overflow-y: auto;
-  z-index: 1;
+  z-index: 5;
   background-color: white;
 `;
 
@@ -138,5 +138,5 @@ export const QuestionsListDiv = styled.div`
 
 export const LogicDiv = styled.div`
   padding-top: 10rem;
-  width: 50%;
+  width: 70%;
 `;
