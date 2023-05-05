@@ -268,30 +268,30 @@ const CreateSurveyDnd = (): JSX.Element => {
     let newNode, newEdge;
 
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i; i < surveyQuestions.length; i++) {
-      if (i == surveyQuestions.length - 1) {
+    for (i = 0; i < surveyQuestions.length; i++) {
+      if (i == 0) {
         newNode = {
           id: String(i + 1),
+          type: "input",
           data: {
             label:
               surveyQuestions[i].title !== ""
                 ? surveyQuestions[i].title
                 : "제목 없음",
-            nextQ: String(0),
+            nextQ: String(i + 2),
           },
           position: { x: 270, y: yaxis },
         };
       } else {
-        if (i == 0) {
+        if (i == surveyQuestions.length - 1) {
           newNode = {
             id: String(i + 1),
-            type: "input",
             data: {
               label:
                 surveyQuestions[i].title !== ""
                   ? surveyQuestions[i].title
                   : "제목 없음",
-              nextQ: String(i + 2),
+              nextQ: String(0),
             },
             position: { x: 270, y: yaxis },
           };
@@ -347,7 +347,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
     setQuestionList(newQuestionTuple);
-  }, [surveyQuestions]);
+  }, [surveyQuestions.length]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
