@@ -221,10 +221,14 @@ const CreateSurveyDnd = (): JSX.Element => {
         setSurveyQuestions(() => newItems1);
         setSurveyQuestions((prevState) => {
           return prevState.map((item, index) => {
+            const nextNumber =
+              item.nextQuestionNumber === "0"
+                ? (index + 2).toString()
+                : item.nextQuestionNumber;
             return {
               ...item,
               questionNumber: (index + 1).toString(),
-              nextQuestionNumber: (index + 2).toString(),
+              nextQuestionNumber: nextNumber,
             };
           });
         });
