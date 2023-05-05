@@ -31,6 +31,7 @@ import { Redirect } from "react-router";
 import Menu from "@components/Menu";
 import SearchEmail from "@components/SearchEmail";
 import SearchPassword from "@components/PasswordModal";
+import { LeftMenu } from "@components/HeaderBar/styles";
 
 const LogIn = () => {
   const [email, onChangeEmail, setEmail] = useInput("");
@@ -98,7 +99,9 @@ const LogIn = () => {
   return (
     <>
       <Wrapper>
-        <Header>BeanBay</Header>
+        <Header>
+          <Link to="/main">BeanBay</Link>
+        </Header>
         <Form onSubmit={onSubmit}>
           <Label>
             <Input

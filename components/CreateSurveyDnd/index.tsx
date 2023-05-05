@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -43,7 +43,6 @@ import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/S
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
 import { Button, Input } from "antd";
 import LogicTab from "@components/LogicTab";
-import { Logic } from "@components/LogicTab/type";
 import { Link, Element } from "react-scroll";
 import {
   SelNodeState,
@@ -55,6 +54,8 @@ import {
   QuestionList,
 } from "../../States/LogicState";
 import { Edge, Node } from "react-flow-renderer";
+import { useMutation } from "react-query";
+import axios, { AxiosError } from "axios";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const [nodes, setNodes] = useRecoilState(NodeState);
@@ -173,7 +174,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       type: "ESSAY",
       title: "",
       explanation: "",
-      questionNumber: "0",
+      questionNumber: "1",
       finalQuestion: false,
       nextQuestionNumber: "0",
     };
@@ -362,6 +363,49 @@ const CreateSurveyDnd = (): JSX.Element => {
     setQuestionList(newQuestionTuple);
   }, [surveyQuestions.length]);
 
+  const mutation = useMutation<
+    QuestionTypes[],
+    AxiosError,
+    {
+      surveyTitle: string;
+      questions: any;
+    }
+  >(
+    "createSurvey",
+    (data) =>
+      axios
+        .post("http://localhost:8080/surveys", data, {
+          withCredentials: true,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => response.data),
+    {
+      onMutate() {},
+      onSuccess() {
+        alert("성공");
+      },
+      onError(error) {
+        alert("양식을 알맞게 작성해주세요");
+      },
+    }
+  );
+
+  const onSubmit = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      if (surveyTitle && questions) {
+        mutation.mutate({
+          surveyTitle,
+          questions: questions,
+        });
+      }
+    },
+    [surveyTitle, surveyQuestions, mutation]
+  );
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
@@ -547,7 +591,9 @@ const CreateSurveyDnd = (): JSX.Element => {
                   marginBottom: "2rem",
                 }}
               >
-                <Button type={"primary"}>설문 생성하기</Button>
+                <Button type={"primary"} onClick={onSubmit}>
+                  설문 생성하기
+                </Button>
               </div>
             ) : (
               <div></div>

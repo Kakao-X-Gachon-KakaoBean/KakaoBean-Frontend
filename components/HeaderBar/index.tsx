@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Logo from "../../image/beanSolo.png";
 
 import { Link } from "react-router-dom";
@@ -12,6 +12,7 @@ import {
   RightMenu,
   TopMenu,
 } from "@components/HeaderBar/styles";
+import { Redirect } from "react-router";
 
 const HeaderBar = () => {
   const [isLogin, setIsLogin] = useState(
@@ -22,6 +23,7 @@ const HeaderBar = () => {
     (e: React.MouseEvent<HTMLDivElement>) => {
       localStorage.removeItem("accessToken");
       setIsLogin(false);
+      document.location.href = "/";
     },
     [isLogin]
   );

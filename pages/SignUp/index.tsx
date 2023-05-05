@@ -75,7 +75,6 @@ const SignUp = () => {
       },
       onSuccess() {
         setSignUpSuccess(true);
-        alert("회원가입에 성공하셨습니다.");
       },
       onError(error) {
         setSignUpError(error.response?.data);
