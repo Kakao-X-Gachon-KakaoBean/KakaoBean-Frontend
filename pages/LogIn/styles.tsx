@@ -17,6 +17,11 @@ export const Header = styled.div`
   letter-spacing: 0.1em;
   text-align: center;
   font-family: "Pretendard-Regular";
+
+  & a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 export const Form = styled.form`
   display: flex;
