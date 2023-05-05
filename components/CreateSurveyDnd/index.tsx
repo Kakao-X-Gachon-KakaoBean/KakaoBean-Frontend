@@ -163,7 +163,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "",
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: (countQuestion + 1).toString(),
       numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
@@ -175,7 +175,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: (countQuestion + 1).toString(),
     };
     const addRangeBar = {
       id: `KEA-KakaoBeans-${countQuestion}`,
@@ -184,7 +184,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       explanation: "",
       questionNumber: "0",
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: (countQuestion + 1).toString(),
       value: 0,
       min: 0,
       max: 5,

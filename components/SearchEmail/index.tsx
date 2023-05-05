@@ -1,14 +1,13 @@
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 
 import {
   Button,
   Div,
   EmailBody,
-  EmailInput,
   Form,
   Header,
+  InputInfo,
 } from "@components/SearchEmail/styles";
-import { Input } from "antd";
 
 import axios, { AxiosError } from "axios";
 
@@ -25,13 +24,16 @@ const SearchEmail: FC<EmailModal> = ({
   onChangeBirth,
 }) => {
   const [email, setEmail] = useState("");
+  const [submitOrClose, setSubmitOrClose] = useState("인증 하기");
   const stopPropagation = useCallback(
     (e: React.SyntheticEvent<EventTarget>) => {
       e.stopPropagation();
     },
     []
   );
-
+  useEffect(() => {
+    if (email) setSubmitOrClose("닫기");
+  }, [email]);
   const queryClient = useQueryClient();
   const mutation = useMutation<
     Search,
@@ -65,6 +67,7 @@ const SearchEmail: FC<EmailModal> = ({
     },
     [name, birth, mutation]
   );
+
   return (
     <Wrapper onClick={stopPropagation}>
       <Form>
@@ -76,24 +79,32 @@ const SearchEmail: FC<EmailModal> = ({
 
       <InputKey>
         <Form onSubmit={onSubmit}>
-          <Input
+          <InputInfo
             type="text"
             id="name"
             onChange={onChangeName}
             name="name"
             value={name}
             placeholder="이름"
-          ></Input>
-          <Input
+          ></InputInfo>
+          <InputInfo
             type="text"
             id="birth"
             onChange={onChangeBirth}
             name="birth"
             value={birth}
             placeholder="생년월일 ex) 1999-10-01"
-          ></Input>
-          {email && <EmailBody>이메일 :{email}</EmailBody>}
-          <Button type="submit">인증 하기</Button>
+          ></InputInfo>
+          {email ? (
+            <EmailBody>이메일 :{email}</EmailBody>
+          ) : (
+            <EmailBody></EmailBody>
+          )}
+          {email ? (
+            <Button onClick={onCloseEmailModal}>{submitOrClose}</Button>
+          ) : (
+            <Button type="submit">{submitOrClose}</Button>
+          )}
         </Form>
       </InputKey>
     </Wrapper>
