@@ -65,6 +65,7 @@ const SearchEmail: FC<EmailModal> = ({
     },
     [name, birth, mutation]
   );
+
   return (
     <Wrapper onClick={stopPropagation}>
       <Form>

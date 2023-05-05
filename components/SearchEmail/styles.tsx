@@ -1,18 +1,20 @@
 import styled from "@emotion/styled";
+import { EmailModal } from "@components/SearchEmail/type";
 
 export const Wrapper = styled.div`
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  position: relative;
-
   background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
 
   width: 25vw;
   min-width: 400px;
   height: 30vh;
   min-height: 180px;
-
-  margin: 20vh auto;
 
   display: flex;
   flex-direction: column;
@@ -20,6 +22,30 @@ export const Wrapper = styled.div`
   align-items: center;
 
   box-sizing: border-box;
+
+  transform: translate(-50%, -50%);
+  animation-duration: 0.3s;
+  animation-name: "fadeIn";
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    to {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+  }
 
   & > form > button {
     border: none;
