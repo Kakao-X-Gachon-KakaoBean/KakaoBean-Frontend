@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useSetRecoilState } from "recoil";
 
 import HeaderBar from "@components/HeaderBar";
 import { Carousel, Input } from "antd";
@@ -21,49 +21,60 @@ import {
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
+import { QuestionBox } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
+import { QuestionTypes, responseDataList } from "@pages/Team/type";
 
-type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
-
-export const report = atom<Answer[]>({
+//atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
+export const report = atom<responseDataList>({
   key: "report",
-  default: [],
+  default: {
+    surveyId: 0, //초기화 값
+    questions: [],
+  },
 });
 
 const Team = () => {
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  //json data - only questions:
+  //test json data - only 'questions' format:
   const [questions, setQuestions] = useState<QuestionTypes[]>(
     testInput.questions
   );
 
-  //recoil_ received answer in here
-  const reportData = useRecoilState(report);
+  //recoil_ can view received response in here
+  const [reportData, setReportData] = useRecoilState(report);
 
-  // const responseData = atom<AnswerList>({
-  //   key:"response",
-  //   default:{
-  //     surveyId: 2
-  //     questions:[]
-  //   }
-  // })
+  //surveyID 초기화 함수
+  const initializeReport = () => {
+    setReportData((prevState) => ({
+      ...prevState,
+      surveyId: testInput.surveyId,
+    }));
+  };
+  // surveyId는 실행시 한번 만 실행
+  useEffect(() => {
+    initializeReport();
+  }, []);
 
+  //carousel(페이지 돌아가는거 구현)
   useEffect(() => {
     carouselRef.current && carouselRef.current.goTo(currentSlide);
   }, [currentSlide]);
 
+  //뒤로 가기 버튼 ->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handlePrevClick = () => {
     carouselRef.current?.prev();
     setCurrentSlide(currentSlide - 1);
   };
 
+  //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handleNextClick = () => {
     carouselRef.current?.next();
     setCurrentSlide(currentSlide + 1);
   };
 
-  //Test: 결과 받아오기 for MultipleQuestions
+  //Test_output: 결과 받아오기 for MultipleQuestions
   useEffect(() => {
     console.log("changed in team_recoil: ", reportData);
   }, [reportData]);
@@ -75,11 +86,11 @@ const Team = () => {
             1(해결). 버튼으로 바꾸기 - 해결한 듯?
             2(해결). 동적 질문 할당
             2_1(해결). json 입력이 있다고 가정할 때
-            2_2(해결). data.type에 따라서 질문 생성; 이후 데이터 넣기
-            -
-            3. 리스폰스 값 저장 - 되는데 지금 출력을 동적으로 못함,,,
-            4. 로직 대응 (페이지 이동, 응답 값 출력)
-            5. thisQuestion안에 데이터 들어가면, 각 컴포넌트 안에서 이를 props로 세팅할 수 있게 하기.
+            2_2(해결). data.type에 따라서 질문 생성;
+            2_3.(해결) thisQuestion안에 데이터 들어가면, 각 컴포넌트 안에서 이를 props로 세팅할 수 있게 하기.
+            3.(해결) 리스폰스 값 저장
+            4. 로직에 대한 페이지 이동
+            5. 로직에 따른 응답 값 출력
             */}
         {questions.map((question, index) => {
           if (question.type === "MULTIPLE") {
@@ -121,13 +132,23 @@ const Team = () => {
             ); // 예외 처리
           }
         })}
+        <QuestionBox>
+          <div>수고하셨습니다 : 제출 페이지</div>
+          <button
+            onClick={() => {
+              console.log(reportData);
+            }}
+          >
+            제출하기
+          </button>
+        </QuestionBox>
       </Carousel>
       <ButtonBox>
         <Button disabled={currentSlide === 0} onClick={handlePrevClick}>
           <FontAwesomeIcon icon={faChevronLeft} />
         </Button>
         <Button
-          disabled={currentSlide === questions.length}
+          disabled={currentSlide === questions.length + 1}
           onClick={handleNextClick}
         >
           <FontAwesomeIcon icon={faChevronRight} />

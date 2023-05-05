@@ -5,7 +5,10 @@ import {
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 
-type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
+export type QuestionTypes =
+  | MultipleQuestion
+  | SubjectiveQuestion
+  | RangeBarQuestion;
 
 //응답 데이터 리스트 형식
 export interface responseDataList {

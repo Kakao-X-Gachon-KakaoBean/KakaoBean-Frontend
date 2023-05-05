@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   RangeBarQuestion,
   subProps,
@@ -10,6 +10,9 @@ import {
   rangeBarStyle,
   Title,
 } from "@components/SurveyResponseTemplates/RangeBar/styles";
+import { useRecoilState } from "recoil";
+import { report } from "@pages/Team";
+import { Answer } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 
 const contentStyle: React.CSSProperties = {
   height: "70vh",
@@ -38,9 +41,18 @@ export const RangeBarQuestions = (props: subProps) => {
 
   const [value, setValue] = useState(0);
 
+  // 각 선택지에 대한 Answer형식 설정 가능하게 해주는 []
+  const [makeData, setMakeData] = useState<Answer>();
+  // recoil reportData -> 제출 시 makeData 입력하기 위함
+  const [reportData, setReportData] = useRecoilState(report);
+
   const handleChange = (newValue: number) => {
     setValue(newValue);
   };
+
+  // useEffect(() => {
+  //   makeData.
+  // }, [value]);
 
   return (
     <div>
