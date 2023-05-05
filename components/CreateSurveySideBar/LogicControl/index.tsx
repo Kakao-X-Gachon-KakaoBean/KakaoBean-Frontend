@@ -201,22 +201,22 @@ export const LogicControl = () => {
 
     const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
     const submitUpperNodeYAxis = updatedNodes[idNum - 2].position.y;
+    const targetUpperNode = nodes.find(
+      (node) => Number(node.id) == Number(value) - 1
+    );
+    const targetUpperNodeYAxis = targetUpperNode?.position.y;
 
     updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
     setSurveyQuestions(updatedQuestions);
 
     //선택한 값이 기존 값과 다를때만 Node, Edge 변경
     if (value != originValue) {
-      console.log("!");
       if (Number(value) == 0) {
-        console.log("!!");
         updatedNodes.forEach((node: Node) => {
           if (Number(node.id) == Number(selNode)) {
-            console.log("1");
             node.position.x = node.position.x - 100;
             node.position.y = submitUpperNodeYAxis;
-          } else if (Number(node.id) != idNum - 2) {
-            console.log("2");
+          } else if (Number(node.id) != 0) {
             node.position.x = node.position.x + 100;
           }
         });
@@ -225,15 +225,15 @@ export const LogicControl = () => {
           return !(edge.source === selNode && edge.target == originValue);
         });
         updatedEdges.push(newEdge);
-      } else {
-        console.log("!!!");
+      } else if (
+        (targetUpperNode != null || targetUpperNode != undefined) &&
+        targetUpperNodeYAxis != null
+      ) {
         updatedNodes.forEach((node: Node) => {
           if (Number(node.id) == Number(selNode)) {
-            console.log("3");
             node.position.x = node.position.x - 100;
-            node.position.y = updatedNodes[value].position.y;
-          } else if (Number(node.id) < Number(value)) {
-            console.log("4");
+            node.position.y = targetUpperNodeYAxis;
+          } else if (Number(node.id) != 0 && Number(node.id) < Number(value)) {
             node.position.x = node.position.x + 100;
           }
         });
