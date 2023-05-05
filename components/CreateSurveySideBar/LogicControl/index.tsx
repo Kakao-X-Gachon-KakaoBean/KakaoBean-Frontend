@@ -127,14 +127,8 @@ export const LogicControl = () => {
 
   //다음 질문 수정될때 node, edge 바뀜
   const NextQuestionChange = (i: number, value: string) => {
-    //SurveyQuestion 변경
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
-
-    updatedQuestions[questionIndex].logics[i].nextQuestionNumber = "" + value;
-    setSurveyQuestions(updatedQuestions);
-
-    //Node, Edge 변경
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -147,6 +141,9 @@ export const LogicControl = () => {
     const originValue =
       updatedQuestions[questionIndex].logics[i].nextQuestionNumber;
     const rootXAxis = updatedNodes[questionIndex].position.x;
+
+    updatedQuestions[questionIndex].logics[i].nextQuestionNumber = "" + value;
+    setSurveyQuestions(updatedQuestions);
 
     //변경이 필요한 노드들의 위치를 수정
     if (value == "0") {
@@ -192,14 +189,8 @@ export const LogicControl = () => {
 
   //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
   const NoLogicChangeNext = (value: string) => {
-    //SurveyQuestion 변경
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
-
-    updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
-    setSurveyQuestions(updatedQuestions);
-
-    //Node, Edge 변경
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -209,17 +200,24 @@ export const LogicControl = () => {
     };
 
     const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
-    const submitYAxis = updatedNodes[idNum].position.y;
+    const submitUpperNodeYAxis = updatedNodes[idNum - 2].position.y;
+
+    updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
+    setSurveyQuestions(updatedQuestions);
 
     //선택한 값이 기존 값과 다를때만 Node, Edge 변경
     if (value != originValue) {
+      console.log("!");
       if (Number(value) == 0) {
+        console.log("!!");
         updatedNodes.forEach((node: Node) => {
-          if (node.id == selNode) {
-            node.position.x = node.position.x - 70;
-            node.position.y = submitYAxis;
-          } else if (node.id > value) {
-            node.position.x = node.position.x + 70;
+          if (Number(node.id) == Number(selNode)) {
+            console.log("1");
+            node.position.x = node.position.x - 100;
+            node.position.y = submitUpperNodeYAxis;
+          } else if (Number(node.id) != idNum - 2) {
+            console.log("2");
+            node.position.x = node.position.x + 100;
           }
         });
 
@@ -228,12 +226,15 @@ export const LogicControl = () => {
         });
         updatedEdges.push(newEdge);
       } else {
+        console.log("!!!");
         updatedNodes.forEach((node: Node) => {
-          if (node.id == selNode) {
-            node.position.x = node.position.x - 70;
+          if (Number(node.id) == Number(selNode)) {
+            console.log("3");
+            node.position.x = node.position.x - 100;
             node.position.y = updatedNodes[value].position.y;
-          } else if (node.id < value) {
-            node.position.x = node.position.x + 70;
+          } else if (Number(node.id) < Number(value)) {
+            console.log("4");
+            node.position.x = node.position.x + 100;
           }
         });
 
