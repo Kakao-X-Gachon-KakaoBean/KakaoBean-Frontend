@@ -24,6 +24,7 @@ import {
   QuestionList,
 } from "../../../States/LogicState";
 import { questionsState } from "../../../States/SurveyState";
+import { target } from "react-chatbot-kit/build/webpack.config";
 
 export const LogicControl = () => {
   // 전체 질문
@@ -126,8 +127,14 @@ export const LogicControl = () => {
 
   //다음 질문 수정될때 node, edge 바뀜
   const NextQuestionChange = (i: number, value: string) => {
+    //SurveyQuestion 변경
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
+
+    updatedQuestions[questionIndex].logics[i].nextQuestionNumber = "" + value;
+    setSurveyQuestions(updatedQuestions);
+
+    //Node, Edge 변경
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -140,9 +147,7 @@ export const LogicControl = () => {
     const originValue =
       updatedQuestions[questionIndex].logics[i].nextQuestionNumber;
     const rootXAxis = updatedNodes[questionIndex].position.x;
-    updatedQuestions[questionIndex].logics[i].nextQuestionNumber = "" + value;
-    setSurveyQuestions(updatedQuestions);
-    console.log(nodes);
+
     //변경이 필요한 노드들의 위치를 수정
     if (value == "0") {
       updatedNodes.forEach((node: Node) => {
@@ -187,12 +192,14 @@ export const LogicControl = () => {
 
   //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
   const NoLogicChangeNext = (value: string) => {
+    //SurveyQuestion 변경
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
 
     updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
     setSurveyQuestions(updatedQuestions);
 
+    //Node, Edge 변경
     let updatedEdges = JSON.parse(JSON.stringify(edges));
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     const newEdge: Edge = {
@@ -201,29 +208,41 @@ export const LogicControl = () => {
       target: String(value),
     };
 
-    updatedEdges = edges.filter(
-      (edge: Edge) =>
-        edge.source === selNode && edge.target === String(Number(selNode) + 1)
-    );
+    const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
+    const submitYAxis = updatedNodes[idNum].position.y;
 
-    updatedNodes[Number(Number(selNode) - 1)].data.nextQ = value;
+    //선택한 값이 기존 값과 다를때만 Node, Edge 변경
+    if (value != originValue) {
+      if (Number(value) == 0) {
+        updatedNodes.forEach((node: Node) => {
+          if (node.id == selNode) {
+            node.position.x = node.position.x - 70;
+            node.position.y = submitYAxis;
+          } else if (node.id > value) {
+            node.position.x = node.position.x + 70;
+          }
+        });
 
-    let flag = updatedNodes.find((node: Node) => node.id === selNode);
+        updatedEdges = updatedEdges.filter((edge: Edge) => {
+          return !(edge.source === selNode && edge.target == originValue);
+        });
+        updatedEdges.push(newEdge);
+      } else {
+        updatedNodes.forEach((node: Node) => {
+          if (node.id == selNode) {
+            node.position.x = node.position.x - 70;
+            node.position.y = updatedNodes[value].position.y;
+          } else if (node.id < value) {
+            node.position.x = node.position.x + 70;
+          }
+        });
 
-    if (selNode && flag) {
-      const selNodeY = flag.position.y;
-      updatedNodes.forEach((node: Node) => {
-        if (node.id < selNode && node.id > value) {
-          node.position.x = node.position.x + 100;
-          node.position.y = selNodeY + 200;
-        }
-        if (node.id >= value) {
-          node.position.x = node.position.x + 50;
-        }
-      });
+        updatedEdges = updatedEdges.filter((edge: Edge) => {
+          return !(edge.source === selNode && edge.target == originValue);
+        });
+        updatedEdges.push(newEdge);
+      }
     }
-
-    updatedEdges.push(newEdge);
     setEdges(updatedEdges);
     setNodes(updatedNodes);
   };
