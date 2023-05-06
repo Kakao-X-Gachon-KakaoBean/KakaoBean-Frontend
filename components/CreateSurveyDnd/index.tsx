@@ -185,17 +185,14 @@ const CreateSurveyDnd = (): JSX.Element => {
     if (questionTypeItems[startIndex].content === "객관식") {
       result.splice(endIndex, 0, {
         ...addMultiple,
-        questionNumber: (endIndex + 1).toString(),
       });
     } else if (questionTypeItems[startIndex].content === "주관식") {
       result.splice(endIndex, 0, {
         ...addSubjective,
-        questionNumber: (endIndex + 1).toString(),
       });
     } else if (questionTypeItems[startIndex].content === "선형배율") {
       result.splice(endIndex, 0, {
         ...addRangeBar,
-        questionNumber: (endIndex + 1).toString(),
       });
     }
     return result;
@@ -222,9 +219,11 @@ const CreateSurveyDnd = (): JSX.Element => {
         setSurveyQuestions((prevState) => {
           return prevState.map((item, index) => {
             const nextNumber =
-              item.nextQuestionNumber === "0"
+              item.nextQuestionNumber === "0" ||
+              item.questionNumber === index.toString()
                 ? (index + 2).toString()
                 : item.nextQuestionNumber;
+            console.log(index + 1, "의 nextQuestionNumber: ", nextNumber);
             return {
               ...item,
               questionNumber: (index + 1).toString(),
