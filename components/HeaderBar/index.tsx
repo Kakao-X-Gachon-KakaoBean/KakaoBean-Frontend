@@ -12,9 +12,38 @@ import {
   RightMenu,
   TopMenu,
 } from "@components/HeaderBar/styles";
-import { Redirect } from "react-router";
+import {
+  countState,
+  createSurveyOptionState,
+  selectedQuestionState,
+  questionsState,
+} from "../../States/SurveyState";
+import {
+  SelNodeState,
+  IdNumState,
+  NodeState,
+  EdgeState,
+  LogicCountState,
+  MultiConditionState,
+  QuestionList,
+} from "../../States/LogicState";
+import { useResetRecoilState } from "recoil";
 
 const HeaderBar = () => {
+  const resetCountState = useResetRecoilState(countState);
+  const resetCreateSurveyOptionState = useResetRecoilState(
+    createSurveyOptionState
+  );
+  const resetSelectedQuestionState = useResetRecoilState(selectedQuestionState);
+  const resetQuestionsState = useResetRecoilState(questionsState);
+  const resetSelNodeState = useResetRecoilState(SelNodeState);
+  const resetIdNumState = useResetRecoilState(IdNumState);
+  const resetEdgeState = useResetRecoilState(EdgeState);
+  const resetNodeState = useResetRecoilState(NodeState);
+  const resetLogicCountState = useResetRecoilState(LogicCountState);
+  const resetMultiConditionState = useResetRecoilState(MultiConditionState);
+  const resetQuestionList = useResetRecoilState(QuestionList);
+
   const [isLogin, setIsLogin] = useState(
     localStorage.getItem("accessToken") !== null
   );
@@ -27,6 +56,24 @@ const HeaderBar = () => {
     },
     [isLogin]
   );
+
+  const resetSurveyAndLogic = () => {
+    resetCountState();
+    resetCreateSurveyOptionState();
+    resetSelectedQuestionState();
+    resetQuestionsState();
+    resetSelNodeState();
+    resetIdNumState();
+    resetEdgeState();
+    resetNodeState();
+    resetLogicCountState();
+    resetMultiConditionState();
+    resetQuestionList();
+  };
+
+  const handleClick = () => {
+    resetSurveyAndLogic();
+  };
 
   return (
     <Bar>
@@ -60,7 +107,7 @@ const HeaderBar = () => {
               )}
             </Links>
             <Links>
-              <Link to="/createsurvey">
+              <Link to="/createsurvey" onClick={handleClick}>
                 <span>Get Start</span>
               </Link>
             </Links>

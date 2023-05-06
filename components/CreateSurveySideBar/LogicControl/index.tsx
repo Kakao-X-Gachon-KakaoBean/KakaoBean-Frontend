@@ -24,7 +24,6 @@ import {
   QuestionList,
 } from "../../../States/LogicState";
 import { questionsState } from "../../../States/SurveyState";
-import { target } from "react-chatbot-kit/build/webpack.config";
 
 export const LogicControl = () => {
   // 전체 질문
@@ -46,10 +45,6 @@ export const LogicControl = () => {
     if (Number(selNode) != 0)
       return nodes[Number(selNode) - 1].id != question.value;
   });
-
-  useEffect(() => {
-    //console.log(Number(Number(selNode) - 1));
-  }, []);
 
   //로직 추가하기
   const addLogic = () => {
@@ -107,10 +102,8 @@ export const LogicControl = () => {
       logics: newLogics,
     };
 
-    //updatedQuestions[questionIndex].logics = newLogics;
     updatedQuestions[questionIndex - 1] = updatedQuestion;
 
-    //console.log(updatedQuestions);
     setSurveyQuestions(updatedQuestions);
     setCount(updatedCounts);
   };
