@@ -4,7 +4,7 @@ import { atom, useRecoilState, useSetRecoilState } from "recoil";
 import HeaderBar from "@components/HeaderBar";
 import { Carousel, Input } from "antd";
 import { CarouselRef } from "antd/es/carousel";
-import { Button, ButtonBox } from "@pages/Team/styles";
+import { Button, ButtonBox, dotStyle } from "@pages/Team/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronRight,
@@ -33,15 +33,16 @@ export const report = atom<responseDataList>({
   },
 });
 
-export const forLogic = atom<number>({
+export const forLogic = atom<string>({
   key: "logic",
-  default: 0,
+  default: "",
 });
 
 const Team = () => {
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  //TODO: 로직에 따른 이동 Queue 만들기
+  const [logicQueue, setLogicQueue] = useState<Number[]>([]);
   //test json data - only 'questions' format:
   const [questions, setQuestions] = useState<QuestionTypes[]>(
     testInput.questions
@@ -79,6 +80,11 @@ const Team = () => {
 
   //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handleNextClick = () => {
+    if (questions[currentSlide].type == "MULTIPLE") {
+      carouselRef.current?.goTo(Number(slideToGo) - 1);
+    } else {
+      carouselRef.current?.next();
+    }
     carouselRef.current?.next();
     setCurrentSlide(currentSlide + 1);
   };
@@ -86,7 +92,8 @@ const Team = () => {
   //Test_output: 결과 받아오기 for MultipleQuestions
   useEffect(() => {
     console.log("changed in team_recoil: ", reportData);
-  }, [reportData]);
+    console.log("changed in team_Slide2go: ", slideToGo);
+  }, [reportData, slideToGo]);
 
   return (
     <div>
@@ -143,7 +150,7 @@ const Team = () => {
           }
         })}
         <QuestionBox>
-          <div>수고하셨습니다 : 제출 페이지</div>
+          <h1>수고하셨습니다 : 제출 페이지</h1>
           <button
             onClick={() => {
               console.log(reportData);

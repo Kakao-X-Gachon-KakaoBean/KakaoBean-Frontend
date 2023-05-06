@@ -2,11 +2,11 @@ import styled from "@emotion/styled";
 import { Button } from "antd";
 
 export const QuestionBox = styled.div`
-  height: 70vh;
+  height: 100vh;
   width: 100%;
-  color: #ffffff;
+  color: black;
   text-align: center;
-  background: #364d79;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   justify-content: center;

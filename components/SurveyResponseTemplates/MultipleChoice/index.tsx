@@ -31,17 +31,17 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   });
 
   // 각 객관식 선택지 false로 초기화 -> 이후 로직에 이를 활용
+  // 각 선택지에 대한 Answer형식 설정 가능하게 해주는 []
+  // recoil reportData -> 제출 시 makeData 입력하기 위함
   const [checkboxData, setCheckboxData] = useState(
     question.answers.map(() => ({ checked: false }))
   );
-  // 각 선택지에 대한 Answer형식 설정 가능하게 해주는 []
   const [makeData, setMakeData] = useState<Answer[]>([]);
-  // recoil reportData -> 제출 시 makeData 입력하기 위함
   const [reportData, setReportData] = useRecoilState(report);
 
   //logic Mapping
   const [logic, setLogic] = useRecoilState(forLogic);
-  const [selectedIdBox, setSelectedIdBox] = useState<Number[]>([0]);
+  const [selectedIdBox, setSelectedIdBox] = useState([0]);
   const [logicIdBox, setLogicIdBox] = useState(
     question.logics.map(() => ({ id: [0], next: "" }))
   );
@@ -51,7 +51,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     setCheckboxData((prevState) => {
       const newState = [...prevState];
       newState[index].checked = !newState[index].checked;
-      //로직 업데이트
+      //이에 따른 로직 업데이트
       if (newState[index].checked) {
         setSelectedIdBox((prev) => {
           return [...prev].concat(question.answers[index].answerId);
@@ -84,6 +84,29 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   useEffect(() => {
     LogicMap();
   }, []);
+
+  //로직 비교
+  const areLogicEqual = (list1: Number[], list2: Number[]) => {
+    if (list1.length !== list2.length) {
+      return false;
+    }
+    return list1.every((element) => list2.includes(element));
+  };
+
+  const changeNext = () => {
+    //logic 비교 후 같으면 출력
+    logicIdBox.map((arr) => {
+      if (areLogicEqual(selectedIdBox, arr.id)) {
+        setLogic(() => {
+          return arr.next;
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    changeNext();
+  }, [selectedIdBox]);
 
   //바뀐 스테이트에 따라 해당 항목 값 makeData에 answer 형식으로 변환 및 저장
   useEffect(() => {
@@ -135,6 +158,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
       <button
         onClick={() => {
           onSubmit();
+          changeNext();
           console.log("selected logic: ", selectedIdBox);
           console.log("input logic: ", logicIdBox);
         }}

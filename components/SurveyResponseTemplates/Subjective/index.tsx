@@ -18,11 +18,11 @@ import { useRecoilState } from "recoil";
 import { report } from "@pages/Team";
 
 const contentStyle: React.CSSProperties = {
-  height: "70vh",
+  height: "100vh",
   width: "100%",
-  color: "#fff",
+  color: "black",
   textAlign: "center",
-  background: "#364d79",
+  background: "#ffffff",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",

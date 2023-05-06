@@ -20,11 +20,11 @@ import {
 } from "@pages/Team/type";
 
 const contentStyle: React.CSSProperties = {
-  height: "70vh",
+  height: "100vh",
   width: "100%",
-  color: "#ffffff",
+  color: "black",
   textAlign: "center",
-  background: "#364d79",
+  background: "#ffffff",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
