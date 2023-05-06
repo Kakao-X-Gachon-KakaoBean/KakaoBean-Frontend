@@ -138,5 +138,6 @@ export const QuestionsListDiv = styled.div`
 
 export const LogicDiv = styled.div`
   padding-top: 10rem;
-  width: 70%;
+  width: 75%;
+  margin-left: -15rem;
 `;

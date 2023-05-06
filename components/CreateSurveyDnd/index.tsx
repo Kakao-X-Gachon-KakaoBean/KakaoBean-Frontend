@@ -282,7 +282,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     const newEdgeTuple: Edge[] = [];
     const newQuestionTuple: any[] = [];
     setIdNum(1);
-    let yaxis = 0;
+    let yaxis = 30;
     let newNode, newEdge;
 
     // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
@@ -298,7 +298,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 : "제목 없음",
             nextQ: String(i + 2),
           },
-          position: { x: 580, y: yaxis },
+          position: { x: 500, y: yaxis },
         };
       } else {
         if (i == surveyQuestions.length - 1) {
@@ -311,7 +311,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(0),
             },
-            position: { x: 580, y: yaxis },
+            position: { x: 500, y: yaxis },
           };
         } else {
           newNode = {
@@ -323,7 +323,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                   : "제목 없음",
               nextQ: String(i + 2),
             },
-            position: { x: 580, y: yaxis },
+            position: { x: 500, y: yaxis },
           };
         }
       }
@@ -348,7 +348,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: 580, y: yaxis },
+      position: { x: 500, y: yaxis },
     };
 
     const submitEdge = {
@@ -385,7 +385,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       id: "0",
       type: "output",
       data: { label: "submit" },
-      position: { x: 580, y: yaxis },
+      position: { x: 500, y: yaxis },
     };
 
     updatedNodes.push(submitNode);
