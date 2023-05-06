@@ -15,7 +15,7 @@ export const createSurveyOptionState = atom({
 });
 
 export const selectedQuestionState = atom<
-  MultipleQuestion | SubjectiveQuestion | RangeBarQuestion | QuestionsItem
+  MultipleQuestion | SubjectiveQuestion | RangeBarQuestion
 >({
   key: "selectedQuestionState",
   default: {
@@ -29,11 +29,7 @@ export const selectedQuestionState = atom<
   },
 });
 
-type QuestionTypes =
-  | QuestionsItem
-  | MultipleQuestion
-  | SubjectiveQuestion
-  | RangeBarQuestion;
+type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
 export const questionsState = atom<QuestionTypes[]>({
   key: "questionsState",
   default: [],
