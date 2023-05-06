@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { report } from "@pages/Team/index";
+import { forLogic, report } from "@pages/Team/index";
 
 import {
   Answer,
@@ -39,14 +39,51 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   // recoil reportData -> 제출 시 makeData 입력하기 위함
   const [reportData, setReportData] = useRecoilState(report);
 
+  //logic Mapping
+  const [logic, setLogic] = useRecoilState(forLogic);
+  const [selectedIdBox, setSelectedIdBox] = useState<Number[]>([0]);
+  const [logicIdBox, setLogicIdBox] = useState(
+    question.logics.map(() => ({ id: [0], next: "" }))
+  );
+
   //버튼 클릭에 따른 바뀐 선택지 state true로 적용 vice versa
   const handleCheckboxChange = (index: number) => {
     setCheckboxData((prevState) => {
       const newState = [...prevState];
       newState[index].checked = !newState[index].checked;
+      //로직 업데이트
+      if (newState[index].checked) {
+        setSelectedIdBox((prev) => {
+          return [...prev].concat(question.answers[index].answerId);
+        });
+      } else {
+        setSelectedIdBox((prev) => {
+          return [...prev].filter(
+            (value) => value !== question.answers[index].answerId
+          );
+        });
+      }
       return newState;
     });
   };
+
+  //해당 문제 로직 초기 설정
+  const LogicMap = () => {
+    setLogicIdBox((prevState) => {
+      const newState = [...prevState];
+      question.logics.map((arr, index1) => {
+        newState[index1].next = arr.nextQuestionNumber;
+        arr.conditionOfQuestionAnswers.map((ans, index2) => {
+          newState[index1].id = [...newState[index1].id, ans.answerId];
+        });
+      });
+      return newState; // 새로운 상태 반환
+    });
+  };
+
+  useEffect(() => {
+    LogicMap();
+  }, []);
 
   //바뀐 스테이트에 따라 해당 항목 값 makeData에 answer 형식으로 변환 및 저장
   useEffect(() => {
@@ -95,7 +132,15 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
-      <button onClick={() => onSubmit()}>check Recoiled Data</button>
+      <button
+        onClick={() => {
+          onSubmit();
+          console.log("selected logic: ", selectedIdBox);
+          console.log("input logic: ", logicIdBox);
+        }}
+      >
+        check Recoiled Data
+      </button>
     </QuestionBox>
   );
 };

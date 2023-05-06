@@ -13,6 +13,11 @@ import {
 import { useRecoilState } from "recoil";
 import { report } from "@pages/Team";
 import { Answer } from "@components/SurveyResponseTemplates/MultipleChoice/type";
+import {
+  answerTypes,
+  answerValue,
+  responseQuestionType,
+} from "@pages/Team/type";
 
 const contentStyle: React.CSSProperties = {
   height: "70vh",
@@ -41,8 +46,8 @@ export const RangeBarQuestions = (props: subProps) => {
 
   const [value, setValue] = useState(0);
 
-  // 각 선택지에 대한 Answer형식 설정 가능하게 해주는 []
-  const [makeData, setMakeData] = useState<Answer>();
+  // 각 선택지에 대한 answerValue
+  const [makeData, setMakeData] = useState<answerValue>();
   // recoil reportData -> 제출 시 makeData 입력하기 위함
   const [reportData, setReportData] = useRecoilState(report);
 
@@ -50,9 +55,21 @@ export const RangeBarQuestions = (props: subProps) => {
     setValue(newValue);
   };
 
-  // useEffect(() => {
-  //   makeData.
-  // }, [value]);
+  useEffect(() => {
+    setMakeData(value);
+  }, [value]);
+
+  const onSubmit = () => {
+    const newQuestion: responseQuestionType = {
+      type: rangeBarQuestions.type,
+      questionId: rangeBarQuestions.questionId,
+      answers: makeData as answerTypes,
+    };
+    setReportData((prevState) => ({
+      ...prevState,
+      questions: [...prevState.questions, newQuestion],
+    }));
+  };
 
   return (
     <div>
@@ -76,6 +93,7 @@ export const RangeBarQuestions = (props: subProps) => {
           value={value}
           style={rangeBarStyle}
         />
+        <button onClick={() => onSubmit()}>check Recoiled Data</button>
       </div>
     </div>
   );

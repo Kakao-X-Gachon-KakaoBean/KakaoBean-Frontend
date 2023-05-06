@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SubjectiveQuestion,
   subProps,
@@ -8,6 +8,14 @@ import {
   Subjective,
   Title,
 } from "@components/SurveyResponseTemplates/Subjective/styles";
+import {
+  answer,
+  answerTypes,
+  answerValue,
+  responseQuestionType,
+} from "@pages/Team/type";
+import { useRecoilState } from "recoil";
+import { report } from "@pages/Team";
 
 const contentStyle: React.CSSProperties = {
   height: "70vh",
@@ -32,11 +40,37 @@ export const SubjectiveQuestions = (props: subProps) => {
     nextQuestionNumber: props.thisQuestion.nextQuestionNumber,
   });
 
+  const [inputValue, setInputValue] = useState("");
+  // 각 선택지에 대한 answerValue
+  const [makeData, setMakeData] = useState<answer>();
+  // recoil reportData -> 제출 시 makeData 입력하기 위함
+  const [reportData, setReportData] = useRecoilState(report);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  useEffect(() => {
+    setMakeData(inputValue);
+  }, [inputValue]);
+
+  const onSubmit = () => {
+    const newQuestion: responseQuestionType = {
+      type: subjectiveQuestions.type,
+      questionId: subjectiveQuestions.questionId,
+      answers: makeData as answer,
+    };
+    setReportData((prevState) => ({
+      ...prevState,
+      questions: [...prevState.questions, newQuestion],
+    }));
+  };
   return (
     <div style={contentStyle}>
       <Title>{subjectiveQuestions.title}</Title>
       <Explanation>{subjectiveQuestions.explanation}</Explanation>
-      <Subjective />
+      <Subjective type="text" value={inputValue} onChange={handleInputChange} />
+      <button onClick={() => onSubmit()}>check Recoiled Data</button>
     </div>
   );
 };

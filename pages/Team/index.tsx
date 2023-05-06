@@ -33,6 +33,11 @@ export const report = atom<responseDataList>({
   },
 });
 
+export const forLogic = atom<number>({
+  key: "logic",
+  default: 0,
+});
+
 const Team = () => {
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -45,6 +50,9 @@ const Team = () => {
   //recoil_ can view received response in here
   const [reportData, setReportData] = useRecoilState(report);
 
+  //logic에 의한 이동 슬라이드 번호
+  const [slideToGo, setSlideToGo] = useRecoilState(forLogic);
+
   //surveyID 초기화 함수
   const initializeReport = () => {
     setReportData((prevState) => ({
@@ -52,6 +60,7 @@ const Team = () => {
       surveyId: testInput.surveyId,
     }));
   };
+
   // surveyId는 실행시 한번 만 실행
   useEffect(() => {
     initializeReport();
@@ -89,6 +98,7 @@ const Team = () => {
             2_2(해결). data.type에 따라서 질문 생성;
             2_3.(해결) thisQuestion안에 데이터 들어가면, 각 컴포넌트 안에서 이를 props로 세팅할 수 있게 하기.
             3.(해결) 리스폰스 값 저장
+            ---------------------------------------------------------------------------------------
             4. 로직에 대한 페이지 이동
             5. 로직에 따른 응답 값 출력
             */}
