@@ -368,6 +368,34 @@ const CreateSurveyDnd = (): JSX.Element => {
     setQuestionList(newQuestionTuple);
   }, [surveyQuestions.length]);
 
+  useEffect(() => {
+    let i = 0;
+    let yaxis = 0;
+    let updatedNodes = JSON.parse(JSON.stringify(nodes));
+    updatedNodes.pop();
+    console.log(updatedNodes);
+    for (i; i < surveyQuestions.length; i++) {
+      updatedNodes[i].data.label =
+        surveyQuestions[i].title !== ""
+          ? surveyQuestions[i].title
+          : "제목 없음";
+      yaxis = yaxis + 100;
+    }
+
+    const submitNode = {
+      id: "0",
+      type: "output",
+      data: { label: "submit" },
+      position: { x: 580, y: yaxis },
+    };
+
+    updatedNodes.push(submitNode);
+
+    setNodes(updatedNodes);
+    //setEdges(newEdgeTuple);
+    //setQuestionList(newQuestionTuple);
+  }, [surveyQuestions.map((question) => question.title).join("")]);
+
   const mutation = useMutation<
     QuestionTypes[],
     AxiosError,
