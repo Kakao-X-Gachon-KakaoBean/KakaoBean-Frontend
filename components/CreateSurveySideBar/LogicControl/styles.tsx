@@ -45,7 +45,19 @@ export const LogicHeader = styled.div`
 
 export const LogicBody = styled.div`
   padding: 1rem;
-  border: 1px solid black;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const LogicBodyHeader = styled.div`
+  width: 10rem;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 0.5rem;
 `;
 
 export const SelectSection = styled.div`
@@ -56,10 +68,12 @@ export const SelectSection = styled.div`
 export const ConditionSection = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 1rem;
 `;
 
 export const LogicBottom = styled.div`
   padding: 1rem;
-  border: 1px solid black;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 `;
