@@ -92,7 +92,16 @@ export const LogicControl = () => {
     }
 
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
+    let updatedEdges = JSON.parse(JSON.stringify(edges));
     const updatedCounts = [...count];
+
+    updatedEdges = updatedEdges.filter((edge: Edge) => {
+      return !(
+        edge.source === selNode &&
+        edge.target == select.logics[logicIndex].nextQuestionNumber &&
+        edge.animated
+      );
+    });
 
     const newLogics = [...select.logics];
     newLogics.splice(logicIndex, 1);
@@ -104,6 +113,7 @@ export const LogicControl = () => {
 
     updatedQuestions[questionIndex - 1] = updatedQuestion;
 
+    setEdges(updatedEdges);
     setSurveyQuestions(updatedQuestions);
     setCount(updatedCounts);
   };
@@ -250,14 +260,14 @@ export const LogicControl = () => {
           <div>
             <div>질문 {selNode}</div>
             <div>
-              이동하기
+              기본이동
               <Select
                 value={
                   "nextQuestionNumber" in select
                     ? select.nextQuestionNumber
                     : "-1"
                 }
-                style={{ width: 120 }}
+                style={{ width: 100 }}
                 onChange={NoLogicChangeNext}
                 options={questionListExceptMe}
               />
@@ -315,7 +325,7 @@ export const LogicControl = () => {
                                                     index
                                                   ]
                                                 }
-                                                style={{ width: 120 }}
+                                                style={{ width: 100 }}
                                                 onChange={(e) =>
                                                   ConditionChange(i, index, e)
                                                 }
@@ -346,7 +356,7 @@ export const LogicControl = () => {
                                       ? item.nextQuestionNumber
                                       : "0"
                                   }
-                                  style={{ width: 120 }}
+                                  style={{ width: 100 }}
                                   onChange={(e: string) =>
                                     NextQuestionChange(i, e)
                                   }
@@ -359,9 +369,6 @@ export const LogicControl = () => {
                       ) : (
                         <div></div>
                       )}
-                      <div>
-                        {JSON.stringify(surveyQuestions[Number(selNode) - 1])}
-                      </div>
                     </>
                   ) : (
                     <div></div>
