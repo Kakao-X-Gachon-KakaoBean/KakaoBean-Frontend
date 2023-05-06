@@ -5,6 +5,7 @@ import {
   LogicBody,
   LogicBottom,
   SideBar,
+  LogicBodyHeader,
 } from "@components/CreateSurveySideBar/LogicControl/styles";
 import { Button, Select } from "antd";
 import Accordion from "@mui/material/Accordion";
@@ -293,9 +294,15 @@ export const LogicControl = () => {
                                 X
                               </Button>
                             </AccordionSummary>
-                            <AccordionDetails>
+                            <AccordionDetails
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "1rem",
+                              }}
+                            >
                               <LogicBody>
-                                조건 :
+                                <LogicBodyHeader>조건</LogicBodyHeader>
                                 {isMultiCondition[Number(selNode)] > 0 &&
                                 "conditionOfQuestionAnswers" in item &&
                                 item.conditionOfQuestionAnswers != null &&

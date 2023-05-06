@@ -59,7 +59,9 @@ export const SubHeader = styled.div`
     & a {
       text-decoration: none;
       color: inherit;
+      font-weight: bold;
     }
+  }
 `;
 
 export const Form = styled.form`
