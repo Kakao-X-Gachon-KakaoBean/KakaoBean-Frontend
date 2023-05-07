@@ -6,6 +6,13 @@ import {
   LogicBottom,
   SideBar,
   LogicBodyHeader,
+  QuestionNumDiv,
+  OptionHeader,
+  DefaultMoveDiv,
+  LogicDiv,
+  AccordionDiv,
+  AddLogicButton,
+  AccordionSummaryDiv,
 } from "@components/CreateSurveySideBar/LogicControl/styles";
 import { Button, Select } from "antd";
 import Accordion from "@mui/material/Accordion";
@@ -256,43 +263,60 @@ export const LogicControl = () => {
     <div>
       <SideBar>
         {selNode === undefined || selNode === "0" || select === undefined ? (
-          <div>질문을 선택해 주세요</div>
+          <div style={{ fontWeight: "bold" }}>질문을 선택해 주세요</div>
         ) : (
           <div>
-            <div>질문 {selNode}</div>
-            <div>
-              기본이동
+            <QuestionNumDiv>질문 {selNode}번</QuestionNumDiv>
+            <DefaultMoveDiv>
+              <OptionHeader>기본 이동</OptionHeader>
               <Select
                 value={
                   "nextQuestionNumber" in select
                     ? select.nextQuestionNumber
                     : "-1"
                 }
-                style={{ width: 100 }}
+                style={{
+                  width: "7rem",
+                }}
                 onChange={NoLogicChangeNext}
                 options={questionListExceptMe}
               />
-            </div>
+            </DefaultMoveDiv>
             {surveyQuestions[Number(Number(selNode) - 1)] &&
               surveyQuestions[Number(Number(selNode) - 1)].type ===
                 "MULTIPLE" && (
-                <>
-                  <Button onClick={addLogic}>로직 추가 하기</Button>
+                <LogicDiv>
+                  <OptionHeader>로직</OptionHeader>
+                  <AddLogicButton onClick={addLogic}>
+                    <span style={{ color: "#039BA1" }}>+ 로직&nbsp;</span>추가
+                    하기
+                  </AddLogicButton>
                   {count[Number(selNode)] >= 0 ? (
-                    <>
+                    <AccordionDiv>
                       {"logics" in select ? (
                         select.logics.map((item, i) => (
-                          <Accordion key={i}>
+                          <Accordion
+                            key={i}
+                            style={{
+                              marginTop: "1.3rem",
+                              width: "100%",
+                              boxShadow: "0 0 2px rgba(0,0,0,0.3)",
+                            }}
+                          >
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                              <Typography>로직 {i + 1}</Typography>
-                              <Button
-                                onClick={(e: any) => {
-                                  DeleteLogic(i);
-                                }}
-                                style={DeleteOption()}
-                              >
-                                X
-                              </Button>
+                              <AccordionSummaryDiv>
+                                <div style={{ fontWeight: "700" }}>
+                                  로직 {i + 1}
+                                </div>
+                                <Button
+                                  onClick={(e: any) => {
+                                    DeleteLogic(i);
+                                  }}
+                                  style={DeleteOption()}
+                                >
+                                  X
+                                </Button>
+                              </AccordionSummaryDiv>
                             </AccordionSummary>
                             <AccordionDetails
                               style={{
@@ -356,7 +380,7 @@ export const LogicControl = () => {
                                 )}
                               </LogicBody>
                               <LogicBottom>
-                                이동 :
+                                <LogicBodyHeader>이동</LogicBodyHeader>
                                 <Select
                                   value={
                                     "nextQuestionNumber" in item
@@ -376,11 +400,11 @@ export const LogicControl = () => {
                       ) : (
                         <div></div>
                       )}
-                    </>
+                    </AccordionDiv>
                   ) : (
                     <div></div>
                   )}
-                </>
+                </LogicDiv>
               )}
           </div>
         )}

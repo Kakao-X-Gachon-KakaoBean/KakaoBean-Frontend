@@ -14,7 +14,9 @@ export const OptionControl = () => {
   return (
     <Wrapper>
       {selectedValue.type !== "NONE" && (
-        <div>{"문제 " + selectedValue.questionNumber + "번"}</div>
+        <div style={{ fontWeight: "bold", fontSize: "1rem" }}>
+          {"질문 " + selectedValue.questionNumber + "번"}
+        </div>
       )}
       {selectedValue.type === "MULTIPLE" && (
         <MultipleOptionControl key={selectedValue.id} />

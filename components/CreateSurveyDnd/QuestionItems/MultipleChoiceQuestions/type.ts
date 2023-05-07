@@ -15,8 +15,8 @@ export interface MultipleQuestion {
   explanation: string;
   finalQuestion: boolean;
   nextQuestionNumber: string;
-  questionNumber: string; // 문제 번호
-  numberOfAnswerChoices: number; // 다중답안 개수
-  answers: string[]; // 옵션들
+  questionNumber: string;
+  numberOfAnswerChoices: number;
+  answers: string[];
   logics: Logic[];
 }
