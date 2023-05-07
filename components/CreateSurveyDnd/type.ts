@@ -1,5 +1,3 @@
-import { atom } from "recoil";
-
 // item type interface
 export interface QuestionTypeItem {
   id: string;
@@ -11,6 +9,7 @@ export interface QuestionsItem {
   id: string;
   type: string;
   content: string;
+  title: string;
 }
 
 // droppable list type

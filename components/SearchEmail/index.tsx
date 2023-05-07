@@ -1,12 +1,13 @@
-import React, { FC, FormEvent, useCallback, useState } from "react";
+import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
 
 import {
   Button,
   Div,
-  EmailInput,
+  EmailBody,
+  EmailHeader,
   Form,
   Header,
-  Input,
+  InputInfo,
 } from "@components/SearchEmail/styles";
 
 import axios, { AxiosError } from "axios";
@@ -14,7 +15,7 @@ import axios, { AxiosError } from "axios";
 import { Wrapper } from "@components/SearchEmail/styles";
 import { InputKey } from "@components/SearchEmail/styles";
 import { EmailModal, Search } from "@components/SearchEmail/type";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 const SearchEmail: FC<EmailModal> = ({
   name,
@@ -23,12 +24,28 @@ const SearchEmail: FC<EmailModal> = ({
   birth,
   onChangeBirth,
 }) => {
+  const [email, setEmail] = useState("");
+  const [submitOrClose, setSubmitOrClose] = useState("인증 하기");
   const stopPropagation = useCallback(
     (e: React.SyntheticEvent<EventTarget>) => {
       e.stopPropagation();
     },
     []
   );
+  useEffect(() => {
+    if (email) setSubmitOrClose("닫기");
+  }, [email]);
+  const queryClient = useQueryClient();
+
+  function formatBirthday(birthday: string): string {
+    const year = birthday.slice(0, 4);
+    const month = birthday.slice(4, 6);
+    const day = birthday.slice(6, 8);
+    return `${year}-${month}-${day}`;
+  }
+
+  const formattedBirthday = formatBirthday(birth);
+
   const mutation = useMutation<
     Search,
     AxiosError,
@@ -45,8 +62,8 @@ const SearchEmail: FC<EmailModal> = ({
       onMutate() {
         // setLogInError(false);
       },
-      onSuccess() {
-        console.log("요청 성공");
+      onSuccess(data) {
+        setEmail(data?.email);
       },
       onError(error) {
         // setLogInError(error.response?.data?.code === 401);
@@ -57,10 +74,11 @@ const SearchEmail: FC<EmailModal> = ({
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      mutation.mutate({ name, birth });
+      mutation.mutate({ name, birth: formattedBirthday });
     },
     [name, birth, mutation]
   );
+
   return (
     <Wrapper onClick={stopPropagation}>
       <Form>
@@ -70,26 +88,37 @@ const SearchEmail: FC<EmailModal> = ({
         <button onClick={onCloseEmailModal}>X</button>
       </Form>
 
-      {/*{failUseEmail && !proveEmail && (*/}
       <InputKey>
         <Form onSubmit={onSubmit}>
-          <Input
+          <InputInfo
             type="text"
             id="name"
             onChange={onChangeName}
             name="name"
             value={name}
             placeholder="이름"
-          ></Input>
-          <Input
+          ></InputInfo>
+          <InputInfo
             type="text"
             id="birth"
             onChange={onChangeBirth}
             name="birth"
             value={birth}
-            placeholder="생년월일 ex) 1999-10-01"
-          ></Input>
-          <Button type="submit">인증 하기</Button>
+            placeholder="생년월일 8자리"
+          ></InputInfo>
+          {email ? (
+            <EmailBody>
+              <EmailHeader>이메일</EmailHeader>
+              {email}
+            </EmailBody>
+          ) : (
+            <></>
+          )}
+          {email ? (
+            <Button onClick={onCloseEmailModal}>{submitOrClose}</Button>
+          ) : (
+            <Button type="submit">{submitOrClose}</Button>
+          )}
         </Form>
       </InputKey>
     </Wrapper>

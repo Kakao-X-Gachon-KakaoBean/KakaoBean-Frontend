@@ -1,6 +1,6 @@
 import { Wrapper, Text, SmallText, TextDiv, Image } from "./styles";
 import React from "react";
-import img1 from "../../../image/ScreenTest1.png";
+import img1 from "../../../image/DragDrop.png";
 
 const DNDText = () => {
   return (
@@ -14,7 +14,10 @@ const DNDText = () => {
           쉽고 빠르게 설문을 시작하세요!
           <br />
         </SmallText>
-        <Image src={img1}></Image>
+        <Image
+          style={{ boxShadow: "0 0 5px rgba(0,0,0,0.5)" }}
+          src={img1}
+        ></Image>
       </TextDiv>
     </Wrapper>
   );

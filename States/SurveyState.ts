@@ -6,7 +6,7 @@ import { QuestionsItem } from "@components/CreateSurveyDnd/type";
 
 export const countState = atom({
   key: "countQuestions",
-  default: 0,
+  default: 1,
 });
 
 export const createSurveyOptionState = atom({
@@ -15,7 +15,7 @@ export const createSurveyOptionState = atom({
 });
 
 export const selectedQuestionState = atom<
-  MultipleQuestion | SubjectiveQuestion | RangeBarQuestion | QuestionsItem
+  MultipleQuestion | SubjectiveQuestion | RangeBarQuestion
 >({
   key: "selectedQuestionState",
   default: {
@@ -27,4 +27,10 @@ export const selectedQuestionState = atom<
     finalQuestion: false,
     nextQuestionNumber: "0",
   },
+});
+
+type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
+export const questionsState = atom<QuestionTypes[]>({
+  key: "questionsState",
+  default: [],
 });

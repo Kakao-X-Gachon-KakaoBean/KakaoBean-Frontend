@@ -16,6 +16,7 @@ import {
   SearchBox,
   SearchBtn,
   SocialLogin,
+  Vertical,
   Wrapper,
 } from "@pages/LogIn/styles";
 import { Link } from "react-router-dom";
@@ -30,6 +31,7 @@ import { Redirect } from "react-router";
 import Menu from "@components/Menu";
 import SearchEmail from "@components/SearchEmail";
 import SearchPassword from "@components/PasswordModal";
+import { LeftMenu } from "@components/HeaderBar/styles";
 
 const LogIn = () => {
   const [email, onChangeEmail, setEmail] = useInput("");
@@ -97,7 +99,9 @@ const LogIn = () => {
   return (
     <>
       <Wrapper>
-        <Header>BeanBay</Header>
+        <Header>
+          <Link to="/main">BeanBay</Link>
+        </Header>
         <Form onSubmit={onSubmit}>
           <Label>
             <Input
@@ -127,12 +131,14 @@ const LogIn = () => {
               }}
             >
               <SearchBtn type="button" onClick={onCloseEmailModal}>
-                이메일 찾기 /
+                이메일 찾기
               </SearchBtn>
+              <div>/</div>
               <SearchBtn type="button" onClick={onClosePasswordModal}>
                 비밀번호 찾기
               </SearchBtn>
             </span>
+            <Vertical></Vertical>
             <span>
               <Link style={{ fontWeight: "bold" }} to="/signup">
                 회원 가입
@@ -178,7 +184,7 @@ const LogIn = () => {
               <SearchPassword
                 name={email}
                 onChangeName={onChangeName}
-                onCloseEmailModal={onCloseEmailModal}
+                onClosePasswordModal={onClosePasswordModal}
                 birth={birth}
                 onChangeBirth={onChangeBirth}
               />

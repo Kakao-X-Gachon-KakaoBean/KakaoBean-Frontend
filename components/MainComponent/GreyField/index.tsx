@@ -1,6 +1,6 @@
 import { Wrapper, Text, SmallText, Div, TextDiv, Image } from "./styles";
 import React from "react";
-import img1 from "../../../image/ScreenTest1.png";
+import img1 from "../../../image/LogicSite.png";
 
 const GreyField = () => {
   return (
@@ -13,7 +13,10 @@ const GreyField = () => {
           </SmallText>
           <SmallText>고객의 요구사항을 빠르게 찾아보세요!</SmallText>
         </TextDiv>
-        <Image src={img1}></Image>
+        <Image
+          src={img1}
+          style={{ boxShadow: "0 0 5px rgba(0,0,0,0.5)" }}
+        ></Image>
       </Div>
     </Wrapper>
   );

@@ -1,5 +1,11 @@
-import React, { FormEvent, useCallback, useState } from "react";
-import { LoginBtn, Wrapper, Label } from "@pages/LogIn/styles";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { Wrapper, Label } from "@pages/LogIn/styles";
 import {
   Header,
   SubHeader,
@@ -7,27 +13,40 @@ import {
   CheckBtn,
   Form,
   InputGender,
+  LoginBtn,
   Label2,
   CheckLabel,
+  EmailLabel,
+  EmailInput,
+  Error,
+  Correct,
+  GenderSpan,
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
 import { useMutation, useQuery } from "react-query";
 import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Button, Modal } from "antd";
+import { Redirect } from "react-router";
 
 const SignUp = () => {
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
-  const [age, onChangeAge, setAge] = useInput<any>(0);
-  const [gender, oncChangeGender, setGender] = useInput("");
-  const [password, onChangePassword, setPassword] = useInput("");
-  const [checkPassword, onChangeCheckPassword, setCheckPassword] = useInput("");
+  const [age, onChangeAge, setAge] = useInput(0);
+  const [gender, onChangeGender, setGender] = useInput("");
+  const [password, , setPassword] = useInput("");
+  const [checkPassword, , setCheckPassword] = useInput("");
   const [emailAuthKey, onChangeEmailAuthKey, seyAuthKey] = useInput("");
+
   const [failUseEmail, setFailUseEmail] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [signUpError, setSignUpError] = useState("");
+
+  const [mismatchError, setMismatchError] = useState(false);
 
   const today = new Date();
   const mutation = useMutation<
@@ -56,17 +75,40 @@ const SignUp = () => {
       },
       onSuccess() {
         setSignUpSuccess(true);
-        console.log("성공");
-        alert("회원가입에 성공하셨습니다.");
       },
       onError(error) {
         setSignUpError(error.response?.data);
-        console.log("에러");
         alert("양식을 알맞게 작성해주세요");
       },
     }
   );
   const birthYear = Number(birth.slice(0, 4));
+
+  function formatBirthday(birthday: string): string {
+    const year = birthday.slice(0, 4);
+    const month = birthday.slice(4, 6);
+    const day = birthday.slice(6, 8);
+    return `${year}-${month}-${day}`;
+  }
+
+  const formattedBirthday = formatBirthday(birth);
+
+  const onChangePassword = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value === checkPassword);
+    },
+    [password, setPassword]
+  );
+
+  const onChangeCheckPassword = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setCheckPassword(e.target.value);
+      setMismatchError(e.target.value === password);
+    },
+    [password, setCheckPassword]
+  );
+
   const onSubmit = useCallback(
     (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -78,8 +120,6 @@ const SignUp = () => {
         checkPassword &&
         emailAuthKey
       ) {
-        console.log("회원가입 시도");
-        console.log(age);
         mutation.mutate({
           name,
           age: today.getFullYear() - birthYear + 1,
@@ -87,11 +127,10 @@ const SignUp = () => {
           email,
           password,
           checkPassword,
-          birth,
+          birth: formattedBirthday,
           emailAuthKey,
         });
       }
-      console.log(mutation);
     },
     [email, name, password, checkPassword, birth, emailAuthKey, mutation]
   );
@@ -100,15 +139,13 @@ const SignUp = () => {
   //   return <div>로딩중...</div>;
   // }
 
-  //로그인 정보 있을 시 메인으로 리다이렉트
-  // if (data) {
-  //   return <Redirect to="/main" />;
-  // }
-
   //입력한 이메일로 인증번호 보내기
   const onSubmitEmail = useCallback(
     (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       e?.preventDefault();
+      const message = (message: string) => (
+        <div style={{ fontSize: "1rem" }}>{message}</div>
+      );
 
       if (!email || !email.trim()) return;
 
@@ -120,11 +157,12 @@ const SignUp = () => {
         )
         .then((response) => {
           setFailUseEmail(true);
-          alert("이메일을 발송하였습니다.");
-          console.log(response);
+          toast(message("메일로 인증번호가 발송되었습니다."), {
+            type: "success",
+          });
         })
         .catch((error) => {
-          alert("이메일 발송에 실패했습니다.");
+          toast(message("메일 주소를 확인해주세요."), { type: "error" });
           setFailUseEmail(false);
           console.log(error.response);
         });
@@ -132,58 +170,72 @@ const SignUp = () => {
     [email]
   );
 
-  console.log(gender);
+  const redirectToMain = () => {
+    if (signUpSuccess) {
+      return <Link to="/login"></Link>;
+    }
+  };
+
   return (
     <>
       <Wrapper>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        ></ToastContainer>
         <Header>회원가입</Header>
         <SubHeader>
-          <div>이미 BeanBay 회원이신가요?</div>
+          <div>
+            이미{" "}
+            <Link to={"/main"} style={{ color: "#039ba1", fontWeight: "bold" }}>
+              BeanBay
+            </Link>{" "}
+            회원이신가요?
+          </div>
           <div>
             <Link to="/login">로그인</Link>
           </div>
         </SubHeader>
         <Form onSubmit={onSubmit}>
-          <Label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              value={name}
-              onChange={onChangeName}
-              placeholder="이름"
+          <EmailLabel>
+            <EmailInput
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={onChangeEmail}
+              placeholder="이메일"
             />
-          </Label>
-          <CheckLabel>
-            <Label2>
-              <InputGender
-                type="radio"
-                name="성별"
-                value="MALE"
-                onChange={oncChangeGender}
+            <CheckBtn
+              type="button"
+              onClick={(e) => {
+                onSubmitEmail(e);
+              }}
+            >
+              이메일 인증
+            </CheckBtn>
+          </EmailLabel>
+
+          {failUseEmail && (
+            <Label>
+              <Input
+                type="text"
+                id="authKey"
+                name="authKey"
+                value={emailAuthKey}
+                onChange={onChangeEmailAuthKey}
+                placeholder="인증번호 입력"
               />
-              <span>남자</span>
-            </Label2>
-            <Label2>
-              <InputGender
-                type="radio"
-                name="성별"
-                value="FEMALE"
-                onChange={oncChangeGender}
-              />
-              <span>여자</span>
-            </Label2>
-          </CheckLabel>
-          <Label>
-            <Input
-              type="text"
-              id="birth"
-              name="birth"
-              value={birth}
-              onChange={onchangeBirth}
-              placeholder="생년월일 ex) 1999-10-01"
-            />
-          </Label>
+            </Label>
+          )}
           <Label>
             <Input
               type="password"
@@ -203,53 +255,69 @@ const SignUp = () => {
               onChange={onChangeCheckPassword}
               placeholder="비밀번호 확인"
             />
+            {!mismatchError && checkPassword.length >= 1 && (
+              <Error>비밀번호가 일치하지 않습니다!</Error>
+            )}
+            {mismatchError && checkPassword.length >= 1 && (
+              <Correct>비밀번호가 일치합니다!</Correct>
+            )}
           </Label>
           <Label>
             <Input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={onChangeEmail}
-              placeholder="이메일"
+              type="text"
+              id="name"
+              name="name"
+              value={name}
+              onChange={onChangeName}
+              placeholder="이름"
             />
           </Label>
-          <CheckBtn
-            type="button"
-            onClick={(e) => {
-              // onCloseEmailModal();
-              onSubmitEmail(e);
-            }}
-          >
-            이메일 인증
-          </CheckBtn>
-          {failUseEmail && (
-            <Label>
-              <Input
-                type="text"
-                id="authKey"
-                name="authKey"
-                value={emailAuthKey}
-                onChange={onChangeEmailAuthKey}
-                placeholder="인증번호 입력"
+          <Label>
+            <Input
+              type="text"
+              id="birth"
+              name="birth"
+              value={birth}
+              onChange={onchangeBirth}
+              placeholder="생년월일 8자리"
+            />
+          </Label>
+          <CheckLabel>
+            <Label2>
+              <InputGender
+                type="radio"
+                name="성별"
+                value="MALE"
+                onChange={onChangeGender}
               />
-            </Label>
-          )}
+              <GenderSpan>남자</GenderSpan>
+            </Label2>
+            <Label2>
+              <InputGender
+                type="radio"
+                name="성별"
+                value="FEMALE"
+                onChange={onChangeGender}
+              />
+              <GenderSpan>여자</GenderSpan>
+            </Label2>
+          </CheckLabel>
           <LoginBtn type="submit">가입하기</LoginBtn>
-          {signUpSuccess && <div>회원가입에 성공하셨습니다.</div>}
         </Form>
-        {/*{emailModal && (*/}
-        {/*  <Menu show={emailModal} onCloseModal={onCloseEmailModal}>*/}
-        {/*    <SearchEmail*/}
-        {/*      email={email}*/}
-        {/*      onChangeEmail={onChangeEmail}*/}
-        {/*      onCloseCheckEmailModal={onCloseEmailModal}*/}
-        {/*      emailAuthKey={emailAuthKey}*/}
-        {/*      onChangeEmailAuthKey={onChangeEmailAuthKey}*/}
-        {/*    />*/}
-        {/*  </Menu>*/}
-        {/*)}*/}
       </Wrapper>
+      <Modal
+        title="BeanBay"
+        closeIcon={" "}
+        footer={[
+          <Link key="submit" to="/login">
+            <Button type="primary">로그인 하러 가기</Button>
+          </Link>,
+        ]}
+        open={signUpSuccess}
+        centered
+      >
+        <p>BeanBay의 회원이 되신 것을 환영합니다.</p>
+      </Modal>
     </>
   );
 };

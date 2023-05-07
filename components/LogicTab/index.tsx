@@ -5,40 +5,13 @@ import ReactFlow, {
   Edge,
   Node,
   ReactFlowProvider,
-  useEdgesState,
-  useNodesState,
 } from "react-flow-renderer";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
-import { Logic } from "@components/LogicTab/type";
-import {
-  SelNodeState,
-  IdNumState,
-  NodeState,
-  EdgeState,
-  LogicState,
-  LogicCountState,
-  MultiConditionState,
-  QuestionList,
-} from "../../States/LogicState";
-
-const initialNodes: Node[] = [
-  {
-    id: "0",
-    type: "input",
-    data: { label: "Submit", nextQ: "0" },
-    position: { x: 400, y: 0 },
-  },
-];
-
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
+import { SelNodeState, NodeState, EdgeState } from "../../States/LogicState";
 
 export default function LogicTab() {
   const nodes = useRecoilValue(NodeState);
   const edges = useRecoilValue(EdgeState);
-  useEffect(() => {
-    console.log(nodes);
-    console.log(edges);
-  }, []);
 
   // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
@@ -59,20 +32,19 @@ export default function LogicTab() {
   }, []);
 
   return (
-    <div>
-      <ReactFlowProvider>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          elementsSelectable={true}
-          nodesConnectable={false}
-          nodesDraggable={true}
-          onNodeClick={onNodeClick}
-        >
-          <Controls />
-          <Background gap={30} size={1} />
-        </ReactFlow>
-      </ReactFlowProvider>
-    </div>
+    <ReactFlowProvider>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        elementsSelectable={true}
+        nodesConnectable={false}
+        nodesDraggable={true}
+        onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeClick}
+      >
+        <Controls />
+        <Background gap={30} size={1} />
+      </ReactFlow>
+    </ReactFlowProvider>
   );
 }

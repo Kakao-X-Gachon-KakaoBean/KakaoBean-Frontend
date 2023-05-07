@@ -1,21 +1,52 @@
 import React from "react";
 import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
+import {
+  InfoSection,
+  Wrapper,
+  Header,
+  SectionHeader,
+  SectionBody,
+} from "@components/MyInfo/styles";
 
 const MyInfo = () => {
-  const { isLoading, isSuccess, status, isError, data, error } = useQuery(
-    ["user"],
-    () => fetcher({ queryKey: "http://localhost:8080/member/member-info" })
-  );
-  console.log(data);
+  interface UserInfo {
+    name: string;
+    age: number;
+    gender: string;
+    email: string;
+    birth: string;
+  }
+  const { isLoading, isSuccess, status, isError, data, error } =
+    useQuery<UserInfo>(["user"], () =>
+      fetcher({ queryKey: "http://localhost:8080/members/info" })
+    );
+
   return (
     <>
-      <div>내 정보</div>
-      <div>이름: {data}</div>
-      <div>나이: {data}</div>
-      <div>성별: {data}</div>
-      <div>이메일: {data}</div>
-      <div>생일: {data}</div>
+      <Wrapper>
+        <Header>내 정보</Header>
+        <InfoSection>
+          <SectionHeader>이름</SectionHeader>
+          <SectionBody>{data?.name}</SectionBody>
+        </InfoSection>
+        <InfoSection>
+          <SectionHeader>나이</SectionHeader>
+          <SectionBody>{data?.age}</SectionBody>
+        </InfoSection>
+        <InfoSection>
+          <SectionHeader>성별</SectionHeader>
+          <SectionBody>{data?.gender}</SectionBody>
+        </InfoSection>
+        <InfoSection>
+          <SectionHeader>이메일</SectionHeader>
+          <SectionBody>{data?.email}</SectionBody>
+        </InfoSection>
+        <InfoSection>
+          <SectionHeader>생일</SectionHeader>
+          <SectionBody>{data?.birth}</SectionBody>
+        </InfoSection>
+      </Wrapper>
     </>
   );
 };

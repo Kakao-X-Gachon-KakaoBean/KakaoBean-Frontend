@@ -33,7 +33,8 @@ export const AddOption = (): React.CSSProperties => ({
 });
 
 export const DeleteOption = (): React.CSSProperties => ({
-  border: 0,
+  border: "none",
   marginLeft: "10px",
   color: "grey",
+  boxShadow: "none",
 });

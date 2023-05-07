@@ -27,17 +27,40 @@ export const getQuestionTypeListStyle = (
   padding: 8,
 });
 
-export const getQuestionsItemStyle = (
+export const getQuestionsItemNoneSelectedStyle = (
   isDragging: boolean,
   draggableStyle: any
 ): React.CSSProperties => ({
   borderRadius: 10,
   userSelect: "none",
   padding: 20,
-  margin: `0 0 10px 0`,
+  margin: `0 0 15px 0`,
   boxShadow: `0px 2px 4px rgba(0,0,0,0.3)`,
   background: isDragging ? "white" : "white",
   ...draggableStyle,
+});
+
+export const getQuestionsItemSelectedStyle = (
+  isDragging: boolean,
+  draggableStyle: any
+): React.CSSProperties => ({
+  borderRadius: 10,
+  userSelect: "none",
+  padding: 20,
+  margin: `0 0 15px 0`,
+  boxShadow: `0 0 1rem rgba(0,0,255,0.3)`,
+  background: isDragging ? "white" : "white",
+  ...draggableStyle,
+});
+
+export const getQuestionsListStyle = (
+  isDraggingOver: boolean
+): React.CSSProperties => ({
+  borderRadius: 10,
+  border: "1px solid",
+  borderColor: "D3D3D3",
+  background: isDraggingOver ? "white" : "white",
+  padding: `50px 70px 50px 70px`,
 });
 
 export const SidebarNoneSelectedQuestion = styled(Button)`
@@ -75,32 +98,22 @@ export const SidebarQuestionDelete = styled.div`
   flex-wrap: wrap;
 `;
 
-export const getQuestionsListStyle = (
-  isDraggingOver: boolean
-): React.CSSProperties => ({
-  borderRadius: 10,
-  border: "1px solid",
-  borderColor: "D3D3D3",
-  background: isDraggingOver ? "white" : "white",
-  padding: `50px 100px 50px 100px`,
-});
-
 export const Wrapper = styled.div`
   display: flex;
   flex: 1;
   justify-content: center;
 `;
+
 export const QuestionsAndType = styled.div`
   display: flex;
   flex: 1;
   position: fixed;
   left: 4rem;
-  top: 10rem;
-  padding-right: 1rem;
+  top: 8rem;
   margin: 0 auto;
-  height: 30rem;
-  overflow-y: scroll;
-  z-index: 1;
+  height: 48%;
+  overflow-y: auto;
+  z-index: 5;
   background-color: white;
 `;
 
@@ -108,24 +121,29 @@ export const SidebarQuestions = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 13rem;
 `;
 
 export const QuestionTypeListDiv = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 13rem;
+  height: 15rem;
   position: fixed;
-  bottom: 5rem;
+  background-color: white;
+  padding-top: 14rem;
+  padding-bottom: 8rem;
+  bottom: 2rem;
   margin-top: 1rem;
+  z-index: 10;
 `;
 
 export const QuestionsListDiv = styled.div`
-  flex-grow: 1;
   padding-top: 10rem;
-  margin-left: 21rem;
+  width: 50%;
 `;
 
 export const LogicDiv = styled.div`
-  flex-grow: 1;
-  padding-top: 5rem;
-  margin-left: 5rem;
+  padding-top: 10rem;
+  width: 70%;
 `;

@@ -1,7 +1,57 @@
-import { Wrapper, Text, TextDiv, Button } from "./styles";
-import React from "react";
+import { Wrapper, Text, TextDiv } from "./styles";
+import { Button } from "antd";
+import React, { useCallback, useState } from "react";
+import { Link } from "react-router-dom";
+import { useResetRecoilState } from "recoil";
+import {
+  countState,
+  createSurveyOptionState,
+  questionsState,
+  selectedQuestionState,
+} from "../../../States/SurveyState";
+import {
+  EdgeState,
+  IdNumState,
+  LogicCountState,
+  MultiConditionState,
+  NodeState,
+  QuestionList,
+  SelNodeState,
+} from "../../../States/LogicState";
 
 const MainFirst = () => {
+  const resetCountState = useResetRecoilState(countState);
+  const resetCreateSurveyOptionState = useResetRecoilState(
+    createSurveyOptionState
+  );
+  const resetSelectedQuestionState = useResetRecoilState(selectedQuestionState);
+  const resetQuestionsState = useResetRecoilState(questionsState);
+  const resetSelNodeState = useResetRecoilState(SelNodeState);
+  const resetIdNumState = useResetRecoilState(IdNumState);
+  const resetEdgeState = useResetRecoilState(EdgeState);
+  const resetNodeState = useResetRecoilState(NodeState);
+  const resetLogicCountState = useResetRecoilState(LogicCountState);
+  const resetMultiConditionState = useResetRecoilState(MultiConditionState);
+  const resetQuestionList = useResetRecoilState(QuestionList);
+
+  const resetSurveyAndLogic = () => {
+    resetCountState();
+    resetCreateSurveyOptionState();
+    resetSelectedQuestionState();
+    resetQuestionsState();
+    resetSelNodeState();
+    resetIdNumState();
+    resetEdgeState();
+    resetNodeState();
+    resetLogicCountState();
+    resetMultiConditionState();
+    resetQuestionList();
+  };
+
+  const handleClick = () => {
+    resetSurveyAndLogic();
+  };
+
   return (
     <Wrapper>
       <TextDiv>
@@ -13,10 +63,16 @@ const MainFirst = () => {
           BeanBay
           <br />
         </Text>
-        <Button>
-          Get Start
-          <br />
-        </Button>
+        <Link
+          to="/createsurvey"
+          onClick={handleClick}
+          style={{ textDecoration: "none" }}
+        >
+          <Button>
+            Get Start
+            <br />
+          </Button>
+        </Link>
       </TextDiv>
     </Wrapper>
   );
