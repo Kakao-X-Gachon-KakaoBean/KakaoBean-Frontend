@@ -155,16 +155,16 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
-      <button
-        onClick={() => {
-          onSubmit();
-          changeNext();
-          console.log("selected logic: ", selectedIdBox);
-          console.log("input logic: ", logicIdBox);
-        }}
-      >
-        check Recoiled Data
-      </button>
+      {/*<button*/}
+      {/*  onClick={() => {*/}
+      {/*    onSubmit();*/}
+      {/*    changeNext();*/}
+      {/*    console.log("selected logic: ", selectedIdBox);*/}
+      {/*    console.log("input logic: ", logicIdBox);*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  check Recoiled Data*/}
+      {/*</button>*/}
     </QuestionBox>
   );
 };

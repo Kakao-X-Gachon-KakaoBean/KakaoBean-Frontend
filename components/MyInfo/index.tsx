@@ -17,10 +17,11 @@ const MyInfo = () => {
     email: string;
     birth: string;
   }
-  const { isLoading, isSuccess, status, isError, data, error } = useQuery(
-    ["user"],
-    () => fetcher({ queryKey: "http://localhost:8080/members/info" })
-  );
+  const { isLoading, isSuccess, status, isError, data, error } =
+    useQuery<UserInfo>(["user"], () =>
+      fetcher({ queryKey: "http://localhost:8080/members/info" })
+    );
+
   return (
     <>
       <Wrapper>

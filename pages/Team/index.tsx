@@ -86,7 +86,7 @@ const Team = () => {
 
   //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handleNextClick = () => {
-    if (questions[currentSlide].type == "MULTIPLE") {
+    if (questions[currentSlide].type == "MULTIPLE" && Number(slideToGo) != 0) {
       carouselRef.current?.goTo(Number(slideToGo) - 1);
     } else {
       carouselRef.current?.next();

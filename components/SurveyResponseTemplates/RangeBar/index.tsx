@@ -93,7 +93,7 @@ export const RangeBarQuestions = (props: subProps) => {
           value={value}
           style={rangeBarStyle}
         />
-        <button onClick={() => onSubmit()}>check Recoiled Data</button>
+        {/*<button onClick={() => onSubmit()}>check Recoiled Data</button>*/}
       </div>
     </div>
   );
