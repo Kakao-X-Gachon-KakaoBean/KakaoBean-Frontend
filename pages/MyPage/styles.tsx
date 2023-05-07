@@ -25,12 +25,9 @@ export const Wrapper = styled.div`
 
 export const SideBar = styled.section`
   font-weight: bolder;
-  padding-top: 10rem;
+  padding-top: 15rem;
   padding-right: 1rem;
-
-  margin: 0 auto;
-
-  border-right: 4px solid gray;
+  background-color: #f2f2f2;
 
   @media screen and (max-width: 769px) {
     order: 1;

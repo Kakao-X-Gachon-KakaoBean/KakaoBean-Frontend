@@ -95,7 +95,7 @@ const HeaderBar = () => {
               </Link>
             </Links>
             <Links>
-              <Link to="/mypage">
+              <Link to="/mypage/myinfo">
                 <span>MY PAGE</span>
               </Link>
             </Links>

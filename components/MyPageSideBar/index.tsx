@@ -9,7 +9,7 @@ const MyPageSideBar: FC<SideBar> = ({ sideBar }) => {
       <Info>
         <span>
           <NavLink activeClassName="selected" to={"/mypage/myinfo"}>
-            내 정보 보기
+            내 정보
           </NavLink>
         </span>
         <span>

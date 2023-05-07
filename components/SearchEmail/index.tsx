@@ -4,6 +4,7 @@ import {
   Button,
   Div,
   EmailBody,
+  EmailHeader,
   Form,
   Header,
   InputInfo,
@@ -35,6 +36,16 @@ const SearchEmail: FC<EmailModal> = ({
     if (email) setSubmitOrClose("닫기");
   }, [email]);
   const queryClient = useQueryClient();
+
+  function formatBirthday(birthday: string): string {
+    const year = birthday.slice(0, 4);
+    const month = birthday.slice(4, 6);
+    const day = birthday.slice(6, 8);
+    return `${year}-${month}-${day}`;
+  }
+
+  const formattedBirthday = formatBirthday(birth);
+
   const mutation = useMutation<
     Search,
     AxiosError,
@@ -63,7 +74,7 @@ const SearchEmail: FC<EmailModal> = ({
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      mutation.mutate({ name, birth });
+      mutation.mutate({ name, birth: formattedBirthday });
     },
     [name, birth, mutation]
   );
@@ -93,12 +104,15 @@ const SearchEmail: FC<EmailModal> = ({
             onChange={onChangeBirth}
             name="birth"
             value={birth}
-            placeholder="생년월일 ex) 1999-10-01"
+            placeholder="생년월일 8자리"
           ></InputInfo>
           {email ? (
-            <EmailBody>이메일 :{email}</EmailBody>
+            <EmailBody>
+              <EmailHeader>이메일</EmailHeader>
+              {email}
+            </EmailBody>
           ) : (
-            <EmailBody></EmailBody>
+            <></>
           )}
           {email ? (
             <Button onClick={onCloseEmailModal}>{submitOrClose}</Button>
