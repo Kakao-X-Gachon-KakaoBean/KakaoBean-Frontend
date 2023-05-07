@@ -19,6 +19,7 @@ export interface responseDataList {
   surveyId: number;
   questions: responseQuestionType[];
 }
+
 export interface responseQuestionType {
   type: string;
   questionId: number;

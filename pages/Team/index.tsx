@@ -22,7 +22,13 @@ import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/t
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
 import { QuestionBox } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
-import { QuestionTypes, responseDataList } from "@pages/Team/type";
+import {
+  incomingDataList,
+  QuestionTypes,
+  responseDataList,
+} from "@pages/Team/type";
+import { useQuery } from "react-query";
+import fetcher from "@utils/fetcher";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -43,7 +49,7 @@ const Team = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   //TODO: 로직에 따른 이동 Queue 만들기
   const [logicQueue, setLogicQueue] = useState<Number[]>([]);
-  //test json data - only 'questions' format:
+
   const [questions, setQuestions] = useState<QuestionTypes[]>(
     testInput.questions
   );
@@ -85,7 +91,7 @@ const Team = () => {
     } else {
       carouselRef.current?.next();
     }
-    carouselRef.current?.next();
+    // carouselRef.current?.next();
     setCurrentSlide(currentSlide + 1);
   };
 
