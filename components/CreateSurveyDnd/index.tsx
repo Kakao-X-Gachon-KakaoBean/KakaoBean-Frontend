@@ -335,7 +335,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       setIsMultiCondition((prevVal) => [...prevVal, 1]);
       newNodeTuple.push(newNode);
       newEdgeTuple.push(newEdge);
-      newQuestionTuple.push({ value: i + 1, label: String(i + 1) });
+      newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
 
       setIdNum(idNum + 1);
       yaxis += 100;
