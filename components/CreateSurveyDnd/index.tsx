@@ -296,7 +296,6 @@ const CreateSurveyDnd = (): JSX.Element => {
               surveyQuestions[i].title !== ""
                 ? surveyQuestions[i].title
                 : "제목 없음",
-            nextQ: String(i + 2),
           },
           position: { x: 500, y: yaxis },
         };
@@ -309,7 +308,6 @@ const CreateSurveyDnd = (): JSX.Element => {
                 surveyQuestions[i].title !== ""
                   ? surveyQuestions[i].title
                   : "제목 없음",
-              nextQ: String(0),
             },
             position: { x: 500, y: yaxis },
           };
@@ -321,7 +319,6 @@ const CreateSurveyDnd = (): JSX.Element => {
                 surveyQuestions[i].title !== ""
                   ? surveyQuestions[i].title
                   : "제목 없음",
-              nextQ: String(i + 2),
             },
             position: { x: 500, y: yaxis },
           };
@@ -338,7 +335,7 @@ const CreateSurveyDnd = (): JSX.Element => {
       setIsMultiCondition((prevVal) => [...prevVal, 1]);
       newNodeTuple.push(newNode);
       newEdgeTuple.push(newEdge);
-      newQuestionTuple.push({ value: i + 1, label: String(i + 1) });
+      newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
 
       setIdNum(idNum + 1);
       yaxis += 100;
