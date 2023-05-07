@@ -46,6 +46,128 @@ export const LogicControl = () => {
       return nodes[Number(selNode) - 1].id != question.value;
   });
 
+  const isNoLogic = (QuestionsList: string | any[] | undefined) => {
+    //const QuestionsList = JSON.parse(JSON.stringify(surveyQuestions));
+    console.log("isLogicStart");
+    let i = 0;
+    if (QuestionsList != undefined) {
+      for (i; i < QuestionsList.length; i++) {
+        if (
+          i == QuestionsList.length - 1 &&
+          QuestionsList[i].nextQuestionNumber != "0"
+        ) {
+          console.log("마지막 문제가 0이 아님");
+
+          break;
+        } else if (QuestionsList[i].nextQuestionNumber != String(i + 2)) {
+          console.log("다음 문제가 아님");
+
+          break;
+        } else if ("logics" in QuestionsList[i]) {
+          let j = 0;
+          for (j; QuestionsList[i].logics.length; j++) {
+            if (
+              i == QuestionsList.length - 1 &&
+              QuestionsList[i].logics[j]?.nextQuestionNumber != "0"
+            ) {
+              console.log("모든 로직에서 이동이 다음 문제가 아님");
+              console.log("원래 다음 문제 : " + "0");
+              console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+              break;
+            } else if (
+              QuestionsList[i].logics[j]?.nextQuestionNumber != String(i + 2)
+            ) {
+              console.log("모든 로직에서 이동이 다음 문제가 아님");
+              console.log("원래 다음 문제 : " + String(i + 2));
+              console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+              break;
+            }
+          }
+        }
+      }
+
+      return i == QuestionsList.length;
+    } else {
+      return false;
+    }
+  };
+
+  const resetNodeAndEdge = () => {
+    const newNodeTuple: Node[] = [];
+    const newEdgeTuple: Edge[] = [];
+    let newNode, newEdge;
+    let yaxis = 30;
+    let i = 0;
+
+    for (i = 0; i < surveyQuestions.length; i++) {
+      if (i == 0) {
+        newNode = {
+          id: String(i + 1),
+          type: "input",
+          data: {
+            label:
+              surveyQuestions[i].title !== ""
+                ? surveyQuestions[i].title
+                : "제목 없음",
+          },
+          position: { x: 500, y: yaxis },
+        };
+      } else {
+        if (i == surveyQuestions.length - 1) {
+          newNode = {
+            id: String(i + 1),
+            data: {
+              label:
+                surveyQuestions[i].title !== ""
+                  ? surveyQuestions[i].title
+                  : "제목 없음",
+            },
+            position: { x: 500, y: yaxis },
+          };
+        } else {
+          newNode = {
+            id: String(i + 1),
+            data: {
+              label:
+                surveyQuestions[i].title !== ""
+                  ? surveyQuestions[i].title
+                  : "제목 없음",
+            },
+            position: { x: 500, y: yaxis },
+          };
+        }
+      }
+      newEdge = {
+        id: "e" + String(i + 1) + "-" + String(i + 2),
+        source: String(i + 1),
+        target: String(i + 2),
+      };
+
+      newNodeTuple.push(newNode);
+      newEdgeTuple.push(newEdge);
+
+      yaxis += 100;
+    }
+    const submitNode = {
+      id: "0",
+      type: "output",
+      data: { label: "submit" },
+      position: { x: 500, y: yaxis },
+    };
+
+    const submitEdge = {
+      id: "e_submit",
+      source: String(i),
+      target: "0",
+    };
+
+    newNodeTuple.push(submitNode);
+    newEdgeTuple.push(submitEdge);
+    setNodes(newNodeTuple);
+    setEdges(newEdgeTuple);
+    console.log("NoLoGIC!!!!!!!!!!!!!!!!!!!!!!!!");
+  };
+
   //로직 추가하기
   const addLogic = () => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
@@ -112,9 +234,13 @@ export const LogicControl = () => {
     };
 
     updatedQuestions[questionIndex - 1] = updatedQuestion;
-
-    setEdges(updatedEdges);
     setSurveyQuestions(updatedQuestions);
+
+    if (isNoLogic(updatedQuestions)) {
+      resetNodeAndEdge();
+    } else {
+      setEdges(updatedEdges);
+    }
     setCount(updatedCounts);
   };
 
@@ -153,7 +279,6 @@ export const LogicControl = () => {
       updatedNodes.forEach((node: Node) => {
         if (Number(node.id) > Number(selNode)) {
           node.position.x = rootXAxis + 100;
-          console.log(node);
         }
       });
     } else if (value != updatedQuestions[questionIndex].nextQuestionNumber) {
@@ -186,8 +311,12 @@ export const LogicControl = () => {
       updatedEdges.push(newEdge);
     }
 
-    setEdges(updatedEdges);
-    setNodes(updatedNodes);
+    if (isNoLogic(updatedQuestions)) {
+      resetNodeAndEdge();
+    } else {
+      setEdges(updatedEdges);
+      setNodes(updatedNodes);
+    }
   };
 
   //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
@@ -203,13 +332,15 @@ export const LogicControl = () => {
     };
 
     const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
+    const originNextValue = String(Number(selNode) + 1);
+    const originNode = nodes.find((node) => Number(node.id) == Number(value));
     const submitUpperNodeYAxis = updatedNodes[idNum - 2].position.y;
     const targetUpperNode = nodes.find(
       (node) => Number(node.id) == Number(value) - 1
     );
     const targetUpperNodeYAxis = targetUpperNode?.position.y;
 
-    updatedQuestions[questionIndex].nextQuestionNumber = "" + value;
+    updatedQuestions[questionIndex].nextQuestionNumber = value;
     setSurveyQuestions(updatedQuestions);
 
     //선택한 값이 기존 값과 다를때만 Node, Edge 변경
@@ -223,11 +354,10 @@ export const LogicControl = () => {
             node.position.x = node.position.x + 100;
           }
         });
-
-        updatedEdges = updatedEdges.filter((edge: Edge) => {
-          return !(edge.source === selNode && edge.target == originValue);
-        });
-        updatedEdges.push(newEdge);
+      } else if (value == originNextValue && originNode != undefined) {
+        updatedNodes[questionIndex].position.x = originNode.position.x;
+        updatedNodes[questionIndex].position.y =
+          updatedNodes[questionIndex + 1].position.y - 100;
       } else if (
         (targetUpperNode != null || targetUpperNode != undefined) &&
         targetUpperNodeYAxis != null
@@ -240,15 +370,20 @@ export const LogicControl = () => {
             node.position.x = node.position.x + 100;
           }
         });
-
-        updatedEdges = updatedEdges.filter((edge: Edge) => {
-          return !(edge.source === selNode && edge.target == originValue);
-        });
-        updatedEdges.push(newEdge);
       }
+
+      updatedEdges = updatedEdges.filter((edge: Edge) => {
+        return !(edge.source === selNode && edge.target == originValue);
+      });
+      updatedEdges.push(newEdge);
     }
-    setEdges(updatedEdges);
-    setNodes(updatedNodes);
+
+    if (isNoLogic(updatedQuestions)) {
+      resetNodeAndEdge();
+    } else {
+      setEdges(updatedEdges);
+      setNodes(updatedNodes);
+    }
   };
 
   return (

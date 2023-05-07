@@ -296,7 +296,6 @@ const CreateSurveyDnd = (): JSX.Element => {
               surveyQuestions[i].title !== ""
                 ? surveyQuestions[i].title
                 : "제목 없음",
-            nextQ: String(i + 2),
           },
           position: { x: 500, y: yaxis },
         };
@@ -309,7 +308,6 @@ const CreateSurveyDnd = (): JSX.Element => {
                 surveyQuestions[i].title !== ""
                   ? surveyQuestions[i].title
                   : "제목 없음",
-              nextQ: String(0),
             },
             position: { x: 500, y: yaxis },
           };
@@ -321,7 +319,6 @@ const CreateSurveyDnd = (): JSX.Element => {
                 surveyQuestions[i].title !== ""
                   ? surveyQuestions[i].title
                   : "제목 없음",
-              nextQ: String(i + 2),
             },
             position: { x: 500, y: yaxis },
           };
