@@ -21,6 +21,7 @@ const MyPage = () => {
         </SideBar>
         <RightSide>
           <Switch>
+            {/*<Redirect to="mypage/myinfo" />*/}
             <Route path="/mypage/myinfo" component={MyInfo} />
             <Route path="/mypage/surveyinfo" component={SurveyInfo} />
             <Route path="/mypage/mysurvey" component={MySurvey} />
