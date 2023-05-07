@@ -4,6 +4,7 @@ import {
   Button,
   Div,
   EmailBody,
+  EmailHeader,
   Form,
   Header,
   InputInfo,
@@ -106,9 +107,12 @@ const SearchEmail: FC<EmailModal> = ({
             placeholder="생년월일 8자리"
           ></InputInfo>
           {email ? (
-            <EmailBody>이메일 :{email}</EmailBody>
+            <EmailBody>
+              <EmailHeader>이메일</EmailHeader>
+              {email}
+            </EmailBody>
           ) : (
-            <EmailBody></EmailBody>
+            <></>
           )}
           {email ? (
             <Button onClick={onCloseEmailModal}>{submitOrClose}</Button>

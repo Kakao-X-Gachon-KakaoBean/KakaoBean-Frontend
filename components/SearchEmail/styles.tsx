@@ -135,10 +135,23 @@ export const Button = styled.button`
   }
 `;
 
+export const EmailHeader = styled.div`
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+`;
 export const EmailBody = styled.div`
   font-size: 1rem;
   width: 15rem;
-  margin-top: 0.3rem;
+  height: 6rem;
+  border: 1px solid #efefef;
+  margin-top: 0.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.2rem 1rem;
+  flex-direction: column;
 `;
 
 export const InputInfo = styled(Input)`
