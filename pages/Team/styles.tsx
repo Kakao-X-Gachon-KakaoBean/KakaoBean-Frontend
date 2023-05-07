@@ -39,3 +39,10 @@ export const Button = styled.button`
     display: none;
   `}
 `;
+
+export const dotStyle = {
+  backgroundColor: "blue", // 점의 원하는 색상으로 변경
+  width: "10px",
+  height: "10px",
+  borderRadius: "50%",
+};
