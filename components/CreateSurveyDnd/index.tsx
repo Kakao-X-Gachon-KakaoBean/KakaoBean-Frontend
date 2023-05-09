@@ -223,7 +223,6 @@ const CreateSurveyDnd = (): JSX.Element => {
               item.questionNumber === index.toString()
                 ? (index + 2).toString()
                 : item.nextQuestionNumber;
-            console.log(index + 1, "의 nextQuestionNumber: ", nextNumber);
             return {
               ...item,
               questionNumber: (index + 1).toString(),
@@ -245,9 +244,13 @@ const CreateSurveyDnd = (): JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    console.log("questions", questions);
-  }, [questions]);
+  // useEffect(() => {
+  //   console.log("questions:", questions);
+  // }, [questions]);
+  //
+  // useEffect(() => {
+  //   console.log("surveyQuestions:", surveyQuestions);
+  // }, [surveyQuestions]);
 
   useEffect(() => {
     setSurveyQuestions(() => surveyQuestions);
@@ -369,13 +372,14 @@ const CreateSurveyDnd = (): JSX.Element => {
     let yaxis = 0;
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     updatedNodes.pop();
-    console.log(updatedNodes);
     for (i; i < surveyQuestions.length; i++) {
-      updatedNodes[i].data.label =
-        surveyQuestions[i].title !== ""
-          ? surveyQuestions[i].title
-          : "제목 없음";
-      yaxis = yaxis + 100;
+      if (updatedNodes[i]) {
+        updatedNodes[i].data.label =
+          surveyQuestions[i].title !== ""
+            ? surveyQuestions[i].title
+            : "제목 없음";
+        yaxis = yaxis + 100;
+      }
     }
 
     const submitNode = {
