@@ -6,7 +6,7 @@ import { Redirect, Route, Switch } from "react-router";
 import loadable from "@loadable/component";
 
 const MyInfo = loadable(() => import("@components/MyInfo"));
-const SurveyInfo = loadable(() => import("@components/SurveyInfo"));
+const SurveyList = loadable(() => import("@components/SurveyList"));
 const MySurvey = loadable(() => import("@components/MySurvey"));
 
 const MyPage = () => {
@@ -21,9 +21,8 @@ const MyPage = () => {
         </SideBar>
         <RightSide>
           <Switch>
-            {/*<Redirect to="mypage/myinfo" />*/}
             <Route path="/mypage/myinfo" component={MyInfo} />
-            <Route path="/mypage/surveyinfo" component={SurveyInfo} />
+            <Route path="/mypage/surveylist" component={SurveyList} />
             <Route path="/mypage/mysurvey" component={MySurvey} />
           </Switch>
         </RightSide>

@@ -1,6 +1,4 @@
 import React from "react";
-import { useQuery } from "react-query";
-import fetcher from "@utils/fetcher";
 import {
   SurveyBox,
   SurveyContainer,
@@ -10,14 +8,10 @@ import {
   SurveyInfo,
 } from "@components/MySurvey/styles";
 
-const MySurvey = () => {
-  // const { isLoading, isSuccess, status, isError, data, error } = useQuery(
-  //   ["MySuervey"],
-  //   () => fetcher({ queryKey: "http://localhost:8080/surveys/1" })
-  // );
+const SurveyList = () => {
   return (
     <>
-      <SurveyHeader>내가 만든 설문 조회</SurveyHeader>
+      <SurveyHeader>참여 설문 조회</SurveyHeader>
       <SurveyContainer>
         {/*{data &&*/}
         {/*  [...Array(data?.length)].map((e, index) => {*/}
@@ -36,4 +30,4 @@ const MySurvey = () => {
   );
 };
 
-export default MySurvey;
+export default SurveyList;
