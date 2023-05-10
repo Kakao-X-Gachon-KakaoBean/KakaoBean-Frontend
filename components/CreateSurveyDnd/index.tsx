@@ -369,7 +369,7 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   useEffect(() => {
     let i = 0;
-    let yaxis = 0;
+    let yaxis = 30;
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
     updatedNodes.pop();
     for (i; i < surveyQuestions.length; i++) {

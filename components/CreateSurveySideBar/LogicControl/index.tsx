@@ -61,30 +61,30 @@ export const LogicControl = () => {
 
   const isNoLogic = () => {
     const QuestionsList = JSON.parse(JSON.stringify(surveyQuestions));
-    console.log("isLogicStart");
+    //console.log("isLogicStart");
     let i = 0;
     if (QuestionsList != undefined) {
       MainLoop: for (i; i < QuestionsList.length; i++) {
         if (i == QuestionsList.length - 1) {
-          console.log("맨 마지막 문제");
+          //console.log("맨 마지막 문제");
           if (QuestionsList[i]?.nextQuestionNumber != "0") {
-            console.log("마지막 문제가 0이 아님");
+            //console.log("마지막 문제가 0이 아님");
             break;
           } else if ("logics" in QuestionsList[i]) {
             let j = 0;
             for (j; QuestionsList[i].logics.length; j++) {
               if (QuestionsList[i].logics[j]?.nextQuestionNumber != "0") {
-                console.log("모든 로직에서 이동이 다음 문제가 아님");
-                console.log("원래 다음 문제 : " + "0");
-                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+                //console.log("모든 로직에서 이동이 다음 문제가 아님");
+                //console.log("원래 다음 문제 : " + "0");
+                //console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
                 break MainLoop;
               }
             }
           }
         } else {
-          console.log("마지막 문제 아닌것");
+          //console.log("마지막 문제 아닌것");
           if (QuestionsList[i]?.nextQuestionNumber != String(i + 2)) {
-            console.log("다음 문제가 아님");
+            //console.log("다음 문제가 아님");
             break;
           } else if ("logics" in QuestionsList[i]) {
             let j = 0;
@@ -92,18 +92,18 @@ export const LogicControl = () => {
               if (
                 QuestionsList[i].logics[j]?.nextQuestionNumber != String(i + 2)
               ) {
-                console.log("모든 로직에서 이동이 다음 문제가 아님");
-                console.log("원래 다음 문제 : " + String(i + 2));
-                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+                //console.log("모든 로직에서 이동이 다음 문제가 아님");
+                //console.log("원래 다음 문제 : " + String(i + 2));
+                //console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
                 break MainLoop;
               }
             }
           }
         }
       }
-      console.log("result");
-      console.log(i);
-      console.log(QuestionsList.length);
+      //console.log("result");
+      //console.log(i);
+      //console.log(QuestionsList.length);
 
       if (i == QuestionsList.length) resetNodeAndEdge();
     }
@@ -182,7 +182,7 @@ export const LogicControl = () => {
     newEdgeTuple.push(submitEdge);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
-    console.log("NoLoGIC!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log("No Logic!!");
   };
 
   //로직 추가하기
