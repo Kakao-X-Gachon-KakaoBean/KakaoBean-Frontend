@@ -19,11 +19,12 @@ export const ResponseResult = styled.div`
   align-items: flex-start;
   justify-content: space-evenly;
 
-  & div:first-child {
+  & > div:first-child {
   }
 
-  & div:last-child {
-    font-size: 1.2rem;
+  & > div:last-child {
+    font-size: 2rem;
+    font-weight: bold;
   }
 `;
 export const GoingResult = styled(ResponseResult)``;

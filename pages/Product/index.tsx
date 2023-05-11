@@ -184,37 +184,6 @@ const Product = () => {
         <ResultSection>세 번째 바</ResultSection>
         <SurveySection>네 번째 바</SurveySection>
       </SectionWrapper>
-      {/*<LineChart*/}
-      {/*  width={730}*/}
-      {/*  height={250}*/}
-      {/*  data={data}*/}
-      {/*  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}*/}
-      {/*>*/}
-      {/*  <CartesianGrid strokeDasharray="3 3" />*/}
-      {/*  <XAxis dataKey="name" />*/}
-      {/*  <YAxis />*/}
-      {/*  <Tooltip />*/}
-      {/*  <Legend />*/}
-      {/*  <Line type="monotone" dataKey="pv" stroke="#8884d8" />*/}
-      {/*  <Line type="monotone" dataKey="uv" stroke="#82ca9d" />*/}
-      {/*</LineChart>*/}
-
-      {/*<PieChart width={400} height={400}>*/}
-      {/*  <Pie*/}
-      {/*    data={data2}*/}
-      {/*    cx="50%"*/}
-      {/*    cy="50%"*/}
-      {/*    labelLine={false}*/}
-      {/*    label={renderCustomizedLabel}*/}
-      {/*    outerRadius={80}*/}
-      {/*    fill="#8884d8"*/}
-      {/*    dataKey="value"*/}
-      {/*  >*/}
-      {/*    {data.map((entry, index) => (*/}
-      {/*      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />*/}
-      {/*    ))}*/}
-      {/*  </Pie>*/}
-      {/*</PieChart>*/}
     </Wrapper>
   );
 };
