@@ -39,7 +39,7 @@ import {
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
-import { Button, Input } from "antd";
+import { Button, Input, Modal } from "antd";
 import LogicTab from "@components/LogicTab";
 import { Link, Element } from "react-scroll";
 import {
@@ -54,6 +54,7 @@ import {
 import { Edge, Node } from "react-flow-renderer";
 import { useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const [nodes, setNodes] = useRecoilState(NodeState);
@@ -79,6 +80,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     selectedQuestionState
   );
   const [surveyTitle, setSurveyTitle] = useState<string>("");
+  const [surveyId, setSurveyId] = useState("");
   // const [surveyQuestions, setSurveyQuestions] = useState<QuestionTypes[]>([]); // id, value 포함 전체 질문
   const [questions, setQuestions] = useState<QuestionTypes[]>([]); // id, value 제거 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState); // 전체 질문 recoil
@@ -87,6 +89,12 @@ const CreateSurveyDnd = (): JSX.Element => {
   };
 
   const [viewLogic, setViewLogic] = useRecoilState(createSurveyOptionState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+    console.log("클릭");
+  };
 
   // 하위컴포넌트에서 값 받고 적용
   const handleQuestionChange = (
@@ -417,8 +425,9 @@ const CreateSurveyDnd = (): JSX.Element => {
         .then((response) => response.data),
     {
       onMutate() {},
-      onSuccess() {
-        alert("성공");
+      onSuccess(returnData: any) {
+        setIsModalOpen(true);
+        setSurveyId(returnData?.surveyId);
       },
       onError(error) {
         alert("양식을 알맞게 작성해주세요");
@@ -634,6 +643,19 @@ const CreateSurveyDnd = (): JSX.Element => {
           </QuestionsListDiv>
         )}
       </Wrapper>
+      <Modal
+        title="BeanBay"
+        open={isModalOpen}
+        onCancel={handleOk}
+        footer={[
+          <CopyToClipboard text={`http://localhost:8080/surveys/${surveyId}`}>
+            <Button type="primary">링크 복사하기</Button>
+          </CopyToClipboard>,
+        ]}
+        centered
+      >
+        <p>{`http://localhost:8080/surveys/${surveyId}`}</p>
+      </Modal>
     </DragDropContext>
   );
 };
