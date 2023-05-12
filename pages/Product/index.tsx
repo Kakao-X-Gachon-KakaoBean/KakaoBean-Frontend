@@ -18,12 +18,22 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-import { Wrapper } from "@components/MainComponent/DNDText/styles";
 import { Header } from "@components/MyInfo/styles";
 import {
   CompleteResult,
   GoingResult,
   LeftResult,
+  PieContainer,
+  PieDescription,
+  PieHeading,
+  PieLangCircle,
+  PieLangColorBox,
+  PieLangColorBoxWrapper,
+  PieLangText,
+  PieLeft,
+  PieRatioWrapper,
+  PieRight,
+  PieTitle,
   ResponseResult,
   ResultSection,
   RightResult,
@@ -31,6 +41,7 @@ import {
   StatisticSection,
   SurveySection,
   ViewSection,
+  Wrapper,
 } from "@pages/Product/styles";
 const Product = () => {
   const data = [
@@ -84,10 +95,17 @@ const Product = () => {
     { name: "30대", value: 3 },
     { name: "40대", value: 2 },
     { name: "50대", value: 2 },
-    { name: "60", value: 1 },
+    { name: "60대", value: 1 },
   ];
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#ba4c4c",
+    "#98cdd6",
+  ];
 
   interface CustomizedLabelProps {
     cx: number;
@@ -160,25 +178,48 @@ const Product = () => {
             </LineChart>
           </LeftResult>
           <RightResult>
-            <PieChart width={400} height={400}>
-              <Pie
-                data={data2}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={renderCustomizedLabel}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
+            <PieContainer>
+              <PieLeft>
+                <PieHeading>
+                  <PieTitle>설문 연령 비율</PieTitle>
+                  <PieDescription>해당 설문 기준</PieDescription>
+                </PieHeading>
+                <PieRatioWrapper>
+                  {data2 &&
+                    data2.map((it, idx) => (
+                      <PieLangColorBoxWrapper key={`${it.name}-${it.value}`}>
+                        <PieLangColorBox props={COLORS[idx]} />
+                        <div>
+                          <PieLangText>{it.name}</PieLangText>
+                          <PieLangText>{it.value}%</PieLangText>
+                        </div>
+                      </PieLangColorBoxWrapper>
+                    ))}
+                </PieRatioWrapper>
+              </PieLeft>
+              <PieRight>
+                <PieChart width={300} height={300}>
+                  <Pie
+                    data={data2}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    innerRadius={30}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {data2.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </PieRight>
+            </PieContainer>
           </RightResult>
         </StatisticSection>
         <ResultSection>세 번째 바</ResultSection>

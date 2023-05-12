@@ -45,6 +45,17 @@ export const forLogic = atom<string>({
 });
 
 const Team = () => {
+  // const {
+  //   isLoading,
+  //   isSuccess,
+  //   status,
+  //   isError,
+  //   data: surveyData,
+  //   error,
+  // } = useQuery<any>(["survey"], () =>
+  //   fetcher({ queryKey: "http://localhost:8080/surveys/104" })
+  // );
+
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   //TODO: 로직에 따른 이동 Queue 만들기
@@ -53,6 +64,20 @@ const Team = () => {
   const [questions, setQuestions] = useState<QuestionTypes[]>(
     testInput.questions
   );
+
+  // const [questions, setQuestions] = useState<QuestionTypes[]>([]);
+  // useEffect(() => {
+  //   if (surveyData?.questions) {
+  //     setQuestions(surveyData.questions);
+  //   }
+  // });
+
+  // const initializeReport = () => {
+  //   setReportData((prevState) => ({
+  //     ...prevState,
+  //     surveyId: surveyData?.surveyId,
+  //   }));
+  // };
 
   //recoil_ can view received response in here
   const [reportData, setReportData] = useRecoilState(report);
@@ -115,46 +140,48 @@ const Team = () => {
             4. 로직에 대한 페이지 이동
             5. 로직에 따른 응답 값 출력
             */}
-        {questions.map((question, index) => {
-          if (question.type === "MULTIPLE") {
-            const mQuestion = question as MultipleQuestion;
-            return (
-              // MULTIPLE 타입에 해당하는 JSX 코드
-              <div>
-                {/*<button onClick={() => console.log(reportData)}>*/}
-                {/*  this is the report_recoil_data*/}
-                {/*</button>*/}
-                {/*page*/}
-                <MultipleChoiceQuestions thisQuestion={mQuestion} />
-              </div>
-            );
-          } else if (question.type === "RANGE") {
-            const rQuestion = question as RangeBarQuestion;
-            return (
-              // RANGE 타입에 해당하는 JSX 코드
-              <div>
-                {/*page*/}
-                <RangeBarQuestions thisQuestion={rQuestion} />
-              </div>
-            );
-          } else if (question.type === "ESSAY") {
-            const sQuestion = question as SubjectiveQuestion;
-            return (
-              // ESSAY 타입에 해당하는 JSX 코드
-              <div>
-                {/*page*/}
-                <SubjectiveQuestions thisQuestion={sQuestion} />
-              </div>
-            );
-          } else {
-            console.log("Type is null!");
-            return (
-              <div>
-                <h1>No Type Space</h1>
-              </div>
-            ); // 예외 처리
-          }
-        })}
+        {questions &&
+          questions.map((question: any, index) => {
+            if (question.type === "MULTIPLE") {
+              const mQuestion = question as MultipleQuestion;
+              return (
+                // MULTIPLE 타입에 해당하는 JSX 코드
+                <div>
+                  {/*<button onClick={() => console.log(reportData)}>*/}
+                  {/*  this is the report_recoil_data*/}
+                  {/*</button>*/}
+                  {/*page*/}
+                  <MultipleChoiceQuestions thisQuestion={mQuestion} />
+                </div>
+              );
+            } else if (question.type === "RANGE") {
+              const rQuestion = question as RangeBarQuestion;
+              return (
+                // RANGE 타입에 해당하는 JSX 코드
+                <div>
+                  {/*page*/}
+                  <RangeBarQuestions thisQuestion={rQuestion} />
+                </div>
+              );
+            } else if (question.type === "ESSAY") {
+              const sQuestion = question as SubjectiveQuestion;
+              return (
+                // ESSAY 타입에 해당하는 JSX 코드
+                <div>
+                  {/*page*/}
+                  <SubjectiveQuestions thisQuestion={sQuestion} />
+                </div>
+              );
+            } else {
+              console.log("Type is null!");
+              return (
+                <div>
+                  <h1>No Type Space</h1>
+                </div>
+              ); // 예외 처리
+            }
+          })}
+
         <QuestionBox>
           <h1>수고하셨습니다 : 제출 페이지</h1>
           <button
