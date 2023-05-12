@@ -1,8 +1,11 @@
 import styled from "@emotion/styled";
 
-export const Wrapper = styled.div``;
+export const Wrapper = styled.div`
+  width: 100vw;
+  min-height: 100vh;
+`;
 export const ViewSection = styled.div`
-  width: 90%;
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: 1rem;
@@ -18,12 +21,14 @@ export const ResponseResult = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-evenly;
+  padding: 1rem;
 
-  & div:first-child {
+  & > div:first-child {
   }
 
-  & div:last-child {
-    font-size: 1.2rem;
+  & > div:last-child {
+    font-size: 2rem;
+    font-weight: bold;
   }
 `;
 export const GoingResult = styled(ResponseResult)``;
@@ -32,6 +37,7 @@ export const CompleteResult = styled(ResponseResult)``;
 export const SectionWrapper = styled.div`
   width: 90%;
   display: grid;
+  justify-content: center;
   grid-template-rows: 1fr 4fr 1fr 2fr;
   grid-row-gap: 1rem;
   margin: 0 auto;
@@ -54,13 +60,74 @@ export const LeftResult = styled.div`
 `;
 export const RightResult = styled(LeftResult)``;
 
+export const PieContainer = styled.div`
+  background: white;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+`;
+
+export const PieLeft = styled.div`
+  margin-left: 1rem;
+  margin-top: 0.8rem;
+`;
+export const PieRight = styled.div`
+  display: flex;
+`;
+
+export const PieHeading = styled.div`
+  margin-bottom: 10px;
+`;
+
+export const PieTitle = styled.h5`
+  font-size: 1.1rem;
+`;
+
+export const PieDescription = styled.span`
+  font-size: 1rem;
+`;
+
+export const PieRatioWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const PieLangColorBox = styled.div<{ props: any }>`
+  width: 12.5px;
+  height: 12.5px;
+  border-radius: 50%;
+  margin-right: 7px;
+  background-color: ${({ props }) => props};
+`;
+
+export const PieLangColorBoxWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+`;
+
+export const PieLangCircle = styled.span`
+  font-size: 9px;
+  margin-right: 7px;
+  border-radius: 50%;
+`;
+export const PieLangText = styled.span`
+  font-size: 9px;
+  margin-right: 7px;
+`;
+
 export const ResultSection = styled.div`
-  width: 90%;
+  width: 100%;
   background-color: #ffffff;
   border: 1px solid #ede1e1;
+  margin: 0 auto;
 `;
 export const SurveySection = styled.div`
-  width: 90%;
+  width: 100%;
   background-color: #ffffff;
   border: 1px solid #ede1e1;
+  margin: 0 auto;
 `;

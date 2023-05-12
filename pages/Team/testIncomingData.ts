@@ -2,8 +2,11 @@ import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleCh
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { incomingDataList } from "@pages/Team/type";
+import { useQuery } from "react-query";
+import fetcher from "@utils/fetcher";
 
 type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
+
 export const testInput: incomingDataList = {
   surveyId: 27,
   surveyTitle: "내가 만든 선물",
