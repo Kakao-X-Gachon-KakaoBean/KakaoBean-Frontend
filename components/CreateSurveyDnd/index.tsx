@@ -361,7 +361,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     newEdgeTuple.push(submitEdge);
     newQuestionTuple.push({ value: "0", label: "제출하기" });
 
-    //console.log(newNodeTuple);
+    console.log(newNodeTuple);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
     setQuestionList(newQuestionTuple);

@@ -18,7 +18,6 @@ import { Button, Select } from "antd";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Typography from "@mui/material/Typography";
 import { DeleteOption } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -407,6 +406,10 @@ export const LogicControl = () => {
       return item;
     });
     setSurveyQuestions(() => updatedQuestions as QuestionTypes[]);
+    console.log("Node!!");
+    console.log(nodes);
+    console.log("SurveyQuestions!!");
+    console.log(surveyQuestions);
   }, []);
 
   useEffect(() => {
