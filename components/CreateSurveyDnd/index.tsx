@@ -35,6 +35,7 @@ import {
   SidebarNoneSelectedQuestion,
   getQuestionsItemSelectedStyle,
   getQuestionsItemNoneSelectedStyle,
+  LeftSideBackDiv,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
@@ -449,108 +450,112 @@ const CreateSurveyDnd = (): JSX.Element => {
   );
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper>
-        <QuestionsAndType>
-          <SidebarQuestions>
-            <Input
-              size="large"
-              placeholder="설문 제목"
-              bordered={false}
-              style={{ fontWeight: "bold" }}
-              onChange={(event) => {
-                setSurveyTitle(event.target.value);
-              }}
-            />
-            <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
-            {surveyQuestions.map((item, index) => {
-              const SidebarQuestion =
-                selectedQuestion.id === item.id
-                  ? SidebarSelectedQuestion
-                  : SidebarNoneSelectedQuestion;
-              return (
-                <Link to={item.id} smooth={true} key={index} offset={-220}>
-                  <SidebarQuestion
-                    onClick={() => {
-                      if (
-                        item.type == "MULTIPLE" ||
-                        item.type == "ESSAY" ||
-                        item.type == "RANGE"
-                      ) {
-                        handleQuestionClick(item, index);
-                      }
-                    }}
-                    style={
-                      "title" in item
-                        ? {
-                            color: isEmptyTitle(item.title) ? "gray" : "black",
-                          }
-                        : { color: "black" }
-                    }
-                  >
-                    <SidebarQuestionTitle>
-                      Q.{index + 1 + " "}
-                      {"title" in item
-                        ? item.title == ""
-                          ? "제목 없음"
-                          : item.title
-                        : "제목 타입 없음"}
-                    </SidebarQuestionTitle>
-                    <SidebarQuestionDelete
+    <Wrapper>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <LeftSideBackDiv>
+          <QuestionsAndType>
+            <SidebarQuestions>
+              <Input
+                size="large"
+                placeholder="설문 제목"
+                bordered={false}
+                style={{ fontWeight: "bold" }}
+                onChange={(event) => {
+                  setSurveyTitle(event.target.value);
+                }}
+              />
+              <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
+              {surveyQuestions.map((item, index) => {
+                const SidebarQuestion =
+                  selectedQuestion.id === item.id
+                    ? SidebarSelectedQuestion
+                    : SidebarNoneSelectedQuestion;
+                return (
+                  <Link to={item.id} smooth={true} key={index} offset={-220}>
+                    <SidebarQuestion
                       onClick={() => {
-                        const newQuestionItems = [
-                          ...surveyQuestions.slice(0, index),
-                          ...surveyQuestions.slice(index + 1),
-                        ];
-                        setSurveyQuestions(newQuestionItems);
+                        if (
+                          item.type == "MULTIPLE" ||
+                          item.type == "ESSAY" ||
+                          item.type == "RANGE"
+                        ) {
+                          handleQuestionClick(item, index);
+                        }
                       }}
+                      style={
+                        "title" in item
+                          ? {
+                              color: isEmptyTitle(item.title)
+                                ? "gray"
+                                : "black",
+                            }
+                          : { color: "black" }
+                      }
                     >
-                      X
-                    </SidebarQuestionDelete>
-                  </SidebarQuestion>
-                </Link>
-              );
-            })}
-          </SidebarQuestions>
-          {viewLogic === "logic" ? (
-            <QuestionTypeListDiv></QuestionTypeListDiv>
-          ) : (
-            <QuestionTypeListDiv>
-              <Droppable droppableId="questionType" isDropDisabled={true}>
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
-                  >
-                    {questionTypeItems.map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id}
-                        index={index}
+                      <SidebarQuestionTitle>
+                        Q.{index + 1 + " "}
+                        {"title" in item
+                          ? item.title == ""
+                            ? "제목 없음"
+                            : item.title
+                          : "제목 타입 없음"}
+                      </SidebarQuestionTitle>
+                      <SidebarQuestionDelete
+                        onClick={() => {
+                          const newQuestionItems = [
+                            ...surveyQuestions.slice(0, index),
+                            ...surveyQuestions.slice(index + 1),
+                          ];
+                          setSurveyQuestions(newQuestionItems);
+                        }}
                       >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getQuestionTypeItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                          >
-                            {item.content}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </QuestionTypeListDiv>
-          )}
-        </QuestionsAndType>
+                        X
+                      </SidebarQuestionDelete>
+                    </SidebarQuestion>
+                  </Link>
+                );
+              })}
+            </SidebarQuestions>
+            {viewLogic === "logic" ? (
+              <QuestionTypeListDiv></QuestionTypeListDiv>
+            ) : (
+              <QuestionTypeListDiv>
+                <Droppable droppableId="questionType" isDropDisabled={true}>
+                  {(provided, snapshot) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
+                    >
+                      {questionTypeItems.map((item, index) => (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getQuestionTypeItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                            >
+                              {item.content}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </QuestionTypeListDiv>
+            )}
+          </QuestionsAndType>
+        </LeftSideBackDiv>
         {viewLogic === "logic" ? (
           <LogicDiv>
             <LogicTab />
@@ -642,21 +647,21 @@ const CreateSurveyDnd = (): JSX.Element => {
             )}
           </QuestionsListDiv>
         )}
-      </Wrapper>
-      <Modal
-        title="BeanBay"
-        open={isModalOpen}
-        onCancel={handleOk}
-        footer={[
-          <CopyToClipboard text={`http://localhost:8080/surveys/${surveyId}`}>
-            <Button type="primary">링크 복사하기</Button>
-          </CopyToClipboard>,
-        ]}
-        centered
-      >
-        <p>{`http://localhost:8080/surveys/${surveyId}`}</p>
-      </Modal>
-    </DragDropContext>
+        <Modal
+          title="BeanBay"
+          open={isModalOpen}
+          onCancel={handleOk}
+          footer={[
+            <CopyToClipboard text={`http://localhost:8080/surveys/${surveyId}`}>
+              <Button type="primary">링크 복사하기</Button>
+            </CopyToClipboard>,
+          ]}
+          centered
+        >
+          <p>{`http://localhost:8080/surveys/${surveyId}`}</p>
+        </Modal>
+      </DragDropContext>
+    </Wrapper>
   );
 };
 

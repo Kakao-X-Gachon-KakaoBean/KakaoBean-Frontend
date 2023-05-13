@@ -6,7 +6,7 @@ export const OptionDiv = styled.div`
   width: 17rem;
   position: fixed;
   flex-direction: column;
-  height: 100rem;
+  height: 100%;
   right: 0;
   padding-top: 10rem;
   border-style: solid;
