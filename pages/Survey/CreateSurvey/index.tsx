@@ -11,22 +11,22 @@ import CreateSurveyUnder768 from "@components/CreateSurveyUnder768";
 const CreateSurvey = (): JSX.Element => {
   return (
     <>
-      <MediaQuery maxWidth={805}>
-        <CreateSurveyUnder768 />
-      </MediaQuery>
-      <MediaQuery maxHeight={800}>
-        <CreateSurveyUnder768 />
-      </MediaQuery>
-      <MediaQuery minWidth={806} minHeight={801}>
-        <Wrapper>
-          <HeaderBar />
-          <CreateSurveyDiv>
-            <CreateSurveyDnd />
-            <CreateSurveySideBar />
-            <CreateSurveyChatBot />
-          </CreateSurveyDiv>
-        </Wrapper>
-      </MediaQuery>
+      {/*<MediaQuery maxWidth={805}>*/}
+      {/*  <CreateSurveyUnder768 />*/}
+      {/*</MediaQuery>*/}
+      {/*<MediaQuery maxHeight={800}>*/}
+      {/*  <CreateSurveyUnder768 />*/}
+      {/*</MediaQuery>*/}
+      {/*<MediaQuery minWidth={806} minHeight={801}>*/}
+      <Wrapper>
+        <HeaderBar />
+        <CreateSurveyDiv>
+          <CreateSurveyDnd />
+          <CreateSurveySideBar />
+          <CreateSurveyChatBot />
+        </CreateSurveyDiv>
+      </Wrapper>
+      {/*</MediaQuery>*/}
     </>
   );
 };

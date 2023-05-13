@@ -60,30 +60,30 @@ export const LogicControl = () => {
 
   const isNoLogic = () => {
     const QuestionsList = JSON.parse(JSON.stringify(surveyQuestions));
-    //console.log("isLogicStart");
+    console.log("isLogicStart");
     let i = 0;
     if (QuestionsList != undefined) {
       MainLoop: for (i; i < QuestionsList.length; i++) {
         if (i == QuestionsList.length - 1) {
-          //console.log("맨 마지막 문제");
+          console.log("맨 마지막 문제");
           if (QuestionsList[i]?.nextQuestionNumber != "0") {
-            //console.log("마지막 문제가 0이 아님");
+            console.log("마지막 문제가 0이 아님");
             break;
           } else if ("logics" in QuestionsList[i]) {
             let j = 0;
             for (j; QuestionsList[i].logics.length; j++) {
               if (QuestionsList[i].logics[j]?.nextQuestionNumber != "0") {
-                //console.log("모든 로직에서 이동이 다음 문제가 아님");
-                //console.log("원래 다음 문제 : " + "0");
-                //console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+                console.log("모든 로직에서 이동이 다음 문제가 아님");
+                console.log("원래 다음 문제 : " + "0");
+                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
                 break MainLoop;
               }
             }
           }
         } else {
-          //console.log("마지막 문제 아닌것");
+          console.log("마지막 문제 아닌것");
           if (QuestionsList[i]?.nextQuestionNumber != String(i + 2)) {
-            //console.log("다음 문제가 아님");
+            console.log("다음 문제가 아님");
             break;
           } else if ("logics" in QuestionsList[i]) {
             let j = 0;
@@ -91,20 +91,20 @@ export const LogicControl = () => {
               if (
                 QuestionsList[i].logics[j]?.nextQuestionNumber != String(i + 2)
               ) {
-                //console.log("모든 로직에서 이동이 다음 문제가 아님");
-                //console.log("원래 다음 문제 : " + String(i + 2));
-                //console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+                console.log("모든 로직에서 이동이 다음 문제가 아님");
+                console.log("원래 다음 문제 : " + String(i + 2));
+                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
                 break MainLoop;
               }
             }
           }
         }
       }
-      //console.log("result");
-      //console.log(i);
-      //console.log(QuestionsList.length);
+      console.log("result");
+      console.log(i);
+      console.log(QuestionsList.length);
 
-      if (i == QuestionsList.length) resetNodeAndEdge();
+      return i == QuestionsList.length;
     }
   };
 
@@ -229,35 +229,39 @@ export const LogicControl = () => {
       return;
     }
 
-    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
-    let updatedEdges = JSON.parse(JSON.stringify(edges));
-    const updatedCounts = [...count];
+    if (isNoLogic()) {
+      resetNodeAndEdge();
+    } else {
+      const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
+      let updatedEdges = JSON.parse(JSON.stringify(edges));
+      const updatedCounts = [...count];
 
-    updatedEdges = updatedEdges.filter((edge: Edge) => {
-      return !(
-        edge.source === selNode &&
-        edge.target == select.logics[logicIndex].nextQuestionNumber &&
-        edge.animated
-      );
-    });
+      updatedEdges = updatedEdges.filter((edge: Edge) => {
+        return !(
+          edge.source === selNode &&
+          edge.target == select.logics[logicIndex].nextQuestionNumber &&
+          edge.animated
+        );
+      });
 
-    const newLogics = [...select.logics];
-    newLogics.splice(logicIndex, 1);
+      const newLogics = [...select.logics];
+      newLogics.splice(logicIndex, 1);
 
-    const updatedQuestion = {
-      ...select,
-      logics: newLogics,
-    };
+      const updatedQuestion = {
+        ...select,
+        logics: newLogics,
+      };
 
-    updatedQuestions[questionIndex - 1] = updatedQuestion;
-    setSurveyQuestions(updatedQuestions);
+      updatedQuestions[questionIndex - 1] = updatedQuestion;
+      setSurveyQuestions(updatedQuestions);
 
-    setEdges(updatedEdges);
+      setEdges(updatedEdges);
 
-    setCount(updatedCounts);
+      setCount(updatedCounts);
+    }
   };
 
-  //로직->조건 변경시 호출. node위치 및 edge 변경 필요
+  //로직->조건 변경시 호출.
   const ConditionChange = (i: number, index2: number, value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const selNodeNumber = Number(Number(selNode) - 1);
@@ -323,8 +327,12 @@ export const LogicControl = () => {
       updatedEdges.push(newEdge);
     }
 
-    setEdges(updatedEdges);
-    setNodes(updatedNodes);
+    if (isNoLogic()) {
+      resetNodeAndEdge();
+    } else {
+      setEdges(updatedEdges);
+      setNodes(updatedNodes);
+    }
   };
 
   //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
@@ -386,8 +394,12 @@ export const LogicControl = () => {
       updatedEdges.push(newEdge);
     }
 
-    setEdges(updatedEdges);
-    setNodes(updatedNodes);
+    if (isNoLogic()) {
+      resetNodeAndEdge();
+    } else {
+      setEdges(updatedEdges);
+      setNodes(updatedNodes);
+    }
   };
 
   useEffect(() => {
@@ -406,15 +418,18 @@ export const LogicControl = () => {
       return item;
     });
     setSurveyQuestions(() => updatedQuestions as QuestionTypes[]);
+
     console.log("Node!!");
     console.log(nodes);
+    console.log("Edge!!");
+    console.log(edges);
     console.log("SurveyQuestions!!");
     console.log(surveyQuestions);
   }, []);
 
-  useEffect(() => {
-    isNoLogic();
-  }, [surveyQuestions]);
+  // useEffect(() => {
+  //   isNoLogic();
+  // }, [surveyQuestions]);
 
   return (
     <div>
