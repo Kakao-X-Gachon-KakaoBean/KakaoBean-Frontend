@@ -30,22 +30,20 @@ const CreateSurveySideBar = (): JSX.Element => {
     },
   ];
   return (
-    <>
-      <OptionDiv>
-        <MenuDiv>
-          <Menu
-            onClick={onClick}
-            selectedKeys={[optionState]}
-            mode="horizontal"
-            items={items}
-            style={{ flex: "auto", marginTop: "-10%" }}
-          />
-        </MenuDiv>
-        <ContentDiv>
-          {optionState == "option" ? <OptionControl /> : <LogicControl />}
-        </ContentDiv>
-      </OptionDiv>
-    </>
+    <OptionDiv>
+      <MenuDiv>
+        <Menu
+          onClick={onClick}
+          selectedKeys={[optionState]}
+          mode="horizontal"
+          items={items}
+          style={{ flex: "auto", marginTop: "-10%" }}
+        />
+      </MenuDiv>
+      <ContentDiv>
+        {optionState == "option" ? <OptionControl /> : <LogicControl />}
+      </ContentDiv>
+    </OptionDiv>
   );
 };
 

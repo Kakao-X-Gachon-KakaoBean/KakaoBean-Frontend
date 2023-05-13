@@ -1,6 +1,12 @@
 import styled from "@emotion/styled";
 
 // component style
+
+export const Wrapper = styled.div`
+  display: flex;
+  background-color: white;
+`;
+
 export const CreateSurveyDiv = styled.div`
   display: flex;
   flex: 1;
