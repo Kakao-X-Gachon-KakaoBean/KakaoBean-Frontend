@@ -260,31 +260,31 @@ const CreateSurveyDnd = (): JSX.Element => {
   //   console.log("surveyQuestions:", surveyQuestions);
   // }, [surveyQuestions]);
 
-  useEffect(() => {
-    setSurveyQuestions(() => surveyQuestions);
-    const updatedQuestions = surveyQuestions.map((item, index) => {
-      if ("id" in item) {
-        const { id, ...rest } = item;
-        const updatedItem = Object.assign({}, item, {
-          questionNumber: (index + 1).toString(),
-        });
-        item = updatedItem;
-        if (
-          index == surveyQuestions.length - 1 &&
-          "finalQuestion" in item &&
-          "nextQuestionNumber"
-        ) {
-          const updatedItem = Object.assign({}, item, {
-            finalQuestion: true,
-            nextQuestionNumber: "0",
-          });
-          item = updatedItem;
-        }
-      }
-      return item;
-    });
-    setQuestions(() => updatedQuestions as QuestionTypes[]);
-  }, [surveyQuestions]);
+  // useEffect(() => {
+  //   setSurveyQuestions(() => surveyQuestions);
+  //   const updatedQuestions = surveyQuestions.map((item, index) => {
+  //     if ("id" in item) {
+  //       const { id, ...rest } = item;
+  //       const updatedItem = Object.assign({}, item, {
+  //         questionNumber: (index + 1).toString(),
+  //       });
+  //       item = updatedItem;
+  //       if (
+  //         index == surveyQuestions.length - 1 &&
+  //         "finalQuestion" in item &&
+  //         "nextQuestionNumber"
+  //       ) {
+  //         const updatedItem = Object.assign({}, item, {
+  //           finalQuestion: true,
+  //           nextQuestionNumber: "0",
+  //         });
+  //         item = updatedItem;
+  //       }
+  //     }
+  //     return item;
+  //   });
+  //   setQuestions(() => updatedQuestions as QuestionTypes[]);
+  // }, [surveyQuestions]);
 
   //설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
   useEffect(() => {
@@ -400,8 +400,8 @@ const CreateSurveyDnd = (): JSX.Element => {
     updatedNodes.push(submitNode);
 
     setNodes(updatedNodes);
-    //setEdges(newEdgeTuple);
-    //setQuestionList(newQuestionTuple);
+    // setEdges(newEdgeTuple);
+    // setQuestionList(newQuestionTuple);
   }, [surveyQuestions.map((question) => question.title).join("")]);
 
   const mutation = useMutation<
