@@ -1,6 +1,15 @@
 import styled from "@emotion/styled";
 
 // component style
+
+export const Wrapper = styled.div`
+  /* 웹 브라우저 (1390px 이상) */
+  @media screen and (min-width: 1390px) {
+    background-color: black;
+    z-index: 10;
+  }
+`;
+
 export const CreateSurveyDiv = styled.div`
   display: flex;
   flex: 1;

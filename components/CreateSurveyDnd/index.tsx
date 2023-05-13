@@ -449,8 +449,8 @@ const CreateSurveyDnd = (): JSX.Element => {
   );
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper>
+    <Wrapper>
+      <DragDropContext onDragEnd={onDragEnd}>
         <QuestionsAndType>
           <SidebarQuestions>
             <Input
@@ -642,21 +642,21 @@ const CreateSurveyDnd = (): JSX.Element => {
             )}
           </QuestionsListDiv>
         )}
-      </Wrapper>
-      <Modal
-        title="BeanBay"
-        open={isModalOpen}
-        onCancel={handleOk}
-        footer={[
-          <CopyToClipboard text={`http://localhost:8080/surveys/${surveyId}`}>
-            <Button type="primary">링크 복사하기</Button>
-          </CopyToClipboard>,
-        ]}
-        centered
-      >
-        <p>{`http://localhost:8080/surveys/${surveyId}`}</p>
-      </Modal>
-    </DragDropContext>
+        <Modal
+          title="BeanBay"
+          open={isModalOpen}
+          onCancel={handleOk}
+          footer={[
+            <CopyToClipboard text={`http://localhost:8080/surveys/${surveyId}`}>
+              <Button type="primary">링크 복사하기</Button>
+            </CopyToClipboard>,
+          ]}
+          centered
+        >
+          <p>{`http://localhost:8080/surveys/${surveyId}`}</p>
+        </Modal>
+      </DragDropContext>
+    </Wrapper>
   );
 };
 

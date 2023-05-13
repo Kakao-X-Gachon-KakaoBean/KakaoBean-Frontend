@@ -1,20 +1,29 @@
 import React, { useCallback, useState } from "react";
+import { Mobile, PC } from "@hooks/responsive";
 import CreateSurveyDnd from "@components/CreateSurveyDnd";
 
-import { CreateSurveyDiv } from "@pages/Survey/CreateSurvey/styles";
+import { CreateSurveyDiv, Wrapper } from "@pages/Survey/CreateSurvey/styles";
 import CreateSurveySideBar from "@components/CreateSurveySideBar";
 import CreateSurveyChatBot from "@components/CreateSurveyChatBot";
 import HeaderBar from "@components/HeaderBar";
+import CreateSurveyUnder768 from "@components/CreateSurveyUnder768";
 
 const CreateSurvey = (): JSX.Element => {
   return (
     <>
-      <HeaderBar />
-      <CreateSurveyDiv>
-        <CreateSurveyDnd />
-        <CreateSurveySideBar />
-        <CreateSurveyChatBot />
-      </CreateSurveyDiv>
+      <Mobile>
+        <CreateSurveyUnder768 />
+      </Mobile>
+      <PC>
+        <Wrapper>
+          <HeaderBar />
+          <CreateSurveyDiv>
+            <CreateSurveyDnd />
+            <CreateSurveySideBar />
+            <CreateSurveyChatBot />
+          </CreateSurveyDiv>
+        </Wrapper>
+      </PC>
     </>
   );
 };
