@@ -14,10 +14,10 @@ const CreateSurvey = (): JSX.Element => {
       <MediaQuery maxWidth={805}>
         <CreateSurveyUnder768 />
       </MediaQuery>
-      <MediaQuery maxHeight={800}>
+      <MediaQuery maxHeight={700}>
         <CreateSurveyUnder768 />
       </MediaQuery>
-      <MediaQuery minWidth={806} minHeight={801}>
+      <MediaQuery minWidth={806} minHeight={701}>
         <Wrapper>
           <HeaderBar />
           <CreateSurveyDiv>

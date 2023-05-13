@@ -116,6 +116,9 @@ export const QuestionsAndType = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  @media screen and (max-height: 800px) {
+    height: 40%;
+  }
   @media screen and (min-height: 1000px) {
     height: 60%;
   }
