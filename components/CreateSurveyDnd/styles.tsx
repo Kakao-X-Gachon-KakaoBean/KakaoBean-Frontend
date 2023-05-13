@@ -106,21 +106,25 @@ export const Wrapper = styled.div`
 
 export const QuestionsAndType = styled.div`
   display: flex;
-  flex: 1;
   position: fixed;
   left: 4rem;
   top: 8rem;
   margin: 0 auto;
-  height: 48%;
+  height: 50%;
   overflow-y: auto;
   z-index: 5;
   background-color: white;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const SidebarQuestions = styled.div`
   display: flex;
+  width: 13rem;
   align-items: center;
   flex-direction: column;
+  background-color: white;
 `;
 
 export const QuestionTypeListDiv = styled.div`
@@ -128,10 +132,10 @@ export const QuestionTypeListDiv = styled.div`
   justify-content: center;
   align-items: center;
   width: 13rem;
-  height: 15rem;
+  height: 10rem;
   position: fixed;
   background-color: white;
-  padding-top: 14rem;
+  padding-top: 1rem;
   padding-bottom: 8rem;
   bottom: 2rem;
   margin-top: 1rem;
@@ -145,5 +149,5 @@ export const QuestionsListDiv = styled.div`
 
 export const LogicDiv = styled.div`
   padding-top: 10rem;
-  width: 70%;
+  width: 60%;
 `;
