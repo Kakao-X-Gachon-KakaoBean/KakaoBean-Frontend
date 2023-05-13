@@ -109,7 +109,6 @@ export const QuestionsAndType = styled.div`
   position: fixed;
   left: 4rem;
   top: 8rem;
-  margin: 0 auto;
   height: 50%;
   overflow-y: auto;
   z-index: 5;
@@ -117,6 +116,15 @@ export const QuestionsAndType = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+export const LeftSideBackDiv = styled.div`
+  display: flex;
+  position: fixed;
+  width: 17rem;
+  height: 100%;
+  background-color: white;
+  left: 0;
 `;
 
 export const SidebarQuestions = styled.div`
@@ -134,11 +142,9 @@ export const QuestionTypeListDiv = styled.div`
   width: 13rem;
   height: 10rem;
   position: fixed;
+  bottom: 0;
   background-color: white;
-  padding-top: 1rem;
-  padding-bottom: 8rem;
-  bottom: 2rem;
-  margin-top: 1rem;
+  padding-bottom: 10rem;
   z-index: 10;
 `;
 
