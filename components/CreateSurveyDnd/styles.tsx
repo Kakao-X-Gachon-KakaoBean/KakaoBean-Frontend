@@ -116,6 +116,12 @@ export const QuestionsAndType = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  @media screen and (min-height: 1000px) {
+    height: 60%;
+  }
+  @media screen and (min-height: 1329px) {
+    height: 80%;
+  }
 `;
 
 export const LeftSideBackDiv = styled.div`
@@ -156,4 +162,7 @@ export const QuestionsListDiv = styled.div`
 export const LogicDiv = styled.div`
   padding-top: 10rem;
   width: 60%;
+  @media screen and (max-width: 1378px) {
+    width: 35%;
+  }
 `;
