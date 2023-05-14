@@ -58,6 +58,7 @@ export const LogicControl = () => {
 
   const isNoLogic = () => {
     const QuestionsList = JSON.parse(JSON.stringify(surveyQuestions));
+    console.log(QuestionsList);
     console.log("isLogicStart");
     let i = 0;
     if (QuestionsList != undefined) {
@@ -102,7 +103,7 @@ export const LogicControl = () => {
       console.log(i);
       console.log(QuestionsList.length);
 
-      return i == QuestionsList.length;
+      if (i == QuestionsList.length) resetNodeAndEdge();
     }
   };
 
@@ -227,36 +228,32 @@ export const LogicControl = () => {
       return;
     }
 
-    if (isNoLogic()) {
-      resetNodeAndEdge();
-    } else {
-      const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
-      let updatedEdges = JSON.parse(JSON.stringify(edges));
-      const updatedCounts = [...count];
+    const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
+    let updatedEdges = JSON.parse(JSON.stringify(edges));
+    const updatedCounts = [...count];
 
-      updatedEdges = updatedEdges.filter((edge: Edge) => {
-        return !(
-          edge.source === selNode &&
-          edge.target == select.logics[logicIndex].nextQuestionNumber &&
-          edge.animated
-        );
-      });
+    updatedEdges = updatedEdges.filter((edge: Edge) => {
+      return !(
+        edge.source === selNode &&
+        edge.target == select.logics[logicIndex].nextQuestionNumber &&
+        edge.animated
+      );
+    });
 
-      const newLogics = [...select.logics];
-      newLogics.splice(logicIndex, 1);
+    const newLogics = [...select.logics];
+    newLogics.splice(logicIndex, 1);
 
-      const updatedQuestion = {
-        ...select,
-        logics: newLogics,
-      };
+    const updatedQuestion = {
+      ...select,
+      logics: newLogics,
+    };
 
-      updatedQuestions[questionIndex - 1] = updatedQuestion;
-      setSurveyQuestions(updatedQuestions);
+    updatedQuestions[questionIndex - 1] = updatedQuestion;
+    setSurveyQuestions(updatedQuestions);
 
-      setEdges(updatedEdges);
+    setEdges(updatedEdges);
 
-      setCount(updatedCounts);
-    }
+    setCount(updatedCounts);
   };
 
   //로직->조건 변경시 호출.
@@ -325,12 +322,8 @@ export const LogicControl = () => {
       updatedEdges.push(newEdge);
     }
 
-    if (isNoLogic()) {
-      resetNodeAndEdge();
-    } else {
-      setEdges(updatedEdges);
-      setNodes(updatedNodes);
-    }
+    setEdges(updatedEdges);
+    setNodes(updatedNodes);
   };
 
   //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
@@ -392,12 +385,8 @@ export const LogicControl = () => {
       updatedEdges.push(newEdge);
     }
 
-    if (isNoLogic()) {
-      resetNodeAndEdge();
-    } else {
-      setEdges(updatedEdges);
-      setNodes(updatedNodes);
-    }
+    setEdges(updatedEdges);
+    setNodes(updatedNodes);
   };
 
   useEffect(() => {
@@ -425,9 +414,9 @@ export const LogicControl = () => {
     console.log(surveyQuestions);
   }, []);
 
-  // useEffect(() => {
-  //   isNoLogic();
-  // }, [surveyQuestions]);
+  useEffect(() => {
+    isNoLogic();
+  }, [surveyQuestions]);
 
   return (
     <div>

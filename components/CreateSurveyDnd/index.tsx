@@ -304,7 +304,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         nodeWithI.data.label =
           existQuestion.title !== "" ? existQuestion.title : "제목 없음";
         edges.forEach((edge) => {
-          if (edge.source == String(i + 1)) {
+          if (edge.source == String(i + 1) && edge.id != "e_submit") {
             newEdgeTuple.push(edge);
           }
         });
@@ -383,49 +383,61 @@ const CreateSurveyDnd = (): JSX.Element => {
     newEdgeTuple.push(submitEdge);
     newQuestionTuple.push({ value: "0", label: "제출하기" });
 
-    console.log(newEdgeTuple);
+    //console.log(newEdgeTuple);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
     setQuestionList(newQuestionTuple);
   }, [surveyQuestions]);
 
-  // //설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
+  ////설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
   // useEffect(() => {
   //   let updatedNodes = JSON.parse(JSON.stringify(nodes));
-  //   const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
   //
   //   let i = 0;
   //   const newNodeTuple: Node[] = [];
   //   const newEdgeTuple: Edge[] = [];
   //   const newQuestionTuple: any[] = [];
-  //   setIdNum(1);
-  //   let defaultYAxis = 30;
   //   let newNode, newEdge;
+
+  // for (i = 0; i < surveyQuestions.length; i++) {
+  //   const nodeWithI = updatedNodes.find(
+  //     (node: Node) => node.id == String(i + 1)
+  //   );
+  //   const existQuestion = surveyQuestions.find(
+  //     (surveyQuestions: QuestionTypes) =>
+  //       surveyQuestions.id.substring(15) == String(i + 1)
+  //   );
   //
-  //   // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-  //   for (i = 0; i < surveyQuestions.length; i++) {
-  //     const nodeWithI = updatedNodes.find(
-  //       (node: Node) => node.id.substring(15) == String(i + 1)
-  //     );
-  //     const existQuestion = updatedQuestions.find(
-  //       (surveyQuestions: QuestionTypes) =>
-  //         surveyQuestions.id.substring(15) == String(i + 1)
-  //     );
+  //   if (nodeWithI && existQuestion) {
+  //     nodeWithI.data.label =
+  //       existQuestion.title !== "" ? existQuestion.title : "제목 없음";
+  //     edges.forEach((edge) => {
+  //       if (edge.source == String(i + 1) && edge.id != "e_submit") {
+  //         newEdgeTuple.push(edge);
+  //       }
+  //     });
+  //     newNodeTuple.push(nodeWithI);
+  //     newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
+  //   } else {
+  //     const xAxis = nodes[i]?.position?.x ? nodes[i]?.position?.x : 500;
+  //     const yAxis = 30 + i * 100;
   //
-  //     if (nodeWithI && existQuestion) {
-  //       nodeWithI.data.label =
-  //         existQuestion.title !== "" ? existQuestion.title : "제목 없음";
-  //       newNodeTuple.push(nodeWithI);
+  //     if (i == 0) {
+  //       newNode = {
+  //         id: String(i + 1),
+  //         type: "input",
+  //         data: {
+  //           label:
+  //             surveyQuestions[countQuestion]?.title !== ""
+  //               ? surveyQuestions[countQuestion]?.title
+  //               : "제목 없음",
+  //         },
+  //         position: { x: xAxis, y: yAxis },
+  //       };
   //     } else {
-  //       const xAxis = nodes[i]?.position?.x ? nodes[i]?.position?.x : 500;
-  //       const yAxis = nodes[i]?.position?.y
-  //         ? nodes[i]?.position?.y
-  //         : defaultYAxis;
-  //
-  //       if (i == 0) {
+  //       if (i == surveyQuestions.length - 1) {
   //         newNode = {
-  //           id: `KEA-KakaoBeans-${countQuestion}`,
-  //           type: "input",
+  //           id: String(i + 1),
   //           data: {
   //             label:
   //               surveyQuestions[countQuestion]?.title !== ""
@@ -435,70 +447,55 @@ const CreateSurveyDnd = (): JSX.Element => {
   //           position: { x: xAxis, y: yAxis },
   //         };
   //       } else {
-  //         if (i == surveyQuestions.length - 1) {
-  //           newNode = {
-  //             id: `KEA-KakaoBeans-${countQuestion}`,
-  //             data: {
-  //               label:
-  //                 surveyQuestions[countQuestion]?.title !== ""
-  //                   ? surveyQuestions[countQuestion]?.title
-  //                   : "제목 없음",
-  //             },
-  //             position: { x: xAxis, y: yAxis },
-  //           };
-  //         } else {
-  //           newNode = {
-  //             id: `KEA-KakaoBeans-${countQuestion}`,
-  //             data: {
-  //               label:
-  //                 surveyQuestions[countQuestion]?.title !== ""
-  //                   ? surveyQuestions[countQuestion]?.title
-  //                   : "제목 없음",
-  //             },
-  //             position: { x: xAxis, y: yAxis },
-  //           };
-  //         }
+  //         newNode = {
+  //           id: String(i + 1),
+  //           data: {
+  //             label:
+  //               surveyQuestions[countQuestion]?.title !== ""
+  //                 ? surveyQuestions[countQuestion]?.title
+  //                 : "제목 없음",
+  //           },
+  //           position: { x: xAxis, y: yAxis },
+  //         };
   //       }
-  //
-  //       newEdge = {
-  //         id: "e" + String(i + 1) + "-" + String(i + 2),
-  //         source: String(i + 1),
-  //         target: String(i + 2),
-  //       };
-  //
-  //       setCount((prevCount) => [...prevCount, 0]);
-  //       setIsMultiCondition((prevVal) => [...prevVal, 1]);
-  //       newNodeTuple.push(newNode);
-  //       newEdgeTuple.push(newEdge);
-  //       newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
-  //
-  //       setIdNum(idNum + 1);
-  //       defaultYAxis += 100;
   //     }
+  //
+  //     newEdge = {
+  //       id: "e" + String(i + 1) + "-" + String(i + 2),
+  //       source: String(i + 1),
+  //       target: String(i + 2),
+  //     };
+  //
+  //     setCount((prevCount) => [...prevCount, 0]);
+  //     setIsMultiCondition((prevVal) => [...prevVal, 1]);
+  //     newNodeTuple.push(newNode);
+  //     newEdgeTuple.push(newEdge);
+  //     newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
   //   }
+  // }
   //
-  //   const submitNode = {
-  //     id: "0",
-  //     type: "output",
-  //     data: { label: "submit" },
-  //     position: { x: 500, y: defaultYAxis },
-  //   };
+  // const submitNode = {
+  //   id: "0",
+  //   type: "output",
+  //   data: { label: "submit" },
+  //   position: { x: 500, y: 30 + surveyQuestions.length * 100 },
+  // };
   //
-  //   const submitEdge = {
-  //     id: "e_submit",
-  //     source: String(i),
-  //     target: "0",
-  //   };
+  // const submitEdge = {
+  //   id: "e_submit",
+  //   source: String(surveyQuestions.length),
+  //   target: "0",
+  // };
   //
-  //   newNodeTuple.push(submitNode);
-  //   newEdgeTuple.push(submitEdge);
-  //   newQuestionTuple.push({ value: "0", label: "제출하기" });
+  // newNodeTuple.push(submitNode);
+  // newEdgeTuple.push(submitEdge);
+  // newQuestionTuple.push({ value: "0", label: "제출하기" });
   //
-  //   //console.log(newNodeTuple);
-  //   setNodes(newNodeTuple);
-  //   setEdges(newEdgeTuple);
-  //   setQuestionList(newQuestionTuple);
-  // }, [surveyQuestions]);
+  // console.log(newEdgeTuple);
+  // setNodes(newNodeTuple);
+  // setEdges(newEdgeTuple);
+  // setQuestionList(newQuestionTuple);
+  // }, [surveyQuestions.length]);
 
   const mutation = useMutation<
     QuestionTypes[],
