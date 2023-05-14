@@ -182,7 +182,6 @@ export const LogicControl = () => {
     newEdgeTuple.push(submitEdge);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
-    console.log("NoLoGIC!!!!!!!!!!!!!!!!!!!!!!!!");
   };
 
   //로직 추가하기
@@ -343,7 +342,8 @@ export const LogicControl = () => {
     const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
     const originNextValue = String(Number(selNode) + 1);
     const originNode = nodes.find((node) => Number(node.id) == Number(value));
-    const submitUpperNodeYAxis = updatedNodes[idNum - 2].position.y;
+    const submitUpperNodeYAxis =
+      updatedNodes[surveyQuestions.length - 2].position.y;
     const targetUpperNode = nodes.find(
       (node) => Number(node.id) == Number(value) - 1
     );

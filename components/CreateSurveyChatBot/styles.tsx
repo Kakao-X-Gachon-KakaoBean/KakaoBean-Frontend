@@ -33,8 +33,9 @@ export const ResponsesDiv = styled.div`
 
 export const ChatTitleButton = styled(Button)`
   max-width: 90%;
+  height: auto;
   white-space: normal;
-  word-break: break-all;
+  word-break: break-word;
 `;
 
 export const CreateQuestionsBtnDiv = styled.div`
