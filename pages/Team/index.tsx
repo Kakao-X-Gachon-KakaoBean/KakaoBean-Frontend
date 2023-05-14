@@ -1,34 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
-import { atom, useRecoilState, useSetRecoilState } from "recoil";
-
-import HeaderBar from "@components/HeaderBar";
-import { Carousel, Input } from "antd";
+import { atom, useRecoilState } from "recoil";
+import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
-import { Button, ButtonBox, dotStyle } from "@pages/Team/styles";
+import { Button, ButtonBox } from "@pages/Team/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronRight,
   faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { MultipleChoiceQuestions } from "@components/SurveyResponseTemplates/MultipleChoice";
 import { RangeBarQuestions } from "@components/SurveyResponseTemplates/RangeBar";
 import { SubjectiveQuestions } from "@components/SurveyResponseTemplates/Subjective";
-import {
-  Answer,
-  MultipleQuestion,
-} from "@components/SurveyResponseTemplates/MultipleChoice/type";
+import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
 import { QuestionBox } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
-import {
-  incomingDataList,
-  QuestionTypes,
-  responseDataList,
-} from "@pages/Team/type";
-import { useQuery } from "react-query";
-import fetcher from "@utils/fetcher";
+import { QuestionTypes, responseDataList } from "@pages/Team/type";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -41,7 +30,7 @@ export const report = atom<responseDataList>({
 
 export const forLogic = atom<string>({
   key: "logic",
-  default: "",
+  default: "0",
 });
 
 const Team = () => {
@@ -58,8 +47,10 @@ const Team = () => {
 
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+
   //TODO: 로직에 따른 이동 Queue 만들기
-  const [logicQueue, setLogicQueue] = useState<Number[]>([]);
+  const [logicQueue, setLogicQueue] = useState<number[]>([0]);
+  const [counter, setCounter] = useState<number>(0);
 
   const [questions, setQuestions] = useState<QuestionTypes[]>(
     testInput.questions
@@ -104,21 +95,80 @@ const Team = () => {
   }, [currentSlide]);
 
   //뒤로 가기 버튼 ->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
+  //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
+
   const handlePrevClick = () => {
-    carouselRef.current?.prev();
-    setCurrentSlide(currentSlide - 1);
+    setCounter(counter - 1);
+    setLogicQueue((prevState) => {
+      prevState.pop();
+      return prevState;
+    });
+    setCurrentSlide(logicQueue[counter]);
+    console.log("current queue_back:", logicQueue);
+    console.log(counter);
   };
 
-  //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handleNextClick = () => {
-    if (questions[currentSlide].type == "MULTIPLE" && Number(slideToGo) != 0) {
-      carouselRef.current?.goTo(Number(slideToGo) - 1);
+    if (Number(slideToGo) != 0) {
+      setCounter(counter + 1);
+      setLogicQueue((prevState) => {
+        return [...prevState, Number(slideToGo)];
+      });
+      setCurrentSlide(logicQueue[counter]);
+      setSlideToGo("0");
+      console.log("current queue:", logicQueue);
     } else {
-      carouselRef.current?.next();
+      setLogicQueue((prevState) => {
+        console.log("in here");
+        return [...prevState, currentSlide + 1];
+      });
+
+      setCounter(counter + 1);
+      setCurrentSlide(logicQueue[counter]);
+
+      console.log("counter: ", counter);
+      console.log("current queue:", logicQueue);
+      console.log(currentSlide);
     }
-    // carouselRef.current?.next();
-    setCurrentSlide(currentSlide + 1);
   };
+
+  const pageCheck = () => {};
+
+  // const handlePrevClick = () => {
+  //   setCounter((prevState) => {
+  //     return prevState - 1;
+  //   });
+  //   setCurrentSlide(logicQueue[counter - 1]);
+  // };
+  //
+
+  // const handleNextClick = () => {
+  //   // if (questions[currentSlide].type == "MULTIPLE" && Number(slideToGo) != 0) {
+  //   //   carouselRef.current?.goTo(Number(slideToGo) - 1);
+  //   // } else {
+  //   //   carouselRef.current?.next();
+  //   // }
+  //   // setCurrentSlide(currentSlide + 1);
+  //
+  //   setLogicQueue((prevState) => {
+  //     const newState = [...prevState];
+  //     const currentPage = logicQueue[counter];
+  //     console.log("hi");
+  //     if (Number(slideToGo) != 0) {
+  //       console.log("here");
+  //       return newState.concat(Number(slideToGo));
+  //     } else {
+  //       console.log(currentPage);
+  //       console.log(logicQueue);
+  //       return newState.concat(Number(currentPage + 1));
+  //     }
+  //   });
+  //   setCounter((prevState) => {
+  //     return prevState + 1;
+  //   });
+  //   console.log("counter: ", counter);
+  //   setCurrentSlide(logicQueue[counter]);
+  // };
 
   //Test_output: 결과 받아오기 for MultipleQuestions
   useEffect(() => {
@@ -144,6 +194,7 @@ const Team = () => {
           questions.map((question: any, index) => {
             if (question.type === "MULTIPLE") {
               const mQuestion = question as MultipleQuestion;
+
               return (
                 // MULTIPLE 타입에 해당하는 JSX 코드
                 <div>
