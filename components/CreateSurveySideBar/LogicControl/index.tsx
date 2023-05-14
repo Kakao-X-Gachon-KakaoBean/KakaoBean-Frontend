@@ -18,13 +18,11 @@ import { Button, Select } from "antd";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Typography from "@mui/material/Typography";
 import { DeleteOption } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   SelNodeState,
-  IdNumState,
   NodeState,
   EdgeState,
   LogicCountState,
@@ -45,7 +43,6 @@ export const LogicControl = () => {
   const [edges, setEdges] = useRecoilState(EdgeState);
   // 현재 선택한 노드
   const selNode = useRecoilValue(SelNodeState);
-  const idNum = useRecoilValue(IdNumState);
   const select = surveyQuestions[Number(Number(selNode) - 1)];
 
   //로직 개수 count
@@ -61,6 +58,7 @@ export const LogicControl = () => {
 
   const isNoLogic = () => {
     const QuestionsList = JSON.parse(JSON.stringify(surveyQuestions));
+    console.log(QuestionsList);
     console.log("isLogicStart");
     let i = 0;
     if (QuestionsList != undefined) {
@@ -182,6 +180,7 @@ export const LogicControl = () => {
     newEdgeTuple.push(submitEdge);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
+    console.log("No Logic!!");
   };
 
   //로직 추가하기
@@ -257,7 +256,7 @@ export const LogicControl = () => {
     setCount(updatedCounts);
   };
 
-  //로직->조건 변경시 호출. node위치 및 edge 변경 필요
+  //로직->조건 변경시 호출.
   const ConditionChange = (i: number, index2: number, value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const selNodeNumber = Number(Number(selNode) - 1);
@@ -407,6 +406,13 @@ export const LogicControl = () => {
       return item;
     });
     setSurveyQuestions(() => updatedQuestions as QuestionTypes[]);
+
+    console.log("Node!!");
+    console.log(nodes);
+    console.log("Edge!!");
+    console.log(edges);
+    console.log("SurveyQuestions!!");
+    console.log(surveyQuestions);
   }, []);
 
   useEffect(() => {
