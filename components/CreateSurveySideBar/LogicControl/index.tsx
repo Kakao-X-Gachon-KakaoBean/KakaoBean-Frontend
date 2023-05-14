@@ -341,7 +341,8 @@ export const LogicControl = () => {
     const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
     const originNextValue = String(Number(selNode) + 1);
     const originNode = nodes.find((node) => Number(node.id) == Number(value));
-    const submitUpperNodeYAxis = updatedNodes[nodes.length - 2].position.y;
+    const submitUpperNodeYAxis =
+      updatedNodes[surveyQuestions.length - 2].position.y;
     const targetUpperNode = nodes.find(
       (node) => Number(node.id) == Number(value) - 1
     );
