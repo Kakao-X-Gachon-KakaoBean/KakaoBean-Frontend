@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ChatTitleButton,
   CreateQuestionsBtnDiv,
@@ -20,7 +20,8 @@ const CreateSurveyChatBot = (): JSX.Element => {
   const [countQuestion, setCountQuestion] = useRecoilState(countState);
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [buttonLoadings, setButtonLoadings] = useState<boolean[]>([]);
+  const [findBtnLoadings, setFindBtnLoadings] = useState<boolean[]>([]);
+  const [submitBtnLoadings, setSubmitBtnLoadings] = useState<boolean[]>([]);
   const [recommendedChatTitle, setRecommendedChatTitle] = useState<
     RecommendedChatTitle[]
   >([
@@ -51,24 +52,47 @@ const CreateSurveyChatBot = (): JSX.Element => {
     },
   ]);
 
-  const SubmitQuestion = () => {
-    enterSubmitLoading(0);
+  const FindQuestion = () => {
+    enterFindLoading(0);
   };
 
-  const enterSubmitLoading = (index: number) => {
-    setButtonLoadings((prevLoadings) => {
+  const enterFindLoading = (index: number) => {
+    setFindBtnLoadings((prevLoadings) => {
       const newLoadings = [...prevLoadings];
       newLoadings[index] = true;
       return newLoadings;
     });
 
     setTimeout(() => {
-      setButtonLoadings((prevLoadings) => {
+      setFindBtnLoadings((prevLoadings) => {
         const newLoadings = [...prevLoadings];
         newLoadings[index] = false;
         setIsSubmitted(true);
         return newLoadings;
       });
+    }, 1000);
+  };
+
+  const SubmitQuestion = () => {
+    enterSubmitLoading(0);
+  };
+
+  const enterSubmitLoading = (index: number) => {
+    CreateQuestion();
+
+    setSubmitBtnLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+
+    setTimeout(() => {
+      setSubmitBtnLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+      closeDrawer();
     }, 1000);
   };
 
@@ -89,6 +113,10 @@ const CreateSurveyChatBot = (): JSX.Element => {
     setOpenDrawer(false);
   };
 
+  useEffect(() => {
+    console.log(surveyQuestions);
+  }, [openDrawer]);
+
   const CreateQuestion = () => {
     let newCountQuestion = countQuestion - 1;
     recommendedChatTitle
@@ -100,18 +128,17 @@ const CreateSurveyChatBot = (): JSX.Element => {
           type: "MULTIPLE",
           title: item.title,
           explanation: "",
-          questionNumber: (surveyQuestions.length + 1).toString(),
+          questionNumber: newCountQuestion.toString(),
           finalQuestion: false,
-          nextQuestionNumber: (surveyQuestions.length + 2).toString(),
+          nextQuestionNumber: (newCountQuestion + 1).toString(),
           numberOfAnswerChoices: 1,
           answers: [""],
           logics: [],
         };
+        console.log("추가되는 질문들: ", addMultiple);
+        setCountQuestion(newCountQuestion + 1);
         setSurveyQuestions((prevQuestions) => [...prevQuestions, addMultiple]);
       });
-    setCountQuestion(newCountQuestion);
-
-    closeDrawer();
   };
 
   return (
@@ -136,8 +163,8 @@ const CreateSurveyChatBot = (): JSX.Element => {
           />
           <Button
             type={"primary"}
-            onClick={SubmitQuestion}
-            loading={buttonLoadings[0]}
+            onClick={FindQuestion}
+            loading={findBtnLoadings[0]}
           >
             제출
           </Button>
@@ -157,7 +184,11 @@ const CreateSurveyChatBot = (): JSX.Element => {
               ))}
             </ResponsesDiv>
             <CreateQuestionsBtnDiv>
-              <Button type={"primary"} onClick={CreateQuestion}>
+              <Button
+                type={"primary"}
+                onClick={SubmitQuestion}
+                loading={submitBtnLoadings[0]}
+              >
                 질문 생성하기
               </Button>
             </CreateQuestionsBtnDiv>
