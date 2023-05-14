@@ -11,7 +11,6 @@ import {
 } from "../../../States/SurveyState";
 import {
   EdgeState,
-  IdNumState,
   LogicCountState,
   MultiConditionState,
   NodeState,
@@ -27,7 +26,6 @@ const MainFirst = () => {
   const resetSelectedQuestionState = useResetRecoilState(selectedQuestionState);
   const resetQuestionsState = useResetRecoilState(questionsState);
   const resetSelNodeState = useResetRecoilState(SelNodeState);
-  const resetIdNumState = useResetRecoilState(IdNumState);
   const resetEdgeState = useResetRecoilState(EdgeState);
   const resetNodeState = useResetRecoilState(NodeState);
   const resetLogicCountState = useResetRecoilState(LogicCountState);
@@ -40,7 +38,6 @@ const MainFirst = () => {
     resetSelectedQuestionState();
     resetQuestionsState();
     resetSelNodeState();
-    resetIdNumState();
     resetEdgeState();
     resetNodeState();
     resetLogicCountState();

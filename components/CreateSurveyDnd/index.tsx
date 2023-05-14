@@ -45,7 +45,6 @@ import LogicTab from "@components/LogicTab";
 import { Link, Element } from "react-scroll";
 import {
   SelNodeState,
-  IdNumState,
   NodeState,
   EdgeState,
   LogicCountState,
@@ -62,8 +61,6 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [edges, setEdges] = useRecoilState(EdgeState);
   // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
-  const [idNum, setIdNum] = useRecoilState(IdNumState);
-
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
   //로직 조건 개수 count
@@ -269,7 +266,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     const newNodeTuple: Node[] = [];
     const newEdgeTuple: Edge[] = [];
     const newQuestionTuple: any[] = [];
-    setIdNum(1);
     let newNode, newEdge;
 
     const updatedQuestions = surveyQuestions.map((item, index) => {
@@ -367,8 +363,6 @@ const CreateSurveyDnd = (): JSX.Element => {
         newNodeTuple.push(newNode);
         newEdgeTuple.push(newEdge);
         newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
-
-        setIdNum(idNum + 1);
       }
     }
 
@@ -389,7 +383,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     newEdgeTuple.push(submitEdge);
     newQuestionTuple.push({ value: "0", label: "제출하기" });
 
-    //console.log(newNodeTuple);
+    console.log(newEdgeTuple);
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
     setQuestionList(newQuestionTuple);

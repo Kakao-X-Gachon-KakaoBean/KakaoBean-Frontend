@@ -23,7 +23,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   SelNodeState,
-  IdNumState,
   NodeState,
   EdgeState,
   LogicCountState,
@@ -44,7 +43,6 @@ export const LogicControl = () => {
   const [edges, setEdges] = useRecoilState(EdgeState);
   // 현재 선택한 노드
   const selNode = useRecoilValue(SelNodeState);
-  const idNum = useRecoilValue(IdNumState);
   const select = surveyQuestions[Number(Number(selNode) - 1)];
 
   //로직 개수 count
@@ -350,7 +348,7 @@ export const LogicControl = () => {
     const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
     const originNextValue = String(Number(selNode) + 1);
     const originNode = nodes.find((node) => Number(node.id) == Number(value));
-    const submitUpperNodeYAxis = updatedNodes[idNum - 2].position.y;
+    const submitUpperNodeYAxis = updatedNodes[nodes.length - 2].position.y;
     const targetUpperNode = nodes.find(
       (node) => Number(node.id) == Number(value) - 1
     );
