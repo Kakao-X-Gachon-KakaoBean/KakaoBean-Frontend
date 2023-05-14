@@ -8,30 +8,45 @@ import {
   SurveyResult,
   SurveyTitle,
   SurveyInfo,
+  CreateSurveyContainer,
 } from "@components/MySurvey/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const MySurvey = () => {
+  const testRef = React.createRef();
+  const data = false;
   // const { isLoading, isSuccess, status, isError, data, error } = useQuery(
   //   ["MySuervey"],
   //   () => fetcher({ queryKey: "http://localhost:8080/surveys/1" })
   // );
+
   return (
     <>
       <SurveyHeader>내가 만든 설문 조회</SurveyHeader>
-      <SurveyContainer>
-        {/*{data &&*/}
-        {/*  [...Array(data?.length)].map((e, index) => {*/}
-        {/*    const SurveyId = SurveyList[index].surveyid;*/}
-        {/*    return (*/}
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
-          </SurveyInfo>
-        </SurveyBox>
-        {/*  );*/}
-        {/*})}*/}
-      </SurveyContainer>
+      {data ? (
+        <SurveyContainer>
+          {/*{data &&*/}
+          {/*  [...Array(data?.length)].map((e, index) => {*/}
+          {/*    const SurveyId = SurveyList[index].surveyid;*/}
+          {/*    return (*/}
+          <SurveyBox>
+            <SurveyInfo>
+              <SurveyTitle>제목</SurveyTitle>
+              <SurveyResult>응답 개수</SurveyResult>
+            </SurveyInfo>
+          </SurveyBox>
+          {/*  );*/}
+          {/*})}*/}
+        </SurveyContainer>
+      ) : (
+        <CreateSurveyContainer>
+          <Link to="/createsurvey">
+            <FontAwesomeIcon icon={faCirclePlus} style={{ fontSize: "2rem" }} />
+          </Link>
+        </CreateSurveyContainer>
+      )}
     </>
   );
 };

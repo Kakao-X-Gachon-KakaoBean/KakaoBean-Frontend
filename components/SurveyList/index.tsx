@@ -6,12 +6,14 @@ import {
   SurveyResult,
   SurveyTitle,
   SurveyInfo,
+  CreateSurveyContainer,
 } from "@components/MySurvey/styles";
 
 const SurveyList = () => {
   return (
     <>
       <SurveyHeader>참여 설문 조회</SurveyHeader>
+
       <SurveyContainer>
         {/*{data &&*/}
         {/*  [...Array(data?.length)].map((e, index) => {*/}

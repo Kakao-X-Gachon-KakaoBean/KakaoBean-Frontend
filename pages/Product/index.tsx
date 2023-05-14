@@ -148,12 +148,12 @@ const Product = () => {
       <SectionWrapper>
         <ViewSection>
           <ResponseResult>
-            <div>응답 수</div>
-            <div>13</div>
+            <div>생성일</div>
+            <div>2022-05-05</div>
           </ResponseResult>
           <GoingResult>
-            <div>진행 중</div>
-            <div>4</div>
+            <div>응답 수</div>
+            <div>13</div>
           </GoingResult>
           <CompleteResult>
             <div>완료 수</div>
