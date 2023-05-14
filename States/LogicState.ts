@@ -7,11 +7,6 @@ export const SelNodeState = atom<string>({
   default: "",
 });
 
-export const IdNumState = atom<number>({
-  key: "id_num",
-  default: 1,
-});
-
 export const NodeState = atom<Node[]>({
   key: "nodes",
   default: [
