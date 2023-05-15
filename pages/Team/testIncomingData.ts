@@ -45,6 +45,10 @@ export const testInput: incomingDataList = {
               answerId: 31,
               content: "답변 3",
             },
+            {
+              answerId: 32,
+              content: "답변 4",
+            },
           ],
           nextQuestionNumber: "4",
         },
@@ -89,7 +93,17 @@ export const testInput: incomingDataList = {
           content: "2번",
         },
       ],
-      logics: [],
+      logics: [
+        {
+          conditionOfQuestionAnswers: [
+            {
+              answerId: 39,
+              content: "2번",
+            },
+          ],
+          nextQuestionNumber: "6",
+        },
+      ],
     },
     {
       type: "ESSAY",
