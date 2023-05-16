@@ -137,14 +137,24 @@ export const MultipleChoiceQuestions = (props: subProps) => {
       answers: makeData,
     };
 
-    setReportData((prevState) => ({
-      ...prevState,
-      questions: [...prevState.questions, newQuestion],
-    }));
+    setReportData((prevState) => {
+      if (
+        prevState.questions.some(
+          (item) => item.questionId === newQuestion.questionId
+        )
+      ) {
+        return prevState;
+      } else {
+        return {
+          ...prevState,
+          questions: [...prevState.questions, newQuestion],
+        };
+      }
+    });
   };
 
   useEffect(() => {
-    if (submitMultiple.includes(Number(question.questionNumber))) {
+    if (submitMultiple.includes(Number(question.questionNumber) - 1)) {
       onSubmit();
       console.log("submit#", question.questionNumber);
     }
