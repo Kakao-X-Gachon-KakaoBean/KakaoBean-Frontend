@@ -61,7 +61,8 @@ const MainFirst = () => {
           <br />
         </Text>
         <Link
-          to="/createsurvey"
+          // to="/createsurvey"
+          to="/surveyresponsedetail"
           onClick={handleClick}
           style={{ textDecoration: "none" }}
         >
