@@ -44,7 +44,7 @@ export const RangeBarQuestions = (props: subProps) => {
     max: props.thisQuestion.max,
   });
 
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(rangeBarQuestions.min);
 
   // 각 선택지에 대한 answerValue
   const [makeData, setMakeData] = useState<answerValue>();
@@ -72,9 +72,9 @@ export const RangeBarQuestions = (props: subProps) => {
   };
 
   useEffect(() => {
-    if (submitRange) {
+    if (submitRange.includes(Number(rangeBarQuestions.questionNumber) - 1)) {
       onSubmit();
-      console.log("reportData: ", reportData);
+      console.log("submit#", rangeBarQuestions.questionNumber);
     }
   }, [submitRange]);
   return (
