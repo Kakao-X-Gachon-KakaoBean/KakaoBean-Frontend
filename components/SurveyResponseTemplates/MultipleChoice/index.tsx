@@ -136,6 +136,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
       questionId: question.questionId,
       answers: makeData,
     };
+
     setReportData((prevState) => ({
       ...prevState,
       questions: [...prevState.questions, newQuestion],
@@ -143,9 +144,9 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   };
 
   useEffect(() => {
-    if (submitMultiple) {
+    if (submitMultiple.includes(Number(question.questionNumber))) {
       onSubmit();
-      console.log("reportData: ", reportData);
+      console.log("submit#", question.questionNumber);
     }
   }, [submitMultiple]);
 

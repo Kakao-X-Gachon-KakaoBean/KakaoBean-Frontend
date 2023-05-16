@@ -67,9 +67,9 @@ export const SubjectiveQuestions = (props: subProps) => {
   };
 
   useEffect(() => {
-    if (submitEssay) {
+    if (submitEssay.includes(Number(subjectiveQuestions.questionNumber) - 1)) {
       onSubmit();
-      console.log("reportData: ", reportData);
+      console.log("submit#", subjectiveQuestions.questionNumber);
     }
   }, [submitEssay]);
   return (

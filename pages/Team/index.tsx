@@ -33,9 +33,9 @@ export const forLogic = atom<string>({
   default: "0",
 });
 
-export const submitAll = atom<boolean>({
+export const submitAll = atom<number[]>({
   key: "submitCall",
-  default: false,
+  default: [],
 });
 
 const Team = () => {
@@ -77,7 +77,7 @@ const Team = () => {
 
   //recoil_ can view received response in here
   const [reportData, setReportData] = useRecoilState(report);
-  const [submitState, setSubmitState] = useRecoilState(submitAll);
+  const [submitQueue, setSubmitQueue] = useRecoilState(submitAll);
 
   //logic에 의한 이동 슬라이드 번호
   const [slideToGo, setSlideToGo] = useRecoilState(forLogic);
@@ -137,6 +137,10 @@ const Team = () => {
     console.log("changed in team_recoil: ", reportData);
     console.log("changed in team_Slide2go: ", slideToGo);
   }, [reportData, slideToGo]);
+
+  useEffect(() => {
+    console.log("check State: ", submitQueue);
+  }, [submitQueue]);
 
   // function consoleLogger() {
   //   console.log("slideToGO: ", slideToGo);
@@ -206,7 +210,7 @@ const Team = () => {
           <button
             onClick={() => {
               console.log(reportData);
-              setSubmitState(true);
+              setSubmitQueue(logicQueue);
             }}
           >
             제출하기
