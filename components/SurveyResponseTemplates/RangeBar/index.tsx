@@ -11,7 +11,7 @@ import {
   Title,
 } from "@components/SurveyResponseTemplates/RangeBar/styles";
 import { useRecoilState } from "recoil";
-import { report } from "@pages/Team";
+import { report, submitAll } from "@pages/Team";
 import { Answer } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import {
   answerTypes,
@@ -50,7 +50,7 @@ export const RangeBarQuestions = (props: subProps) => {
   const [makeData, setMakeData] = useState<answerValue>();
   // recoil reportData -> 제출 시 makeData 입력하기 위함
   const [reportData, setReportData] = useRecoilState(report);
-
+  const [submitRange] = useRecoilState(submitAll);
   const handleChange = (newValue: number) => {
     setValue(newValue);
   };
@@ -71,6 +71,12 @@ export const RangeBarQuestions = (props: subProps) => {
     }));
   };
 
+  useEffect(() => {
+    if (submitRange) {
+      onSubmit();
+      console.log("reportData: ", reportData);
+    }
+  }, [submitRange]);
   return (
     <div>
       <div style={contentStyle}>

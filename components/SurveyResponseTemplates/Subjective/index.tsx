@@ -15,7 +15,7 @@ import {
   responseQuestionType,
 } from "@pages/Team/type";
 import { useRecoilState } from "recoil";
-import { report } from "@pages/Team";
+import { report, submitAll } from "@pages/Team";
 
 const contentStyle: React.CSSProperties = {
   height: "100vh",
@@ -45,7 +45,7 @@ export const SubjectiveQuestions = (props: subProps) => {
   const [makeData, setMakeData] = useState<answer>();
   // recoil reportData -> 제출 시 makeData 입력하기 위함
   const [reportData, setReportData] = useRecoilState(report);
-
+  const [submitEssay] = useRecoilState(submitAll);
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
@@ -65,6 +65,13 @@ export const SubjectiveQuestions = (props: subProps) => {
       questions: [...prevState.questions, newQuestion],
     }));
   };
+
+  useEffect(() => {
+    if (submitEssay) {
+      onSubmit();
+      console.log("reportData: ", reportData);
+    }
+  }, [submitEssay]);
   return (
     <div style={contentStyle}>
       <Title>{subjectiveQuestions.title}</Title>
