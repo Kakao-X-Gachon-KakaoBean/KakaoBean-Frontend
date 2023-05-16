@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { forLogic, report } from "@pages/Team/index";
+import { forLogic, report, submitAll } from "@pages/Team/index";
 
 import {
   Answer,
@@ -38,6 +38,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   );
   const [makeData, setMakeData] = useState<Answer[]>([]);
   const [reportData, setReportData] = useRecoilState(report);
+  const [submitMultiple] = useRecoilState(submitAll);
 
   //logic Mapping
   const [logic, setLogic] = useRecoilState(forLogic);
@@ -100,6 +101,8 @@ export const MultipleChoiceQuestions = (props: subProps) => {
         setLogic(() => {
           return arr.next;
         });
+      } else {
+        setLogic("0");
       }
     });
   };
@@ -138,6 +141,13 @@ export const MultipleChoiceQuestions = (props: subProps) => {
       questions: [...prevState.questions, newQuestion],
     }));
   };
+
+  useEffect(() => {
+    if (submitMultiple) {
+      onSubmit();
+      console.log("reportData: ", reportData);
+    }
+  }, [submitMultiple]);
 
   return (
     <QuestionBox>
