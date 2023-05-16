@@ -93,12 +93,16 @@ export const RangeBarQuestions = (props: subProps) => {
         <Title>{rangeBarQuestions.title}</Title>
         <Explanation>{rangeBarQuestions.explanation}</Explanation>
         <MinMaxRange
-          style={{ display: "flex", justifyContent: "space-between" }}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "50vw",
+          }}
         >
-          <div style={{ width: "50px", borderWidth: 0 }}>
+          <div style={{ width: "30px", borderWidth: 0 }}>
             {rangeBarQuestions.min}
           </div>
-          <div style={{ width: "50px", borderWidth: 0 }}>
+          <div style={{ width: "30px", borderWidth: 0 }}>
             {rangeBarQuestions.max}
           </div>
         </MinMaxRange>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
-import { Button, ButtonBox } from "@pages/Team/styles";
+import { Button, ButtonBox, ModifiedButton } from "@pages/Team/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -16,8 +16,14 @@ import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleCh
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
-import { QuestionBox } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
+import {
+  QuestionBox,
+  Title,
+} from "@components/SurveyResponseTemplates/MultipleChoice/styles";
 import { QuestionTypes, responseDataList } from "@pages/Team/type";
+
+// 실제 데이터 recoil
+// import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -57,14 +63,24 @@ const Team = () => {
   const [logicQueue, setLogicQueue] = useState<number[]>([0]);
   const [counter, setCounter] = useState<number>(0);
 
+  //survey dummy data
   const [questions, setQuestions] = useState<QuestionTypes[]>(
     testInput.questions
   );
+  //surveyID 초기화 함수
+  const initializeReport = () => {
+    setReportData((prevState) => ({
+      ...prevState,
+      surveyId: testInput.surveyId,
+    }));
+  };
 
+  //실제 데이터 _ 위에 주석하고 사용
+  // const [survey, setSurvey] = useRecoilState(surveyData);
   // const [questions, setQuestions] = useState<QuestionTypes[]>([]);
   // useEffect(() => {
-  //   if (surveyData?.questions) {
-  //     setQuestions(surveyData.questions);
+  //   if (survey?.questions) {
+  //     setQuestions(survey.questions);
   //   }
   // });
 
@@ -81,14 +97,6 @@ const Team = () => {
 
   //logic에 의한 이동 슬라이드 번호
   const [slideToGo, setSlideToGo] = useRecoilState(forLogic);
-
-  //surveyID 초기화 함수
-  const initializeReport = () => {
-    setReportData((prevState) => ({
-      ...prevState,
-      surveyId: testInput.surveyId,
-    }));
-  };
 
   // surveyId는 실행시 한번 만 실행
   useEffect(() => {
@@ -142,6 +150,7 @@ const Team = () => {
     console.log("check State: ", submitQueue);
   }, [submitQueue]);
 
+  // 로그 출력용
   // function consoleLogger() {
   //   console.log("slideToGO: ", slideToGo);
   //   console.log("counter: ", counter);
@@ -205,17 +214,19 @@ const Team = () => {
             }
           })}
 
-        <QuestionBox>
-          <h1>수고하셨습니다 : 제출 페이지</h1>
-          <button
-            onClick={() => {
-              console.log("report Data", reportData);
-              setSubmitQueue(logicQueue);
-            }}
-          >
-            제출하기
-          </button>
-        </QuestionBox>
+        <div>
+          <QuestionBox>
+            <Title>수고하셨습니다 : 제출 페이지</Title>
+            <ModifiedButton
+              onClick={() => {
+                console.log("report Data", reportData);
+                setSubmitQueue(logicQueue);
+              }}
+            >
+              제출하기
+            </ModifiedButton>
+          </QuestionBox>
+        </div>
       </Carousel>
       <ButtonBox>
         <Button
