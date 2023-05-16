@@ -209,7 +209,7 @@ const Team = () => {
           <h1>수고하셨습니다 : 제출 페이지</h1>
           <button
             onClick={() => {
-              console.log(reportData);
+              console.log("report Data", reportData);
               setSubmitQueue(logicQueue);
             }}
           >

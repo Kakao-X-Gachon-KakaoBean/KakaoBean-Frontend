@@ -65,10 +65,20 @@ export const RangeBarQuestions = (props: subProps) => {
       questionId: rangeBarQuestions.questionId,
       answers: makeData as answerTypes,
     };
-    setReportData((prevState) => ({
-      ...prevState,
-      questions: [...prevState.questions, newQuestion],
-    }));
+    setReportData((prevState) => {
+      if (
+        prevState.questions.some(
+          (item) => item.questionId === newQuestion.questionId
+        )
+      ) {
+        return prevState;
+      } else {
+        return {
+          ...prevState,
+          questions: [...prevState.questions, newQuestion],
+        };
+      }
+    });
   };
 
   useEffect(() => {

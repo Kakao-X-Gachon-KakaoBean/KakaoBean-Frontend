@@ -60,10 +60,20 @@ export const SubjectiveQuestions = (props: subProps) => {
       questionId: subjectiveQuestions.questionId,
       answers: makeData as answer,
     };
-    setReportData((prevState) => ({
-      ...prevState,
-      questions: [...prevState.questions, newQuestion],
-    }));
+    setReportData((prevState) => {
+      if (
+        prevState.questions.some(
+          (item) => item.questionId === newQuestion.questionId
+        )
+      ) {
+        return prevState;
+      } else {
+        return {
+          ...prevState,
+          questions: [...prevState.questions, newQuestion],
+        };
+      }
+    });
   };
 
   useEffect(() => {
