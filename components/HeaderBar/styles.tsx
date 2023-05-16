@@ -3,11 +3,11 @@ import { keyframes } from "@emotion/react";
 
 export const Bar = styled.div`
   background-color: rgba(255, 255, 255, 0.9);
-  z-index: 2;
+  width: 100%;
+  height: 75px;
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  z-index: 9999;
 `;
 
 export const MainBar = styled.div`

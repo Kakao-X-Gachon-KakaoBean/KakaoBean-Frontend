@@ -38,7 +38,7 @@ export const SectionWrapper = styled.div`
   width: 90%;
   display: grid;
   justify-content: center;
-  grid-template-rows: 1fr 4fr 1fr 2fr;
+  grid-template-rows: 1fr 4fr;
   grid-row-gap: 1rem;
   margin: 0 auto;
 `;
@@ -127,7 +127,33 @@ export const ResultSection = styled.div`
 `;
 export const SurveySection = styled.div`
   width: 100%;
+  height: 18rem;
   background-color: #ffffff;
   border: 1px solid #ede1e1;
+  border-radius: 10px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 `;
+
+export const SurveyHeader = styled.div`
+  width: 100%;
+  height: 4rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+`;
+export const SurveyBody = styled.div`
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.5fr 0.01fr 1fr;
+`;
+export const SurveyBodyChart = styled.div``;
+
+export const SurveyVertical = styled.div`
+  border-left: 1px solid #e4e4e4;
+  height: 80%;
+  margin: auto 0;
+`;
+export const SurveyBodyResult = styled.div``;
