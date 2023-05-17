@@ -40,6 +40,17 @@ export const Button = styled.button`
   `}
 `;
 
+export const ModifiedButton = styled(Button)`
+  width: 7rem;
+  height: 2rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+`;
+// export const SubmitPage = styled.div`
+//   dis
+// `;
+
 export const dotStyle = {
   backgroundColor: "blue", // 점의 원하는 색상으로 변경
   width: "10px",

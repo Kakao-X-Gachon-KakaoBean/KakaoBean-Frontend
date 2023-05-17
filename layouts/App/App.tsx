@@ -9,6 +9,9 @@ const MyPage = loadable(() => import(`@pages/MyPage`));
 const Team = loadable(() => import(`@pages/Team`));
 const Product = loadable(() => import(`@pages/Product`));
 const CreateSurvey = loadable(() => import(`@pages/Survey/CreateSurvey`));
+const SurveyResponseDetail = loadable(
+  () => import(`@pages/Survey/SurveyResponseDetail`)
+);
 
 const App = () => {
   return (
@@ -24,6 +27,7 @@ const App = () => {
       <Route path="/mypage" component={MyPage} />
       <Route path="/mypage/:id" component={MyPage} />
       <Route path="/createsurvey" component={CreateSurvey} />
+      <Route path="/surveyresponsedetail" component={SurveyResponseDetail} />
     </Switch>
   );
 };
