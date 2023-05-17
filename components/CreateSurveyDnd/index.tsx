@@ -5,7 +5,7 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   QuestionTypeItem,
   getQuestionType,
@@ -77,6 +77,7 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
   );
+
   const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [surveyId, setSurveyId] = useState("");
   // const [surveyQuestions, setSurveyQuestions] = useState<QuestionTypes[]>([]); // id, value 포함 전체 질문
@@ -131,6 +132,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     index: number
   ) => {
     setSelectedQuestion(() => clickedQuestion);
+    setSelNode(String(index + 1));
   };
 
   // 질문 리스트 순서 바꾸기
@@ -268,8 +270,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     let i = firstSurveyId;
     const newNodeTuple: Node[] = [];
     const newEdgeTuple: Edge[] = [];
-    const newQuestionTuple: any[] = [];
-    let newNode, newEdge;
+    let newNode, newEdge: Edge<any>;
 
     const updatedQuestions = surveyQuestions.map((item, index) => {
       if ("id" in item) {
@@ -294,7 +295,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     });
     setQuestions(() => updatedQuestions as QuestionTypes[]);
 
-    for (i; i <= countQuestion; i++) {
+    for (i; i < countQuestion; i++) {
       const nodeWithI = updatedNodes.find((node: Node) => node.id == String(i));
       const existQuestion = surveyQuestions.find(
         (surveyQuestions: QuestionTypes) =>
@@ -310,17 +311,13 @@ const CreateSurveyDnd = (): JSX.Element => {
           }
         });
         newNodeTuple.push(nodeWithI);
-        newQuestionTuple.push({
-          value: String(i - firstSurveyId),
-          label: String(i - firstSurveyId),
-        });
       } else {
         const xAxis = nodes[i - firstSurveyId]?.position?.x
           ? nodes[i - firstSurveyId]?.position?.x
           : 500;
         const yAxis = 30 + (i - firstSurveyId) * 100;
 
-        if (i == 0) {
+        if (i == firstSurveyId) {
           newNode = {
             id: String(i),
             type: "input",
@@ -333,45 +330,37 @@ const CreateSurveyDnd = (): JSX.Element => {
             position: { x: xAxis, y: yAxis },
           };
         } else {
-          if (i == surveyQuestions.length - 1) {
-            newNode = {
-              id: String(i),
-              data: {
-                label:
-                  surveyQuestions[countQuestion]?.title !== ""
-                    ? surveyQuestions[countQuestion]?.title
-                    : "제목 없음",
-              },
-              position: { x: xAxis, y: yAxis },
-            };
-          } else {
-            newNode = {
-              id: String(i),
-              data: {
-                label:
-                  surveyQuestions[countQuestion]?.title !== ""
-                    ? surveyQuestions[countQuestion]?.title
-                    : "제목 없음",
-              },
-              position: { x: xAxis, y: yAxis },
-            };
-          }
+          newNode = {
+            id: String(i),
+            data: {
+              label:
+                surveyQuestions[countQuestion]?.title !== ""
+                  ? surveyQuestions[countQuestion]?.title
+                  : "제목 없음",
+            },
+            position: { x: xAxis, y: yAxis },
+          };
         }
 
-        newEdge = {
-          id: "e" + String(i) + "-" + String(i + 1),
-          source: String(i),
-          target: String(i + 1),
-        };
+        if (i != countQuestion - 1) {
+          newEdge = {
+            id: "e" + String(i) + "-" + String(i + 1),
+            source: String(i),
+            target: String(i + 1),
+          };
+
+          const isDuplicate = newEdgeTuple.some((edge) => {
+            return edge.id === newEdge.id;
+          });
+
+          if (!isDuplicate) {
+            newEdgeTuple.push(newEdge);
+          }
+        }
 
         setCount((prevCount) => [...prevCount, 0]);
         setIsMultiCondition((prevVal) => [...prevVal, 1]);
         newNodeTuple.push(newNode);
-        newEdgeTuple.push(newEdge);
-        newQuestionTuple.push({
-          value: String(i - firstSurveyId),
-          label: String(i - firstSurveyId),
-        });
       }
     }
 
@@ -383,19 +372,23 @@ const CreateSurveyDnd = (): JSX.Element => {
     };
 
     const submitEdge = {
-      id: "e_submit",
+      id: "e" + String(i) + "-0",
       source: String(surveyQuestions.length),
       target: "0",
     };
 
-    newNodeTuple.push(submitNode);
-    newEdgeTuple.push(submitEdge);
-    newQuestionTuple.push({ value: "0", label: "제출하기" });
+    const isDuplicate = newEdgeTuple.some((edge) => {
+      return edge.id === submitEdge.id;
+    });
 
-    //console.log(newEdgeTuple);
+    if (!isDuplicate) {
+      newEdgeTuple.push(submitEdge);
+    }
+
+    newNodeTuple.push(submitNode);
+
     setNodes(newNodeTuple);
     setEdges(newEdgeTuple);
-    setQuestionList(newQuestionTuple);
   }, [surveyQuestions]);
 
   ////설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
@@ -513,6 +506,10 @@ const CreateSurveyDnd = (): JSX.Element => {
     ];
     const newNodeItems = [...nodes.slice(0, index), ...nodes.slice(index + 1)];
     const newEdgeItems = [...edges.slice(0, index), ...edges.slice(index + 1)];
+    const newQuestionsTuple = [
+      ...edges.slice(0, index),
+      ...edges.slice(index + 1),
+    ];
 
     setSurveyQuestions(newQuestionItems);
     setNodes(newNodeItems);
@@ -614,13 +611,17 @@ const CreateSurveyDnd = (): JSX.Element => {
                             : item.title
                           : "제목 타입 없음"}
                       </SidebarQuestionTitle>
-                      <SidebarQuestionDelete
-                        onClick={() => {
-                          onClickSurveyDelete(index);
-                        }}
-                      >
-                        X
-                      </SidebarQuestionDelete>
+                      {viewLogic !== "logic" ? (
+                        <SidebarQuestionDelete
+                          onClick={() => {
+                            onClickSurveyDelete(index);
+                          }}
+                        >
+                          X
+                        </SidebarQuestionDelete>
+                      ) : (
+                        <div></div>
+                      )}
                     </SidebarQuestion>
                   </Link>
                 );

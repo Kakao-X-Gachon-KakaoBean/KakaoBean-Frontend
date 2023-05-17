@@ -18,13 +18,18 @@ export default function LogicTab() {
 
   //노드 클릭하면 selNode에다가 아이디 넣어주기
   const onNodeClick = useCallback(
-    (event, node) => {
-      const targetId = Object.values(event.currentTarget.dataset.id);
-      setSelNode(String(targetId));
-      console.log(event.currentTarget);
-      //console.log(nodes);
+    (event) => {
+      if (Number(Object.values(event.currentTarget.dataset.id)) == 0) {
+        setSelNode("0");
+        //console.log("submit button");
+      } else {
+        const nodes = Object.values(event.currentTarget.parentNode.childNodes);
+        const clickedIndex = nodes.indexOf(event.currentTarget);
+        setSelNode(String(clickedIndex + 1));
+        console.log(clickedIndex + 1);
+      }
     },
-    [selNode]
+    [setSelNode]
   );
 
   useEffect(() => {

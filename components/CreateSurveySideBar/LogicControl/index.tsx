@@ -20,7 +20,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DeleteOption } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   SelNodeState,
   NodeState,
@@ -30,7 +30,11 @@ import {
   QuestionList,
 } from "../../../States/LogicState";
 
-import { countState, questionsState } from "../../../States/SurveyState";
+import {
+  countState,
+  questionsState,
+  selectedQuestionState,
+} from "../../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
@@ -52,39 +56,57 @@ export const LogicControl = () => {
   //로직 조건 개수 count
   const [isMultiCondition, setIsMultiCondition] =
     useRecoilState(MultiConditionState);
-  const questionList = useRecoilValue(QuestionList);
+  const [questionList, setQuestionList] = useRecoilState(QuestionList);
   const questionListExceptMe = questionList.filter((question) => {
     if (Number(selNode) != 0)
       return nodes[Number(selNode) - 1].id != question.value;
   });
 
+  const getRandomColor = () => {
+    // 랜덤한 색상을 생성
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  useEffect(() => {
+    console.log("EDGE");
+    console.log(edges);
+    console.log("NODE");
+    console.log(nodes);
+  }, [edges]);
+
   const isNoLogic = () => {
     const QuestionsList = JSON.parse(JSON.stringify(surveyQuestions));
-    console.log(QuestionsList);
-    console.log("isLogicStart");
+    const questionLen = QuestionsList.length;
+    //console.log(QuestionsList);
+    //console.log("isLogicStart");
     let i = 0;
     if (QuestionsList != undefined) {
-      MainLoop: for (i; i < surveyQuestions.length - 1; i++) {
-        if (i == QuestionsList.length - 1) {
-          console.log("맨 마지막 문제");
+      MainLoop: for (i; i < questionLen; i++) {
+        if (i == questionLen - 1) {
+          //console.log("맨 마지막 문제");
           if (QuestionsList[i]?.nextQuestionNumber != "0") {
-            console.log("마지막 문제가 0이 아님");
+            //console.log("마지막 문제가 0이 아님");
             break;
           } else if ("logics" in QuestionsList[i]) {
             let j = 0;
             for (j; QuestionsList[i].logics.length; j++) {
               if (QuestionsList[i].logics[j]?.nextQuestionNumber != "0") {
-                console.log("모든 로직에서 이동이 다음 문제가 아님");
-                console.log("원래 다음 문제 : " + "0");
-                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+                //console.log("모든 로직에서 이동이 다음 문제가 아님");
+                //console.log("원래 다음 문제 : " + "0");
+                //console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
                 break MainLoop;
               }
             }
           }
         } else {
-          console.log("마지막 문제 아닌것");
+          //console.log("마지막 문제 아닌것");
           if (QuestionsList[i]?.nextQuestionNumber != String(i + 2)) {
-            console.log("다음 문제가 아님");
+            //console.log("다음 문제가 아님");
             break;
           } else if ("logics" in QuestionsList[i]) {
             let j = 0;
@@ -92,18 +114,18 @@ export const LogicControl = () => {
               if (
                 QuestionsList[i].logics[j]?.nextQuestionNumber != String(i + 2)
               ) {
-                console.log("모든 로직에서 이동이 다음 문제가 아님");
-                console.log("원래 다음 문제 : " + String(i + 2));
-                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
+                //console.log("모든 로직에서 이동이 다음 문제가 아님");
+                //console.log("원래 다음 문제 : " + String(i + 2));
+                //console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
                 break MainLoop;
               }
             }
           }
         }
       }
-      console.log("result");
-      console.log(i);
-      console.log(QuestionsList.length);
+      //console.log("result");
+      //console.log(i);
+      //console.log(QuestionsList.length);
 
       if (i == QuestionsList.length) resetNodeAndEdge();
     }
@@ -114,12 +136,15 @@ export const LogicControl = () => {
     const newEdgeTuple: Edge[] = [];
     let newNode, newEdge;
     let yaxis = 30;
+    const firstSurveyId = surveyQuestions[0]
+      ? Number(surveyQuestions[0].id.substring(15))
+      : 1;
     let i = 0;
 
-    for (i = 0; i < surveyQuestions.length; i++) {
+    for (i; i < surveyQuestions.length; i++) {
       if (i == 0) {
         newNode = {
-          id: surveyQuestions[i].id,
+          id: surveyQuestions[i].id.substring(15),
           type: "input",
           data: {
             label:
@@ -130,38 +155,32 @@ export const LogicControl = () => {
           position: { x: 500, y: yaxis },
         };
       } else {
-        if (i == surveyQuestions.length - 1) {
-          newNode = {
-            id: surveyQuestions[i].id,
-            data: {
-              label:
-                surveyQuestions[i].title !== ""
-                  ? surveyQuestions[i].title
-                  : "제목 없음",
-            },
-            position: { x: 500, y: yaxis },
-          };
-        } else {
-          newNode = {
-            id: surveyQuestions[i].id,
-            data: {
-              label:
-                surveyQuestions[i].title !== ""
-                  ? surveyQuestions[i].title
-                  : "제목 없음",
-            },
-            position: { x: 500, y: yaxis },
-          };
-        }
+        newNode = {
+          id: surveyQuestions[i].id.substring(15),
+          data: {
+            label:
+              surveyQuestions[i].title !== ""
+                ? surveyQuestions[i].title
+                : "제목 없음",
+          },
+          position: { x: 500, y: yaxis },
+        };
       }
-      newEdge = {
-        id: "e" + String(i + 1) + "-" + String(i + 2),
-        source: String(i + 1),
-        target: String(i + 2),
-      };
+
+      if (i != surveyQuestions.length - 1) {
+        newEdge = {
+          id:
+            "e" +
+            String(i + firstSurveyId) +
+            "-" +
+            String(i + 1 + firstSurveyId),
+          source: String(i + firstSurveyId),
+          target: String(i + 1 + firstSurveyId),
+        };
+        newEdgeTuple.push(newEdge);
+      }
 
       newNodeTuple.push(newNode);
-      newEdgeTuple.push(newEdge);
 
       yaxis += 100;
     }
@@ -173,8 +192,8 @@ export const LogicControl = () => {
     };
 
     const submitEdge = {
-      id: "e_submit",
-      source: String(i),
+      id: "e" + String(i) + "-0",
+      source: String(surveyQuestions.length),
       target: "0",
     };
 
@@ -189,7 +208,11 @@ export const LogicControl = () => {
   const addLogic = () => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const updatedCounts = [...count];
-    let updatedLogics;
+    let updatedLogics: {
+      nextQuestionNumber: any;
+      conditionOfQuestionAnswers?: string[];
+    };
+    let updatedEdges = JSON.parse(JSON.stringify(edges));
 
     //마지막 질문일 경우 next질문 0 (제출하기)
     if (Number(selNode) == surveyQuestions.length) {
@@ -206,8 +229,29 @@ export const LogicControl = () => {
       };
     }
 
+    const newEdge: Edge = {
+      id: "e" + selNode + "-" + updatedLogics.nextQuestionNumber + "-animated",
+      source: String(selNode),
+      target: updatedLogics.nextQuestionNumber,
+      animated: true,
+      style: { stroke: getRandomColor() },
+    };
+
     updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
     updatedQuestions[Number(selNode) - 1].logics.push(updatedLogics);
+    updatedEdges.push(newEdge);
+
+    const desiredEdge = edges.find((edge) => {
+      return (
+        edge.source == String(selNode) &&
+        edge.target == updatedLogics.nextQuestionNumber &&
+        edge.animated == true
+      );
+    });
+
+    if (!desiredEdge) {
+      setEdges(updatedEdges);
+    }
 
     setSurveyQuestions(updatedQuestions);
     setCount(updatedCounts);
@@ -279,6 +323,7 @@ export const LogicControl = () => {
       source: String(selNode),
       target: String(value),
       animated: true,
+      style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
     };
 
     const originValue =
@@ -321,7 +366,12 @@ export const LogicControl = () => {
           edge.animated == true
         );
       });
-      updatedEdges.push(newEdge);
+      const isDuplicate = updatedEdges.some((edge: Edge) => {
+        return edge.id === newEdge.id;
+      });
+      if (!isDuplicate) {
+        updatedEdges.push(newEdge);
+      }
     }
 
     setEdges(updatedEdges);
@@ -344,7 +394,7 @@ export const LogicControl = () => {
     const originNextValue = String(Number(selNode) + 1);
     const originNode = nodes.find((node) => Number(node.id) == Number(value));
     const submitUpperNodeYAxis =
-      updatedNodes[surveyQuestions.length - 2].position.y;
+      updatedNodes[surveyQuestions.length - 1].position.y;
     const targetUpperNode = nodes.find(
       (node) => Number(node.id) == Number(value) - 1
     );
@@ -385,7 +435,12 @@ export const LogicControl = () => {
       updatedEdges = updatedEdges.filter((edge: Edge) => {
         return !(edge.source === selNode && edge.target == originValue);
       });
-      updatedEdges.push(newEdge);
+      const isDuplicate = updatedEdges.some((edge: Edge) => {
+        return edge.id === newEdge.id;
+      });
+      if (!isDuplicate) {
+        updatedEdges.push(newEdge);
+      }
     }
 
     setEdges(updatedEdges);
@@ -409,12 +464,22 @@ export const LogicControl = () => {
     });
     setSurveyQuestions(() => updatedQuestions as QuestionTypes[]);
 
-    console.log("Node!!");
-    console.log(nodes);
-    console.log("Edge!!");
-    console.log(edges);
-    console.log("SurveyQuestions!!");
-    console.log(surveyQuestions);
+    const updatedSurveyList = [];
+    let i = 0;
+    for (i; i < surveyQuestions.length; i++) {
+      updatedSurveyList.push({ value: String(i + 1), label: String(i + 1) });
+    }
+    updatedSurveyList.push({ value: "0", label: "제출하기" });
+    setQuestionList(updatedSurveyList);
+    isNoLogic();
+    // console.log("Node!!");
+    // console.log(nodes);
+    // console.log("Edge!!");
+    // console.log(edges);
+    // console.log("SurveyQuestions!!");
+    // console.log(surveyQuestions);
+    // console.log("QuestionList!!");
+    // console.log(updatedSurveyList);
   }, []);
 
   useEffect(() => {
