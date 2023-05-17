@@ -18,10 +18,10 @@ export default function LogicTab() {
 
   //노드 클릭하면 selNode에다가 아이디 넣어주기
   const onNodeClick = useCallback(
-    (event) => {
+    (event, node) => {
       const targetId = Object.values(event.currentTarget.dataset.id);
       setSelNode(String(targetId));
-      console.log(targetId);
+      console.log(event.currentTarget);
       //console.log(nodes);
     },
     [selNode]

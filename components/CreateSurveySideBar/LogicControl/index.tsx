@@ -29,7 +29,8 @@ import {
   MultiConditionState,
   QuestionList,
 } from "../../../States/LogicState";
-import { questionsState } from "../../../States/SurveyState";
+
+import { countState, questionsState } from "../../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
@@ -44,6 +45,7 @@ export const LogicControl = () => {
   // 현재 선택한 노드
   const selNode = useRecoilValue(SelNodeState);
   const select = surveyQuestions[Number(Number(selNode) - 1)];
+  const countQuestion = useRecoilValue(countState);
 
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
@@ -62,7 +64,7 @@ export const LogicControl = () => {
     console.log("isLogicStart");
     let i = 0;
     if (QuestionsList != undefined) {
-      MainLoop: for (i; i < QuestionsList.length; i++) {
+      MainLoop: for (i; i < surveyQuestions.length - 1; i++) {
         if (i == QuestionsList.length - 1) {
           console.log("맨 마지막 문제");
           if (QuestionsList[i]?.nextQuestionNumber != "0") {
@@ -117,7 +119,7 @@ export const LogicControl = () => {
     for (i = 0; i < surveyQuestions.length; i++) {
       if (i == 0) {
         newNode = {
-          id: String(i + 1),
+          id: surveyQuestions[i].id,
           type: "input",
           data: {
             label:
@@ -130,7 +132,7 @@ export const LogicControl = () => {
       } else {
         if (i == surveyQuestions.length - 1) {
           newNode = {
-            id: String(i + 1),
+            id: surveyQuestions[i].id,
             data: {
               label:
                 surveyQuestions[i].title !== ""
@@ -141,7 +143,7 @@ export const LogicControl = () => {
           };
         } else {
           newNode = {
-            id: String(i + 1),
+            id: surveyQuestions[i].id,
             data: {
               label:
                 surveyQuestions[i].title !== ""

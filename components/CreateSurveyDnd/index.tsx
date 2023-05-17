@@ -262,7 +262,10 @@ const CreateSurveyDnd = (): JSX.Element => {
     setSurveyQuestions(() => surveyQuestions);
 
     let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    let i = 0;
+    const firstSurveyId = surveyQuestions[0]
+      ? Number(surveyQuestions[0].id.substring(15))
+      : 1;
+    let i = firstSurveyId;
     const newNodeTuple: Node[] = [];
     const newEdgeTuple: Edge[] = [];
     const newQuestionTuple: any[] = [];
@@ -291,32 +294,35 @@ const CreateSurveyDnd = (): JSX.Element => {
     });
     setQuestions(() => updatedQuestions as QuestionTypes[]);
 
-    for (i = 0; i < surveyQuestions.length; i++) {
-      const nodeWithI = updatedNodes.find(
-        (node: Node) => node.id == String(i + 1)
-      );
+    for (i; i <= countQuestion; i++) {
+      const nodeWithI = updatedNodes.find((node: Node) => node.id == String(i));
       const existQuestion = surveyQuestions.find(
         (surveyQuestions: QuestionTypes) =>
-          surveyQuestions.id.substring(15) == String(i + 1)
+          surveyQuestions.id.substring(15) == String(i)
       );
 
       if (nodeWithI && existQuestion) {
         nodeWithI.data.label =
           existQuestion.title !== "" ? existQuestion.title : "제목 없음";
         edges.forEach((edge) => {
-          if (edge.source == String(i + 1) && edge.id != "e_submit") {
+          if (edge.source == String(i) && edge.id != "e_submit") {
             newEdgeTuple.push(edge);
           }
         });
         newNodeTuple.push(nodeWithI);
-        newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
+        newQuestionTuple.push({
+          value: String(i - firstSurveyId),
+          label: String(i - firstSurveyId),
+        });
       } else {
-        const xAxis = nodes[i]?.position?.x ? nodes[i]?.position?.x : 500;
-        const yAxis = 30 + i * 100;
+        const xAxis = nodes[i - firstSurveyId]?.position?.x
+          ? nodes[i - firstSurveyId]?.position?.x
+          : 500;
+        const yAxis = 30 + (i - firstSurveyId) * 100;
 
         if (i == 0) {
           newNode = {
-            id: String(i + 1),
+            id: String(i),
             type: "input",
             data: {
               label:
@@ -329,7 +335,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         } else {
           if (i == surveyQuestions.length - 1) {
             newNode = {
-              id: String(i + 1),
+              id: String(i),
               data: {
                 label:
                   surveyQuestions[countQuestion]?.title !== ""
@@ -340,7 +346,7 @@ const CreateSurveyDnd = (): JSX.Element => {
             };
           } else {
             newNode = {
-              id: String(i + 1),
+              id: String(i),
               data: {
                 label:
                   surveyQuestions[countQuestion]?.title !== ""
@@ -353,16 +359,19 @@ const CreateSurveyDnd = (): JSX.Element => {
         }
 
         newEdge = {
-          id: "e" + String(i + 1) + "-" + String(i + 2),
-          source: String(i + 1),
-          target: String(i + 2),
+          id: "e" + String(i) + "-" + String(i + 1),
+          source: String(i),
+          target: String(i + 1),
         };
 
         setCount((prevCount) => [...prevCount, 0]);
         setIsMultiCondition((prevVal) => [...prevVal, 1]);
         newNodeTuple.push(newNode);
         newEdgeTuple.push(newEdge);
-        newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
+        newQuestionTuple.push({
+          value: String(i - firstSurveyId),
+          label: String(i - firstSurveyId),
+        });
       }
     }
 
@@ -497,6 +506,19 @@ const CreateSurveyDnd = (): JSX.Element => {
   // setQuestionList(newQuestionTuple);
   // }, [surveyQuestions.length]);
 
+  const onClickSurveyDelete = (index: number) => {
+    const newQuestionItems = [
+      ...surveyQuestions.slice(0, index),
+      ...surveyQuestions.slice(index + 1),
+    ];
+    const newNodeItems = [...nodes.slice(0, index), ...nodes.slice(index + 1)];
+    const newEdgeItems = [...edges.slice(0, index), ...edges.slice(index + 1)];
+
+    setSurveyQuestions(newQuestionItems);
+    setNodes(newNodeItems);
+    setEdges(newEdgeItems);
+  };
+
   const mutation = useMutation<
     QuestionTypes[],
     AxiosError,
@@ -594,11 +616,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                       </SidebarQuestionTitle>
                       <SidebarQuestionDelete
                         onClick={() => {
-                          const newQuestionItems = [
-                            ...surveyQuestions.slice(0, index),
-                            ...surveyQuestions.slice(index + 1),
-                          ];
-                          setSurveyQuestions(newQuestionItems);
+                          onClickSurveyDelete(index);
                         }}
                       >
                         X
