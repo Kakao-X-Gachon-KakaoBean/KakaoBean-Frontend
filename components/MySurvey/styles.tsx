@@ -60,6 +60,7 @@ export const SurveyBox = styled.div`
   border-radius: 10px;
 
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   background-color: #fafbfc;
