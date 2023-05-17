@@ -7,20 +7,53 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import inComingData from "./incoming3.json"; // incoming3.json
 import { Wrapper } from "@components/SurveyResponseLogicFlow/styles";
+import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 
 const SurveyResponseLogicFlow = () => {
+  const getRandomColor = () => {
+    // 랜덤한 색상을 생성
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  // 로직 유무 확인
+  const hasLogics = inComingData.questions.some(
+    (question) => question.logics && question.logics.length > 0
+  );
+
   // Node 설정
   const questionNodes: Node<any>[] = inComingData.questions.map(
     (question, index) => {
-      return {
-        id: question.questionId.toString(),
-        data: {
-          label: question.title,
-        },
-        position: { x: 250, y: 5 + index * 100 },
-      };
+      if (question.logics && question.logics.length > 0) {
+        return {
+          id: question.questionId.toString(),
+          data: {
+            label: question.title,
+          },
+          position: { x: 250, y: 5 + index * 100 },
+        };
+      } else if (hasLogics) {
+        return {
+          id: question.questionId.toString(),
+          data: {
+            label: question.title,
+          },
+          position: { x: 350, y: 5 + index * 100 },
+        };
+      } else {
+        return {
+          id: question.questionId.toString(),
+          data: {
+            label: question.title,
+          },
+          position: { x: 250, y: 5 + index * 100 },
+        };
+      }
     }
-    // 여기에 const 배열 하나 더 추가한 다음에 제출 노드 넣기
   );
   // 새로운 배열을 생성하고 제출 노드를 추가합니다.
   const submitNode: Node<any>[] = [
@@ -29,7 +62,10 @@ const SurveyResponseLogicFlow = () => {
       data: {
         label: "제출",
       },
-      position: { x: 250, y: questionNodes.length * 100 },
+      position: {
+        x: 250,
+        y: questionNodes.length * 100,
+      },
     },
   ];
 
@@ -69,13 +105,14 @@ const SurveyResponseLogicFlow = () => {
       else if (question.type === "MULTIPLE") {
         // 로직이 존재하는 경우, 로직 length 만큼 edge를 생성한다.
         if (question.logics && question.logics.length > 0) {
-          const logicEdges = question.logics.map((logic) => {
+          const logicEdges = question.logics.map((logic: Logic) => {
             if (logic.nextQuestionNumber === "0") {
               return {
                 id: `${question.questionId} to submit (logic)`,
                 source: question.questionId.toString(),
                 target: "submit",
                 animated: true,
+                style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
               };
             } else {
               const nextQuestion = inComingData.questions.find(
@@ -91,6 +128,7 @@ const SurveyResponseLogicFlow = () => {
                 source: question.questionId.toString(),
                 target: nextQuestion.questionId.toString(),
                 animated: true,
+                style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
               };
             }
           });
