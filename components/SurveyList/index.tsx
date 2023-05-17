@@ -25,6 +25,42 @@ const SurveyList = () => {
             <SurveyResult>응답 개수</SurveyResult>
           </SurveyInfo>
         </SurveyBox>
+        <SurveyBox>
+          <SurveyInfo>
+            <SurveyTitle>제목</SurveyTitle>
+            <SurveyResult>응답 개수</SurveyResult>
+          </SurveyInfo>
+        </SurveyBox>
+        <SurveyBox>
+          <SurveyInfo>
+            <SurveyTitle>제목</SurveyTitle>
+            <SurveyResult>응답 개수</SurveyResult>
+          </SurveyInfo>
+        </SurveyBox>
+        <SurveyBox>
+          <SurveyInfo>
+            <SurveyTitle>제목</SurveyTitle>
+            <SurveyResult>응답 개수</SurveyResult>
+          </SurveyInfo>
+        </SurveyBox>
+        <SurveyBox>
+          <SurveyInfo>
+            <SurveyTitle>제목</SurveyTitle>
+            <SurveyResult>응답 개수</SurveyResult>
+          </SurveyInfo>
+        </SurveyBox>
+        <SurveyBox>
+          <SurveyInfo>
+            <SurveyTitle>제목</SurveyTitle>
+            <SurveyResult>응답 개수</SurveyResult>
+          </SurveyInfo>
+        </SurveyBox>
+        <SurveyBox>
+          <SurveyInfo>
+            <SurveyTitle>제목</SurveyTitle>
+            <SurveyResult>응답 개수</SurveyResult>
+          </SurveyInfo>
+        </SurveyBox>
         {/*  );*/}
         {/*})}*/}
       </SurveyContainer>
