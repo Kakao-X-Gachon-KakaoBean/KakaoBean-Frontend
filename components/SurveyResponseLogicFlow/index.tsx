@@ -38,14 +38,11 @@ const SurveyResponseLogicFlow = () => {
 
   // Edge 설정
   const initialEdges: Edge<any>[] = inComingData.questions
-    .filter(
-      (question) =>
-        question.nextQuestionNumber !== "" &&
-        question.nextQuestionNumber !== "0"
-    )
+    .filter((question) => question.nextQuestionNumber !== "")
     .map((question) => {
       // node question 이 주관식, 혹은 선형배율식일 경우엔 nextQuestionNumber에 해당하는 노드를 찾아서 연결한다.
       if (question.type === "ESSAY" || question.type === "RANGE") {
+        console.log(question.nextQuestionNumber);
         if (question.nextQuestionNumber === "0") {
           return {
             id: `${question.questionId} to submit`,
