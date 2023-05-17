@@ -32,7 +32,7 @@ export const ResponseResult = styled.div`
   }
 `;
 export const GoingResult = styled(ResponseResult)``;
-export const CompleteResult = styled(ResponseResult)``;
+export const TitleResult = styled(ResponseResult)``;
 
 export const SectionWrapper = styled.div`
   width: 90%;
@@ -92,7 +92,7 @@ export const PieRatioWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 export const PieLangColorBox = styled.div<{ props: any }>`
@@ -147,13 +147,19 @@ export const SurveyHeader = styled.div`
 export const SurveyBody = styled.div`
   flex: 1;
   display: grid;
-  grid-template-columns: 1.5fr 0.01fr 1fr;
+  grid-template-columns: 1fr 1.5fr 0.01fr 1fr;
 `;
 export const SurveyBodyChart = styled.div``;
+
+export const SurveyBodySummary = styled.div`
+  padding: 1rem;
+`;
 
 export const SurveyVertical = styled.div`
   border-left: 1px solid #e4e4e4;
   height: 80%;
   margin: auto 0;
 `;
-export const SurveyBodyResult = styled.div``;
+export const SurveyBodyResult = styled.div`
+  padding: 1rem;
+`;

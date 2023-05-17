@@ -20,15 +20,14 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+
 import { Header } from "@components/MyInfo/styles";
 import {
-  CompleteResult,
   GoingResult,
   LeftResult,
   PieContainer,
   PieDescription,
   PieHeading,
-  PieLangCircle,
   PieLangColorBox,
   PieLangColorBoxWrapper,
   PieLangText,
@@ -37,20 +36,26 @@ import {
   PieRight,
   PieTitle,
   ResponseResult,
-  ResultSection,
+  TitleResult,
   RightResult,
   SectionWrapper,
   StatisticSection,
   SurveyBody,
   SurveyBodyChart,
   SurveyBodyResult,
+  SurveyBodySummary,
   SurveyHeader,
   SurveySection,
   SurveyVertical,
   ViewSection,
   Wrapper,
 } from "@pages/Product/styles";
-import { Vertical } from "@pages/LogIn/styles";
+
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 const Product = () => {
   const data = [
     {
@@ -138,6 +143,10 @@ const Product = () => {
       <Header>Product</Header>
       <SectionWrapper>
         <ViewSection>
+          <TitleResult>
+            <div>설문 제목</div>
+            <div>내가 만든 설문</div>
+          </TitleResult>
           <ResponseResult>
             <div>생성일</div>
             <div>2022-05-05</div>
@@ -146,10 +155,6 @@ const Product = () => {
             <div>응답 수</div>
             <div>13</div>
           </GoingResult>
-          <CompleteResult>
-            <div>완료 수</div>
-            <div>9</div>
-          </CompleteResult>
         </ViewSection>
         <StatisticSection>
           <LeftResult>
@@ -244,6 +249,7 @@ const Product = () => {
                 </Pie>
               </PieChart>
             </SurveyBodyChart>
+            <SurveyBodySummary>몇번</SurveyBodySummary>
             <SurveyVertical></SurveyVertical>
             <SurveyBodyResult>
               <div>1번 50%</div>
@@ -255,14 +261,56 @@ const Product = () => {
         <SurveySection>
           <SurveyHeader>주관식</SurveyHeader>
           <SurveyBody>
-            <SurveyBodyResult>결과</SurveyBodyResult>
+            <SurveyBodyResult>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>설문 답변</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>얍</Typography>
+                  <Typography>얍</Typography>
+                  <Typography>얍</Typography>
+                </AccordionDetails>
+              </Accordion>
+            </SurveyBodyResult>
           </SurveyBody>
         </SurveySection>
         <SurveySection>
           <SurveyHeader>선형 배율</SurveyHeader>
           <SurveyBody>
-            <SurveyBodyChart>차트</SurveyBodyChart>
-            <SurveyBodyResult>결과</SurveyBodyResult>
+            <SurveyBodyChart>
+              <PieChart width={300} height={200}>
+                <Pie
+                  data={data2}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  innerRadius={30}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {data2.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </SurveyBodyChart>
+            <SurveyBodySummary>몇번</SurveyBodySummary>
+            <SurveyVertical></SurveyVertical>
+            <SurveyBodyResult>
+              <div>1번 50%</div>
+              <div>2번 50%</div>
+              <div>3번 50%</div>
+            </SurveyBodyResult>
           </SurveyBody>
         </SurveySection>
       </SectionWrapper>
