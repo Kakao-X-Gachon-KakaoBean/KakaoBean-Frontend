@@ -1,34 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
-import { atom, useRecoilState, useSetRecoilState } from "recoil";
-
-import HeaderBar from "@components/HeaderBar";
-import { Carousel, Input } from "antd";
+import { atom, useRecoilState } from "recoil";
+import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
-import { Button, ButtonBox, dotStyle } from "@pages/Team/styles";
+import { Button, ButtonBox, ModifiedButton } from "@pages/Team/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronRight,
   faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { MultipleChoiceQuestions } from "@components/SurveyResponseTemplates/MultipleChoice";
 import { RangeBarQuestions } from "@components/SurveyResponseTemplates/RangeBar";
 import { SubjectiveQuestions } from "@components/SurveyResponseTemplates/Subjective";
-import {
-  Answer,
-  MultipleQuestion,
-} from "@components/SurveyResponseTemplates/MultipleChoice/type";
+import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
-import { QuestionBox } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
 import {
-  incomingDataList,
-  QuestionTypes,
-  responseDataList,
-} from "@pages/Team/type";
-import { useQuery } from "react-query";
-import fetcher from "@utils/fetcher";
+  QuestionBox,
+  Title,
+} from "@components/SurveyResponseTemplates/MultipleChoice/styles";
+import { QuestionTypes, responseDataList } from "@pages/Team/type";
+
+// 실제 데이터 recoil
+// import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -41,7 +36,12 @@ export const report = atom<responseDataList>({
 
 export const forLogic = atom<string>({
   key: "logic",
-  default: "",
+  default: "0",
+});
+
+export const submitAll = atom<number[]>({
+  key: "submitCall",
+  default: [],
 });
 
 const Team = () => {
@@ -58,17 +58,29 @@ const Team = () => {
 
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  //TODO: 로직에 따른 이동 Queue 만들기
-  const [logicQueue, setLogicQueue] = useState<Number[]>([]);
 
+  //TODO: 로직에 따른 이동 Queue 만들기
+  const [logicQueue, setLogicQueue] = useState<number[]>([0]);
+  const [counter, setCounter] = useState<number>(0);
+
+  //survey dummy data
   const [questions, setQuestions] = useState<QuestionTypes[]>(
     testInput.questions
   );
+  //surveyID 초기화 함수
+  const initializeReport = () => {
+    setReportData((prevState) => ({
+      ...prevState,
+      surveyId: testInput.surveyId,
+    }));
+  };
 
+  //실제 데이터 _ 위에 주석하고 사용
+  // const [survey, setSurvey] = useRecoilState(surveyData);
   // const [questions, setQuestions] = useState<QuestionTypes[]>([]);
   // useEffect(() => {
-  //   if (surveyData?.questions) {
-  //     setQuestions(surveyData.questions);
+  //   if (survey?.questions) {
+  //     setQuestions(survey.questions);
   //   }
   // });
 
@@ -81,17 +93,10 @@ const Team = () => {
 
   //recoil_ can view received response in here
   const [reportData, setReportData] = useRecoilState(report);
+  const [submitQueue, setSubmitQueue] = useRecoilState(submitAll);
 
   //logic에 의한 이동 슬라이드 번호
   const [slideToGo, setSlideToGo] = useRecoilState(forLogic);
-
-  //surveyID 초기화 함수
-  const initializeReport = () => {
-    setReportData((prevState) => ({
-      ...prevState,
-      surveyId: testInput.surveyId,
-    }));
-  };
 
   // surveyId는 실행시 한번 만 실행
   useEffect(() => {
@@ -104,27 +109,54 @@ const Team = () => {
   }, [currentSlide]);
 
   //뒤로 가기 버튼 ->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
+  //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handlePrevClick = () => {
-    carouselRef.current?.prev();
-    setCurrentSlide(currentSlide - 1);
+    setCounter(counter - 1);
+    setLogicQueue((prevState) => {
+      prevState.pop();
+      return prevState;
+    });
   };
 
-  //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handleNextClick = () => {
-    if (questions[currentSlide].type == "MULTIPLE" && Number(slideToGo) != 0) {
-      carouselRef.current?.goTo(Number(slideToGo) - 1);
+    if (Number(slideToGo) != 0) {
+      console.log("has logic!");
+      setCounter(counter + 1);
+      setLogicQueue((prevState) => {
+        return [...prevState, Number(slideToGo) - 1];
+      });
+      // setSlideToGo("0");
     } else {
-      carouselRef.current?.next();
+      console.log("in here");
+      setLogicQueue((prevState) => {
+        return [...prevState, currentSlide + 1];
+      });
+      setCounter(counter + 1);
     }
-    // carouselRef.current?.next();
-    setCurrentSlide(currentSlide + 1);
   };
+
+  useEffect(() => {
+    setCurrentSlide(logicQueue[counter]);
+    // consoleLogger();
+  }, [counter]);
 
   //Test_output: 결과 받아오기 for MultipleQuestions
   useEffect(() => {
     console.log("changed in team_recoil: ", reportData);
     console.log("changed in team_Slide2go: ", slideToGo);
   }, [reportData, slideToGo]);
+
+  useEffect(() => {
+    console.log("check State: ", submitQueue);
+  }, [submitQueue]);
+
+  // 로그 출력용
+  // function consoleLogger() {
+  //   console.log("slideToGO: ", slideToGo);
+  //   console.log("counter: ", counter);
+  //   console.log("current queue:", logicQueue);
+  //   console.log("currentSlide: ", currentSlide);
+  // }
 
   return (
     <div>
@@ -136,8 +168,8 @@ const Team = () => {
             2_2(해결). data.type에 따라서 질문 생성;
             2_3.(해결) thisQuestion안에 데이터 들어가면, 각 컴포넌트 안에서 이를 props로 세팅할 수 있게 하기.
             3.(해결) 리스폰스 값 저장
+            4.(해결) 로직에 대한 페이지 이동
             ---------------------------------------------------------------------------------------
-            4. 로직에 대한 페이지 이동
             5. 로직에 따른 응답 값 출력
             */}
         {questions &&
@@ -182,24 +214,34 @@ const Team = () => {
             }
           })}
 
-        <QuestionBox>
-          <h1>수고하셨습니다 : 제출 페이지</h1>
-          <button
-            onClick={() => {
-              console.log(reportData);
-            }}
-          >
-            제출하기
-          </button>
-        </QuestionBox>
+        <div>
+          <QuestionBox>
+            <Title>수고하셨습니다 : 제출 페이지</Title>
+            <ModifiedButton
+              onClick={() => {
+                console.log("report Data", reportData);
+                setSubmitQueue(logicQueue);
+              }}
+            >
+              제출하기
+            </ModifiedButton>
+          </QuestionBox>
+        </div>
       </Carousel>
       <ButtonBox>
-        <Button disabled={currentSlide === 0} onClick={handlePrevClick}>
+        <Button
+          disabled={currentSlide === 0}
+          onClick={() => {
+            handlePrevClick();
+          }}
+        >
           <FontAwesomeIcon icon={faChevronLeft} />
         </Button>
         <Button
-          disabled={currentSlide === questions.length + 1}
-          onClick={handleNextClick}
+          disabled={currentSlide === questions.length}
+          onClick={() => {
+            handleNextClick();
+          }}
         >
           <FontAwesomeIcon icon={faChevronRight} />
         </Button>
