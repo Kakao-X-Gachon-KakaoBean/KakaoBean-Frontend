@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const Wrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
+  margin-top: 9rem;
 `;
 export const ViewSection = styled.div`
   width: 100%;
@@ -136,6 +137,17 @@ export const SurveySection = styled.div`
   flex-direction: column;
 `;
 
+export const SurveyShortSection = styled.div`
+  width: 100%;
+  height: 18rem;
+  background-color: #ffffff;
+  border: 1px solid #ede1e1;
+  border-radius: 10px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const SurveyHeader = styled.div`
   width: 100%;
   height: 4rem;
@@ -149,7 +161,13 @@ export const SurveyBody = styled.div`
   display: grid;
   grid-template-columns: 1fr 1.5fr 0.01fr 1fr;
 `;
-export const SurveyBodyChart = styled.div``;
+
+export const SurveyShortBody = styled.div`
+  flex: 1;
+`;
+export const SurveyBodyChart = styled.div`
+  width: 100%;
+`;
 
 export const SurveyBodySummary = styled.div`
   padding: 1rem;
@@ -161,5 +179,6 @@ export const SurveyVertical = styled.div`
   margin: auto 0;
 `;
 export const SurveyBodyResult = styled.div`
+  width: 100%;
   padding: 1rem;
 `;
