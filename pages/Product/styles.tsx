@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
 export const ViewSection = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 0.5fr 0.5fr;
   grid-column-gap: 1rem;
   margin: 0 auto;
 `;

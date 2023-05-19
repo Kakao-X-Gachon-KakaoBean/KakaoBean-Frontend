@@ -13,32 +13,42 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 const MySurvey = () => {
-  const testRef = React.createRef();
-  const data = false;
-  // const { isLoading, isSuccess, status, isError, data, error } = useQuery(
-  //   ["MySuervey"],
-  //   () => fetcher({ queryKey: "http://localhost:8080/surveys/1" })
-  // );
+  const {
+    isLoading,
+    isSuccess,
+    status,
+    isError,
+    data: MySurvey,
+    error,
+  } = useQuery(["MySurvey"], () =>
+    fetcher({ queryKey: "http://localhost:8080/surveys/own-survey" })
+  );
 
   return (
     <>
       <SurveyHeader>내가 만든 설문 조회</SurveyHeader>
-      {data ? (
+      {MySurvey ? (
         <SurveyContainer>
-          {/*{data &&*/}
-          {/*  [...Array(data?.length)].map((e, index) => {*/}
-          {/*    const SurveyId = SurveyList[index].surveyid;*/}
-          {/*    return (*/}
-          <SurveyBox>
-            <SurveyInfo>
-              <SurveyTitle>제목</SurveyTitle>
-              <SurveyResult>응답 개수</SurveyResult>
-            </SurveyInfo>
-          </SurveyBox>
-          {/*  );*/}
-          {/*})}*/}
+          {MySurvey &&
+            [...Array(MySurvey?.myOwnSurveys.length)].map((e, index) => {
+              const SurveyId = MySurvey?.myOwnSurveys[index].surveyid;
+              return (
+                <SurveyBox>
+                  <SurveyInfo>
+                    <SurveyTitle>
+                      {MySurvey?.myOwnSurveys[index]?.surveyTitle}
+                    </SurveyTitle>
+                    <FontAwesomeIcon icon={faTrashCan} />
+                  </SurveyInfo>
+                  <SurveyResult>
+                    응답 개수:{MySurvey?.myOwnSurveys[index]?.numberOfResponse}
+                  </SurveyResult>
+                </SurveyBox>
+              );
+            })}
         </SurveyContainer>
       ) : (
         <CreateSurveyContainer>
