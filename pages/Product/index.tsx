@@ -59,6 +59,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HeaderBar from "@components/HeaderBar";
+import { Link } from "react-router-dom";
+import { Button } from "antd";
 const Product = () => {
   const data = [
     {
@@ -158,6 +160,20 @@ const Product = () => {
             <div>응답 수</div>
             <div>13</div>
           </GoingResult>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Link to="/surveyresponsedetail" style={{ textDecoration: "none" }}>
+              <Button type="primary">
+                조회하기
+                <br />
+              </Button>
+            </Link>
+          </div>
         </ViewSection>
         <StatisticSection>
           <LeftResult>
