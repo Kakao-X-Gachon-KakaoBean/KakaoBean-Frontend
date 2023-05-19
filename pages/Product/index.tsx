@@ -46,6 +46,8 @@ import {
   SurveyBodySummary,
   SurveyHeader,
   SurveySection,
+  SurveyShortSection,
+  SurveyShortBody,
   SurveyVertical,
   ViewSection,
   Wrapper,
@@ -56,6 +58,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import HeaderBar from "@components/HeaderBar";
 const Product = () => {
   const data = [
     {
@@ -140,7 +143,7 @@ const Product = () => {
   };
   return (
     <Wrapper>
-      <Header>Product</Header>
+      <HeaderBar />
       <SectionWrapper>
         <ViewSection>
           <TitleResult>
@@ -224,6 +227,8 @@ const Product = () => {
             </PieContainer>
           </RightResult>
         </StatisticSection>
+
+        {/*객관식, 선형배율일시*/}
         <SurveySection>
           <SurveyHeader>객관식</SurveyHeader>
           <SurveyBody>
@@ -258,11 +263,13 @@ const Product = () => {
             </SurveyBodyResult>
           </SurveyBody>
         </SurveySection>
-        <SurveySection>
+
+        {/*주관식일시*/}
+        <SurveyShortSection>
           <SurveyHeader>주관식</SurveyHeader>
-          <SurveyBody>
+          <SurveyShortBody>
             <SurveyBodyResult>
-              <Accordion>
+              <Accordion sx={{ width: "100%" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
@@ -277,8 +284,10 @@ const Product = () => {
                 </AccordionDetails>
               </Accordion>
             </SurveyBodyResult>
-          </SurveyBody>
-        </SurveySection>
+          </SurveyShortBody>
+        </SurveyShortSection>
+
+        {/*객관식, 선형배율일시*/}
         <SurveySection>
           <SurveyHeader>선형 배율</SurveyHeader>
           <SurveyBody>

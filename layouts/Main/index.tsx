@@ -5,7 +5,6 @@ import HorizonScroll from "@components/MainComponent/MainTouchScroll";
 import DNDText from "@components/MainComponent/DNDText";
 import GreyField from "@components/MainComponent/GreyField";
 import BlackField from "@components/MainComponent/BlackField";
-import { Mobile, PC } from "@hooks/responsive";
 import { Redirect, useLocation } from "react-router";
 import { useCookies } from "react-cookie";
 import moment from "moment";
@@ -33,17 +32,14 @@ const Main = () => {
 
   return (
     <>
-      <PC>
-        <div>
-          <HeaderBar />
-          <MainFirst />
-          <HorizonScroll />
-          <DNDText />
-          <GreyField />
-          <BlackField />
-        </div>
-      </PC>
-      <Mobile>모바일</Mobile>
+      <div>
+        <HeaderBar />
+        <MainFirst />
+        <HorizonScroll />
+        <DNDText />
+        <GreyField />
+        <BlackField />
+      </div>
     </>
   );
 };

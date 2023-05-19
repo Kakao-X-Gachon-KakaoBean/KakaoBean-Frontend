@@ -2,12 +2,12 @@ import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 
 export const Bar = styled.div`
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: white;
   width: 100%;
   height: 75px;
   position: fixed;
   top: 0;
-  z-index: 9999;
+  z-index: 999;
 `;
 
 export const MainBar = styled.div`
@@ -58,6 +58,30 @@ export const RightMenu = styled.div`
       display: flex;
       flex-direction: column;
     }
+  }
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const MiniBar = styled.div`
+  font-size: 2rem;
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+`;
+
+export const ToggleMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+
+  & span a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.5rem;
   }
 `;
 
