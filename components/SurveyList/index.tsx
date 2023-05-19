@@ -6,8 +6,9 @@ import {
   SurveyResult,
   SurveyTitle,
   SurveyInfo,
-  CreateSurveyContainer,
 } from "@components/MySurvey/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 const SurveyList = () => {
   return (
@@ -22,45 +23,53 @@ const SurveyList = () => {
         <SurveyBox>
           <SurveyInfo>
             <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
+            <FontAwesomeIcon icon={faTrashCan} />
           </SurveyInfo>
+          <SurveyResult>응답 개수: 2</SurveyResult>
         </SurveyBox>
         <SurveyBox>
           <SurveyInfo>
             <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
+            <FontAwesomeIcon icon={faTrashCan} />
           </SurveyInfo>
+          <SurveyResult>응답 개수: 2</SurveyResult>
         </SurveyBox>
         <SurveyBox>
           <SurveyInfo>
             <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
+            <FontAwesomeIcon icon={faTrashCan} />
           </SurveyInfo>
+          <SurveyResult>응답 개수: 2</SurveyResult>
         </SurveyBox>
         <SurveyBox>
           <SurveyInfo>
             <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
+            <FontAwesomeIcon icon={faTrashCan} />
           </SurveyInfo>
+          <SurveyResult>응답 개수: 2</SurveyResult>
         </SurveyBox>
         <SurveyBox>
           <SurveyInfo>
             <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
+            <FontAwesomeIcon icon={faTrashCan} />
           </SurveyInfo>
+          <SurveyResult>응답 개수: 2</SurveyResult>
         </SurveyBox>
         <SurveyBox>
           <SurveyInfo>
             <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
+            <FontAwesomeIcon icon={faTrashCan} />
           </SurveyInfo>
+          <SurveyResult>응답 개수: 2</SurveyResult>
         </SurveyBox>
         <SurveyBox>
           <SurveyInfo>
             <SurveyTitle>제목</SurveyTitle>
-            <SurveyResult>응답 개수</SurveyResult>
+            <FontAwesomeIcon icon={faTrashCan} />
           </SurveyInfo>
+          <SurveyResult>응답 개수: 2</SurveyResult>
         </SurveyBox>
+
         {/*  );*/}
         {/*})}*/}
       </SurveyContainer>
