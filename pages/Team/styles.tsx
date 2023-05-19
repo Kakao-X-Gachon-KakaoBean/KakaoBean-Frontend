@@ -40,6 +40,9 @@ export const Button = styled.button`
   `}
 `;
 
+export const SpaceBetween = styled.div`
+  margin-top: 2rem;
+`;
 export const ModifiedButton = styled(Button)`
   width: 7rem;
   height: 2rem;

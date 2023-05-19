@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
-import { Button, ButtonBox, ModifiedButton } from "@pages/Team/styles";
+import {
+  Button,
+  ButtonBox,
+  ModifiedButton,
+  SpaceBetween,
+} from "@pages/Team/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -16,10 +21,7 @@ import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleCh
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
-import {
-  QuestionBox,
-  Title,
-} from "@components/SurveyResponseTemplates/MultipleChoice/styles";
+import { QuestionBox, Title } from "@components/SurveyResponseTemplates/styles";
 import { QuestionTypes, responseDataList } from "@pages/Team/type";
 
 // 실제 데이터 recoil
@@ -216,7 +218,8 @@ const Team = () => {
 
         <div>
           <QuestionBox>
-            <Title>수고하셨습니다 : 제출 페이지</Title>
+            <Title>응답해주셔서 감사합니다!</Title>
+            <SpaceBetween />
             <ModifiedButton
               onClick={() => {
                 console.log("report Data", reportData);

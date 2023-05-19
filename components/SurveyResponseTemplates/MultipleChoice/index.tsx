@@ -9,12 +9,15 @@ import {
 } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import {
   ChoiceBtn,
-  Explanation,
   MultipleQuestionDiv,
-  QuestionBox,
-  Title,
 } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
 import { responseQuestionType } from "@pages/Team/type";
+import { SpaceBetween } from "@pages/Team/styles";
+import {
+  Explanation,
+  QuestionBox,
+  Title,
+} from "@components/SurveyResponseTemplates/styles";
 
 export const MultipleChoiceQuestions = (props: subProps) => {
   const [question] = useState<MultipleQuestion>({
@@ -163,7 +166,9 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   return (
     <QuestionBox>
       <Title>{question.title}</Title>
+      <SpaceBetween />
       <Explanation>{question.explanation}</Explanation>
+      <SpaceBetween />
       {question.answers.map((question, index) => (
         <MultipleQuestionDiv key={index}>
           <ChoiceBtn
@@ -176,6 +181,11 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
+      <SpaceBetween />
+      <SpaceBetween />
+      <SpaceBetween />
+      <SpaceBetween />
+      <SpaceBetween />
       {/*<button*/}
       {/*  onClick={() => {*/}
       {/*    onSubmit();*/}

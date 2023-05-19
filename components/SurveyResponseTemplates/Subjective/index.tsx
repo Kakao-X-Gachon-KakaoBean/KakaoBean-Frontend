@@ -3,11 +3,7 @@ import {
   SubjectiveQuestion,
   subProps,
 } from "@components/SurveyResponseTemplates/Subjective/type";
-import {
-  Explanation,
-  Subjective,
-  Title,
-} from "@components/SurveyResponseTemplates/Subjective/styles";
+import { Subjective } from "@components/SurveyResponseTemplates/Subjective/styles";
 import {
   answer,
   answerTypes,
@@ -16,18 +12,11 @@ import {
 } from "@pages/Team/type";
 import { useRecoilState } from "recoil";
 import { report, submitAll } from "@pages/Team";
-
-const contentStyle: React.CSSProperties = {
-  height: "100vh",
-  width: "100%",
-  color: "black",
-  textAlign: "center",
-  background: "#ffffff",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-};
+import {
+  Explanation,
+  QuestionBox,
+  Title,
+} from "@components/SurveyResponseTemplates/styles";
 
 export const SubjectiveQuestions = (props: subProps) => {
   const [subjectiveQuestions] = useState<SubjectiveQuestion>({
@@ -83,11 +72,11 @@ export const SubjectiveQuestions = (props: subProps) => {
     }
   }, [submitEssay]);
   return (
-    <div style={contentStyle}>
+    <QuestionBox>
       <Title>{subjectiveQuestions.title}</Title>
       <Explanation>{subjectiveQuestions.explanation}</Explanation>
       <Subjective type="text" value={inputValue} onChange={handleInputChange} />
       {/*<button onClick={() => onSubmit()}>check Recoiled Data</button>*/}
-    </div>
+    </QuestionBox>
   );
 };
