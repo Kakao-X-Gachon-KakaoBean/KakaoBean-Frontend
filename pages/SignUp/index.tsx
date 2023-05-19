@@ -196,7 +196,7 @@ const SignUp = () => {
           <div>
             이미{" "}
             <Link to={"/main"} style={{ color: "#039ba1", fontWeight: "bold" }}>
-              BeanBay
+              Cocoa
             </Link>{" "}
             회원이신가요?
           </div>
@@ -306,7 +306,7 @@ const SignUp = () => {
         </Form>
       </Wrapper>
       <Modal
-        title="BeanBay"
+        title="Cocoa"
         closeIcon={" "}
         footer={[
           <Link key="submit" to="/login">
