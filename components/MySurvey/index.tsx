@@ -11,7 +11,7 @@ import {
   CreateSurveyContainer,
 } from "@components/MySurvey/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const MySurvey = () => {
@@ -34,8 +34,9 @@ const MySurvey = () => {
           <SurveyBox>
             <SurveyInfo>
               <SurveyTitle>제목</SurveyTitle>
-              <SurveyResult>응답 개수</SurveyResult>
+              <FontAwesomeIcon icon={faEllipsis} />
             </SurveyInfo>
+            <SurveyResult>응답 개수</SurveyResult>
           </SurveyBox>
           {/*  );*/}
           {/*})}*/}

@@ -36,9 +36,8 @@ export const CreateSurveyContainer = styled.div`
 `;
 export const SurveyContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, minmax(18rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   grid-row-gap: 2rem;
-
   @media (max-width: 769px) {
     display: flex;
     flex-direction: column;
@@ -62,7 +61,7 @@ export const SurveyBox = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   background-color: #fafbfc;
   box-shadow: rgba(0, 0, 0, 0.1) 2px 4px 10px;
   cursor: pointer;
@@ -77,6 +76,18 @@ export const SurveyBox = styled.div`
   }
 `;
 
-export const SurveyInfo = styled.div``;
-export const SurveyTitle = styled.div``;
-export const SurveyResult = styled.div``;
+export const SurveyInfo = styled.div`
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+`;
+export const SurveyTitle = styled.div`
+  font-size: 1.2rem;
+`;
+export const SurveyResult = styled.div`
+  width: 100%;
+  padding: 1rem;
+  flex: 1;
+`;
