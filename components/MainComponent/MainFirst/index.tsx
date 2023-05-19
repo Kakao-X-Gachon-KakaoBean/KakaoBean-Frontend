@@ -57,7 +57,7 @@ const MainFirst = () => {
           <br />
         </Text>
         <Text>
-          BeanBay
+          Cocoa
           <br />
         </Text>
         <Link

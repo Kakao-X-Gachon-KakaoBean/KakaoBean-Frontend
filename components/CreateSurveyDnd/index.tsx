@@ -759,7 +759,7 @@ const CreateSurveyDnd = (): JSX.Element => {
           </QuestionsListDiv>
         )}
         <Modal
-          title="BeanBay"
+          title="Cocoa"
           open={isModalOpen}
           onCancel={handleOk}
           footer={[

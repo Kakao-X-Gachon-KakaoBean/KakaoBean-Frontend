@@ -94,7 +94,7 @@ const HeaderBar = () => {
           <Link to="/main" style={{ textDecoration: "none" }}>
             <LeftMenu>
               {/*<Img src={Logo} alt="" />*/}
-              <Header>CoCoa</Header>
+              <Header>Cocoa</Header>
             </LeftMenu>
           </Link>
           <RightMenu>
@@ -131,7 +131,7 @@ const HeaderBar = () => {
       </MainBar>
       {menuToggle && (
         <Drawer
-          title="CoCoa"
+          title="Cocoa"
           placement="right"
           onClose={onClose}
           open={menuToggle}
