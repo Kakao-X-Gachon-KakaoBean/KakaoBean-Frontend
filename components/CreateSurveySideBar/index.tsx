@@ -6,17 +6,22 @@ import {
   MenuDiv,
   OptionDiv,
 } from "@components/CreateSurveySideBar/styles";
-import { RecoilRoot, selector, useRecoilState } from "recoil";
-import { createSurveyOptionState } from "../../States/SurveyState";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import {
+  createSurveyOptionState,
+  selectedQuestionState,
+} from "../../States/SurveyState";
 import { OptionControl } from "@components/CreateSurveySideBar/OptionControl";
 import { LogicControl } from "@components/CreateSurveySideBar/LogicControl";
 
 const CreateSurveySideBar = (): JSX.Element => {
   const [optionState, setOptionState] = useRecoilState(createSurveyOptionState);
+  const resetSelectedQuestionState = useResetRecoilState(selectedQuestionState);
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     setOptionState(e.key);
+    resetSelectedQuestionState();
   };
 
   const items: MenuProps["items"] = [
