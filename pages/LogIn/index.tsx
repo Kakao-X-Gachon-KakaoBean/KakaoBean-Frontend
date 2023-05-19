@@ -100,7 +100,7 @@ const LogIn = () => {
     <>
       <Wrapper>
         <Header>
-          <Link to="/main">BeanBay</Link>
+          <Link to="/main">Cocoa</Link>
         </Header>
         <Form onSubmit={onSubmit}>
           <Label>

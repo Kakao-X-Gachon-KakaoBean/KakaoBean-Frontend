@@ -1,12 +1,15 @@
 import React from "react";
 import { Wrapper } from "@pages/Survey/SurveyResponseDetail/styles";
 import SurveyResponseLogicFlow from "@components/SurveyResponseLogicFlow";
+import HeaderBar from "@components/HeaderBar";
+import SurveyResponseDetailTable from "@components/SurveyResponseDetailTable";
 
 const SurveyResponseDetail = () => {
   return (
     <Wrapper>
+      <HeaderBar />
       <SurveyResponseLogicFlow />
-      <div style={{ display: "flex", backgroundColor: "#729599" }}>B</div>
+      <SurveyResponseDetailTable />
       <div style={{ display: "flex", backgroundColor: "#BCC5CE" }}>C</div>
     </Wrapper>
   );
