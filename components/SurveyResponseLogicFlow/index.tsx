@@ -4,10 +4,13 @@ import ReactFlow, {
   Edge,
   useNodesState,
   useEdgesState,
+  Background,
 } from "react-flow-renderer";
 import inComingData from "./incoming3.json"; // incoming3.json
 import { Wrapper } from "@components/SurveyResponseLogicFlow/styles";
 import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
+import { selectedNodeState } from "../../States/SurveyState";
+import { useRecoilState, useResetRecoilState } from "recoil";
 
 const SurveyResponseLogicFlow = () => {
   const getRandomColor = () => {
@@ -78,7 +81,6 @@ const SurveyResponseLogicFlow = () => {
     .map((question) => {
       // node question 이 주관식, 혹은 선형배율식일 경우엔 nextQuestionNumber에 해당하는 노드를 찾아서 연결한다.
       if (question.type === "ESSAY" || question.type === "RANGE") {
-        console.log(question.nextQuestionNumber);
         if (question.nextQuestionNumber === "0") {
           return {
             id: `${question.questionId} to submit`,
@@ -192,13 +194,23 @@ const SurveyResponseLogicFlow = () => {
     .flat(); // 배열 평탄화, logic 값에 의해 묶여진 배열을 평탄화한다.
 
   useEffect(() => {
-    console.log("initialNodes", initialNodes);
-    console.log("initialEdges", initialEdges);
-  }, [initialNodes, initialEdges]);
+    return () => {
+      resetSelectedNodeState();
+    };
+  }, []);
+
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+  const [selectedNode, setSelectedNode] = useRecoilState(selectedNodeState);
+  const resetSelectedNodeState = useResetRecoilState(selectedNodeState);
+
   const onNodeClick = (event: React.MouseEvent, node: Node) => {
     console.log(`Clicked node ${node.id} with data:`, node.data);
+    setSelectedNode({
+      id: node.id,
+      data: node.data,
+      position: node.position,
+    });
   };
 
   return (
@@ -210,7 +222,9 @@ const SurveyResponseLogicFlow = () => {
         onEdgesChange={onEdgesChange}
         onNodeClick={onNodeClick}
         fitView
-      />
+      >
+        <Background gap={30} size={1} />
+      </ReactFlow>
     </Wrapper>
   );
 };
