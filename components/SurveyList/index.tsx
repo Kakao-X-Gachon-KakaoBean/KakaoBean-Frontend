@@ -13,79 +13,45 @@ import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
 
 const SurveyList = () => {
-  // const {
-  //   isLoading,
-  //   isSuccess,
-  //   status,
-  //   isError,
-  //   data: SurveyList,
-  //   error,
-  // } = useQuery(["SurveyList"], () =>
-  //   fetcher({ queryKey: "http://localhost:8080/surveys/" })
-  // );
+  const {
+    isLoading,
+    isSuccess,
+    status,
+    isError,
+    data: SurveyList,
+    error,
+  } = useQuery(["SurveyList"], () =>
+    fetcher({ queryKey: "http://localhost:8080/surveys/submitted-survey" })
+  );
 
   return (
     <>
       <SurveyHeader>참여 설문 조회</SurveyHeader>
-
-      <SurveyContainer>
-        {/*{SurveyList &&*/}
-        {/*[...Array(MySurvey?.myOwnSurveys.length)].map((e, index) => {*/}
-        {/*const SurveyId = MySurvey?.myOwnSurveys[index].surveyid;*/}
-        {/*return (*/}
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </SurveyInfo>
-          <SurveyResult>응답 개수: 2</SurveyResult>
-        </SurveyBox>
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </SurveyInfo>
-          <SurveyResult>응답 개수: 2</SurveyResult>
-        </SurveyBox>
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </SurveyInfo>
-          <SurveyResult>응답 개수: 2</SurveyResult>
-        </SurveyBox>
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </SurveyInfo>
-          <SurveyResult>응답 개수: 2</SurveyResult>
-        </SurveyBox>
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </SurveyInfo>
-          <SurveyResult>응답 개수: 2</SurveyResult>
-        </SurveyBox>
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </SurveyInfo>
-          <SurveyResult>응답 개수: 2</SurveyResult>
-        </SurveyBox>
-        <SurveyBox>
-          <SurveyInfo>
-            <SurveyTitle>제목</SurveyTitle>
-            <FontAwesomeIcon icon={faTrashCan} />
-          </SurveyInfo>
-          <SurveyResult>응답 개수: 2</SurveyResult>
-        </SurveyBox>
-
-        {/*  );*/}
-        {/*})}*/}
-      </SurveyContainer>
+      {SurveyList?.mySubmittedSurveys.length == 0 ? (
+        <SurveyContainer>
+          {SurveyList &&
+            [...Array(SurveyList?.mySubmittedSurveys.length)].map(
+              (e, index) => {
+                const SurveyId = SurveyList?.mySubmittedSurveys[index].surveyId;
+                return (
+                  <SurveyBox>
+                    <SurveyInfo>
+                      <SurveyTitle>
+                        {SurveyList?.mySubmittedSurveys?.surveyTitle}
+                      </SurveyTitle>
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </SurveyInfo>
+                    <SurveyResult>
+                      마감 일자: {SurveyList?.mySubmittedSurveys?.submittedDate}
+                    </SurveyResult>
+                  </SurveyBox>
+                );
+              }
+            )}
+        </SurveyContainer>
+      ) : (
+        <div>참여한 설문이 없습니다.</div>
+      )}
     </>
   );
 };
