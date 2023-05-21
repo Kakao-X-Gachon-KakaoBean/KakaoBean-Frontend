@@ -10,7 +10,6 @@ const SurveyResponseDetail = () => {
       <HeaderBar />
       <SurveyResponseLogicFlow />
       <SurveyResponseDetailTable />
-      <div style={{ display: "flex", backgroundColor: "#BCC5CE" }}>C</div>
     </Wrapper>
   );
 };

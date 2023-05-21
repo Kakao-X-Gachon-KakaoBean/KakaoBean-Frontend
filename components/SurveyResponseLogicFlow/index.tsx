@@ -6,7 +6,7 @@ import ReactFlow, {
   useEdgesState,
   Background,
 } from "react-flow-renderer";
-import inComingData from "./incoming3.json"; // incoming3.json
+import inComingData from "./incoming2.json"; // incoming3.json
 import { Wrapper } from "@components/SurveyResponseLogicFlow/styles";
 import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { selectedNodeState } from "../../States/SurveyState";
