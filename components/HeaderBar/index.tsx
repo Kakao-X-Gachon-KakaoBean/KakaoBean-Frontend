@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Logo from "../../image/beanSolo.png";
 
 import { Link } from "react-router-dom";
 import {
@@ -93,7 +92,6 @@ const HeaderBar = () => {
         <TopMenu>
           <Link to="/main" style={{ textDecoration: "none" }}>
             <LeftMenu>
-              {/*<Img src={Logo} alt="" />*/}
               <Header>Cocoa</Header>
             </LeftMenu>
           </Link>
