@@ -263,14 +263,14 @@ const CreateSurveyDnd = (): JSX.Element => {
   useEffect(() => {
     setSurveyQuestions(() => surveyQuestions);
 
-    let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    const firstSurveyId = surveyQuestions[0]
-      ? Number(surveyQuestions[0].id.substring(15))
-      : 1;
-    let i = firstSurveyId;
-    const newNodeTuple: Node[] = [];
-    const newEdgeTuple: Edge[] = [];
-    let newNode, newEdge: Edge<any>;
+    // let updatedNodes = JSON.parse(JSON.stringify(nodes));
+    // const firstSurveyId = surveyQuestions[0]
+    //   ? Number(surveyQuestions[0].id.substring(15))
+    //   : 1;
+    // let i = firstSurveyId;
+    // const newNodeTuple: Node[] = [];
+    // const newEdgeTuple: Edge[] = [];
+    // let newNode, newEdge: Edge<any>;
 
     const updatedQuestions = surveyQuestions.map((item, index) => {
       if ("id" in item) {
@@ -295,209 +295,101 @@ const CreateSurveyDnd = (): JSX.Element => {
     });
     setQuestions(() => updatedQuestions as QuestionTypes[]);
 
-    for (i; i < countQuestion; i++) {
-      const nodeWithI = updatedNodes.find((node: Node) => node.id == String(i));
-      const existQuestion = surveyQuestions.find(
-        (surveyQuestions: QuestionTypes) =>
-          surveyQuestions.id.substring(15) == String(i)
-      );
-
-      if (nodeWithI && existQuestion) {
-        nodeWithI.data.label =
-          existQuestion.title !== "" ? existQuestion.title : "제목 없음";
-        edges.forEach((edge) => {
-          if (edge.source == String(i) && edge.id != "e_submit") {
-            newEdgeTuple.push(edge);
-          }
-        });
-        newNodeTuple.push(nodeWithI);
-      } else {
-        const xAxis = nodes[i - firstSurveyId]?.position?.x
-          ? nodes[i - firstSurveyId]?.position?.x
-          : 500;
-        const yAxis = 30 + (i - firstSurveyId) * 100;
-
-        if (i == firstSurveyId) {
-          newNode = {
-            id: String(i),
-            type: "input",
-            data: {
-              label:
-                surveyQuestions[countQuestion]?.title !== ""
-                  ? surveyQuestions[countQuestion]?.title
-                  : "제목 없음",
-            },
-            position: { x: xAxis, y: yAxis },
-          };
-        } else {
-          newNode = {
-            id: String(i),
-            data: {
-              label:
-                surveyQuestions[countQuestion]?.title !== ""
-                  ? surveyQuestions[countQuestion]?.title
-                  : "제목 없음",
-            },
-            position: { x: xAxis, y: yAxis },
-          };
-        }
-
-        if (i != countQuestion - 1) {
-          newEdge = {
-            id: "e" + String(i) + "-" + String(i + 1),
-            source: String(i),
-            target: String(i + 1),
-          };
-
-          const isDuplicate = newEdgeTuple.some((edge) => {
-            return edge.id === newEdge.id;
-          });
-
-          if (!isDuplicate) {
-            newEdgeTuple.push(newEdge);
-          }
-        }
-
-        setCount((prevCount) => [...prevCount, 0]);
-        setIsMultiCondition((prevVal) => [...prevVal, 1]);
-        newNodeTuple.push(newNode);
-      }
-    }
-
-    const submitNode = {
-      id: "0",
-      type: "output",
-      data: { label: "submit" },
-      position: { x: 500, y: 30 + surveyQuestions.length * 100 },
-    };
-
-    const submitEdge = {
-      id: "e" + String(i) + "-0",
-      source: String(surveyQuestions.length),
-      target: "0",
-    };
-
-    const isDuplicate = newEdgeTuple.some((edge) => {
-      return edge.id === submitEdge.id;
-    });
-
-    if (!isDuplicate) {
-      newEdgeTuple.push(submitEdge);
-    }
-
-    newNodeTuple.push(submitNode);
-
-    setNodes(newNodeTuple);
-    setEdges(newEdgeTuple);
+    // for (i; i < countQuestion; i++) {
+    //   const nodeWithI = updatedNodes.find((node: Node) => node.id == String(i));
+    //   const existQuestion = surveyQuestions.find(
+    //     (surveyQuestions: QuestionTypes) =>
+    //       surveyQuestions.id.substring(15) == String(i)
+    //   );
+    //
+    //   if (nodeWithI && existQuestion) {
+    //     nodeWithI.data.label =
+    //       existQuestion.title !== "" ? existQuestion.title : "제목 없음";
+    //     edges.forEach((edge) => {
+    //       if (edge.source == String(i) && edge.id != "e_submit") {
+    //         newEdgeTuple.push(edge);
+    //       }
+    //     });
+    //     newNodeTuple.push(nodeWithI);
+    //   } else {
+    //     const xAxis = nodes[i - firstSurveyId]?.position?.x
+    //       ? nodes[i - firstSurveyId]?.position?.x
+    //       : 500;
+    //     const yAxis = 30 + (i - firstSurveyId) * 100;
+    //
+    //     if (i == firstSurveyId) {
+    //       newNode = {
+    //         id: String(i),
+    //         type: "input",
+    //         data: {
+    //           label:
+    //             surveyQuestions[countQuestion]?.title !== ""
+    //               ? surveyQuestions[countQuestion]?.title
+    //               : "제목 없음",
+    //         },
+    //         position: { x: xAxis, y: yAxis },
+    //       };
+    //     } else {
+    //       newNode = {
+    //         id: String(i),
+    //         data: {
+    //           label:
+    //             surveyQuestions[countQuestion]?.title !== ""
+    //               ? surveyQuestions[countQuestion]?.title
+    //               : "제목 없음",
+    //         },
+    //         position: { x: xAxis, y: yAxis },
+    //       };
+    //     }
+    //
+    //     if (i != countQuestion - 1) {
+    //       newEdge = {
+    //         id: "e" + String(i) + "-" + String(i + 1),
+    //         source: String(i),
+    //         target: String(i + 1),
+    //       };
+    //
+    //       const isDuplicate = newEdgeTuple.some((edge) => {
+    //         return edge.id === newEdge.id;
+    //       });
+    //
+    //       if (!isDuplicate) {
+    //         newEdgeTuple.push(newEdge);
+    //       }
+    //     }
+    //
+    //     setCount((prevCount) => [...prevCount, 0]);
+    //     setIsMultiCondition((prevVal) => [...prevVal, 1]);
+    //     newNodeTuple.push(newNode);
+    //   }
+    // }
+    //
+    // const submitNode = {
+    //   id: "0",
+    //   type: "output",
+    //   data: { label: "submit" },
+    //   position: { x: 500, y: 30 + surveyQuestions.length * 100 },
+    // };
+    //
+    // const submitEdge = {
+    //   id: "e" + String(i) + "-0",
+    //   source: String(surveyQuestions.length),
+    //   target: "0",
+    // };
+    //
+    // const isDuplicate = newEdgeTuple.some((edge) => {
+    //   return edge.id === submitEdge.id;
+    // });
+    //
+    // if (!isDuplicate) {
+    //   newEdgeTuple.push(submitEdge);
+    // }
+    //
+    // newNodeTuple.push(submitNode);
+    //
+    // setNodes(newNodeTuple);
+    // setEdges(newEdgeTuple);
   }, [surveyQuestions]);
-
-  ////설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
-  // useEffect(() => {
-  //   let updatedNodes = JSON.parse(JSON.stringify(nodes));
-  //
-  //   let i = 0;
-  //   const newNodeTuple: Node[] = [];
-  //   const newEdgeTuple: Edge[] = [];
-  //   const newQuestionTuple: any[] = [];
-  //   let newNode, newEdge;
-
-  // for (i = 0; i < surveyQuestions.length; i++) {
-  //   const nodeWithI = updatedNodes.find(
-  //     (node: Node) => node.id == String(i + 1)
-  //   );
-  //   const existQuestion = surveyQuestions.find(
-  //     (surveyQuestions: QuestionTypes) =>
-  //       surveyQuestions.id.substring(15) == String(i + 1)
-  //   );
-  //
-  //   if (nodeWithI && existQuestion) {
-  //     nodeWithI.data.label =
-  //       existQuestion.title !== "" ? existQuestion.title : "제목 없음";
-  //     edges.forEach((edge) => {
-  //       if (edge.source == String(i + 1) && edge.id != "e_submit") {
-  //         newEdgeTuple.push(edge);
-  //       }
-  //     });
-  //     newNodeTuple.push(nodeWithI);
-  //     newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
-  //   } else {
-  //     const xAxis = nodes[i]?.position?.x ? nodes[i]?.position?.x : 500;
-  //     const yAxis = 30 + i * 100;
-  //
-  //     if (i == 0) {
-  //       newNode = {
-  //         id: String(i + 1),
-  //         type: "input",
-  //         data: {
-  //           label:
-  //             surveyQuestions[countQuestion]?.title !== ""
-  //               ? surveyQuestions[countQuestion]?.title
-  //               : "제목 없음",
-  //         },
-  //         position: { x: xAxis, y: yAxis },
-  //       };
-  //     } else {
-  //       if (i == surveyQuestions.length - 1) {
-  //         newNode = {
-  //           id: String(i + 1),
-  //           data: {
-  //             label:
-  //               surveyQuestions[countQuestion]?.title !== ""
-  //                 ? surveyQuestions[countQuestion]?.title
-  //                 : "제목 없음",
-  //           },
-  //           position: { x: xAxis, y: yAxis },
-  //         };
-  //       } else {
-  //         newNode = {
-  //           id: String(i + 1),
-  //           data: {
-  //             label:
-  //               surveyQuestions[countQuestion]?.title !== ""
-  //                 ? surveyQuestions[countQuestion]?.title
-  //                 : "제목 없음",
-  //           },
-  //           position: { x: xAxis, y: yAxis },
-  //         };
-  //       }
-  //     }
-  //
-  //     newEdge = {
-  //       id: "e" + String(i + 1) + "-" + String(i + 2),
-  //       source: String(i + 1),
-  //       target: String(i + 2),
-  //     };
-  //
-  //     setCount((prevCount) => [...prevCount, 0]);
-  //     setIsMultiCondition((prevVal) => [...prevVal, 1]);
-  //     newNodeTuple.push(newNode);
-  //     newEdgeTuple.push(newEdge);
-  //     newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
-  //   }
-  // }
-  //
-  // const submitNode = {
-  //   id: "0",
-  //   type: "output",
-  //   data: { label: "submit" },
-  //   position: { x: 500, y: 30 + surveyQuestions.length * 100 },
-  // };
-  //
-  // const submitEdge = {
-  //   id: "e_submit",
-  //   source: String(surveyQuestions.length),
-  //   target: "0",
-  // };
-  //
-  // newNodeTuple.push(submitNode);
-  // newEdgeTuple.push(submitEdge);
-  // newQuestionTuple.push({ value: "0", label: "제출하기" });
-  //
-  // console.log(newEdgeTuple);
-  // setNodes(newNodeTuple);
-  // setEdges(newEdgeTuple);
-  // setQuestionList(newQuestionTuple);
-  // }, [surveyQuestions.length]);
 
   const onClickSurveyDelete = (index: number) => {
     const newQuestionItems = [
