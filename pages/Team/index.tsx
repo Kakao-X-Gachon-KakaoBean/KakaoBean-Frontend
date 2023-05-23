@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { atom, useRecoilState } from "recoil";
 import { Carousel } from "antd";
 import { CarouselRef } from "antd/es/carousel";
-import { Button, ButtonBox, ModifiedButton } from "@pages/Team/styles";
+import {
+  Button,
+  ButtonBox,
+  ModifiedButton,
+  SpaceBetween,
+} from "@pages/Team/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -16,14 +21,14 @@ import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleCh
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
-import {
-  QuestionBox,
-  Title,
-} from "@components/SurveyResponseTemplates/MultipleChoice/styles";
+import { QuestionBox, Title } from "@components/SurveyResponseTemplates/styles";
 import { QuestionTypes, responseDataList } from "@pages/Team/type";
+import { EndingPage } from "@components/SurveyResponseTemplates/SubmitionCompletePage";
 
 // 실제 데이터 recoil
-// import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
+////이건 아직이다.. import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
+import { useQuery } from "react-query";
+import fetcher from "@utils/fetcher";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -53,7 +58,7 @@ const Team = () => {
   //   data: surveyData,
   //   error,
   // } = useQuery<any>(["survey"], () =>
-  //   fetcher({ queryKey: "http://localhost:8080/surveys/104" })
+  //   fetcher({ queryKey: "http://localhost:8080/surveys/31" })
   // );
 
   const carouselRef = useRef<CarouselRef>(null);
@@ -76,7 +81,8 @@ const Team = () => {
   };
 
   //실제 데이터 _ 위에 주석하고 사용
-  // const [survey, setSurvey] = useRecoilState(surveyData);
+  //이건 아직,, const [survey, setSurvey] = useRecoilState(surveyData);
+  // const [survey, setSurvey] = useState(surveyData);
   // const [questions, setQuestions] = useState<QuestionTypes[]>([]);
   // useEffect(() => {
   //   if (survey?.questions) {
@@ -87,7 +93,7 @@ const Team = () => {
   // const initializeReport = () => {
   //   setReportData((prevState) => ({
   //     ...prevState,
-  //     surveyId: surveyData?.surveyId,
+  //     surveyId: survey?.surveyId,
   //   }));
   // };
 
@@ -148,6 +154,7 @@ const Team = () => {
 
   useEffect(() => {
     console.log("check State: ", submitQueue);
+    if (submitQueue.length > 0) handleClick();
   }, [submitQueue]);
 
   // 로그 출력용
@@ -157,9 +164,14 @@ const Team = () => {
   //   console.log("current queue:", logicQueue);
   //   console.log("currentSlide: ", currentSlide);
   // }
+  const [endSurvey, setEndSurvey] = useState(false);
 
+  const handleClick = () => {
+    setEndSurvey(true);
+    console.log(endSurvey);
+  };
   return (
-    <div>
+    <div style={{ height: "100vh", overflow: "hidden" }}>
       <Carousel dotPosition={"right"} ref={carouselRef}>
         {/*TODO:
             1(해결). 버튼으로 바꾸기 - 해결한 듯?
@@ -179,10 +191,6 @@ const Team = () => {
               return (
                 // MULTIPLE 타입에 해당하는 JSX 코드
                 <div>
-                  {/*<button onClick={() => console.log(reportData)}>*/}
-                  {/*  this is the report_recoil_data*/}
-                  {/*</button>*/}
-                  {/*page*/}
                   <MultipleChoiceQuestions thisQuestion={mQuestion} />
                 </div>
               );
@@ -191,7 +199,6 @@ const Team = () => {
               return (
                 // RANGE 타입에 해당하는 JSX 코드
                 <div>
-                  {/*page*/}
                   <RangeBarQuestions thisQuestion={rQuestion} />
                 </div>
               );
@@ -200,7 +207,6 @@ const Team = () => {
               return (
                 // ESSAY 타입에 해당하는 JSX 코드
                 <div>
-                  {/*page*/}
                   <SubjectiveQuestions thisQuestion={sQuestion} />
                 </div>
               );
@@ -216,7 +222,10 @@ const Team = () => {
 
         <div>
           <QuestionBox>
-            <Title>수고하셨습니다 : 제출 페이지</Title>
+            <Title style={{ textAlign: "center" }}>
+              응답해주셔서 감사합니다!
+            </Title>
+            <SpaceBetween />
             <ModifiedButton
               onClick={() => {
                 console.log("report Data", reportData);
@@ -228,24 +237,27 @@ const Team = () => {
           </QuestionBox>
         </div>
       </Carousel>
-      <ButtonBox>
-        <Button
-          disabled={currentSlide === 0}
-          onClick={() => {
-            handlePrevClick();
-          }}
-        >
-          <FontAwesomeIcon icon={faChevronLeft} />
-        </Button>
-        <Button
-          disabled={currentSlide === questions.length}
-          onClick={() => {
-            handleNextClick();
-          }}
-        >
-          <FontAwesomeIcon icon={faChevronRight} />
-        </Button>
-      </ButtonBox>
+      {endSurvey && <EndingPage />}
+      <QuestionBox>
+        <ButtonBox>
+          <Button
+            disabled={currentSlide === 0}
+            onClick={() => {
+              handlePrevClick();
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </Button>
+          <Button
+            disabled={currentSlide === questions.length}
+            onClick={() => {
+              handleNextClick();
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </Button>
+        </ButtonBox>
+      </QuestionBox>
     </div>
   );
 };
