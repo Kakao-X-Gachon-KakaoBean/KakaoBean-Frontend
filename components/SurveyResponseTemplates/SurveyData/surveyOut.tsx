@@ -5,6 +5,8 @@ export const postData = async (url: string, data: responseDataList) => {
   const response = await fetch(url, {
     method: "POST",
     headers: {
+      "X-Requested-With": "XMLHttpRequest",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),

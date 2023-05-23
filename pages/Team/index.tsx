@@ -23,9 +23,12 @@ import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjecti
 import { testInput } from "@pages/Team/testIncomingData";
 import { QuestionBox, Title } from "@components/SurveyResponseTemplates/styles";
 import { QuestionTypes, responseDataList } from "@pages/Team/type";
+import { EndingPage } from "@components/SurveyResponseTemplates/SubmitionCompletePage";
 
 // 실제 데이터 recoil
-// import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
+////이건 아직이다.. import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
+import { useQuery } from "react-query";
+import fetcher from "@utils/fetcher";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -55,7 +58,7 @@ const Team = () => {
   //   data: surveyData,
   //   error,
   // } = useQuery<any>(["survey"], () =>
-  //   fetcher({ queryKey: "http://localhost:8080/surveys/104" })
+  //   fetcher({ queryKey: "http://localhost:8080/surveys/31" })
   // );
 
   const carouselRef = useRef<CarouselRef>(null);
@@ -78,7 +81,8 @@ const Team = () => {
   };
 
   //실제 데이터 _ 위에 주석하고 사용
-  // const [survey, setSurvey] = useRecoilState(surveyData);
+  //이건 아직,, const [survey, setSurvey] = useRecoilState(surveyData);
+  // const [survey, setSurvey] = useState(surveyData);
   // const [questions, setQuestions] = useState<QuestionTypes[]>([]);
   // useEffect(() => {
   //   if (survey?.questions) {
@@ -89,7 +93,7 @@ const Team = () => {
   // const initializeReport = () => {
   //   setReportData((prevState) => ({
   //     ...prevState,
-  //     surveyId: surveyData?.surveyId,
+  //     surveyId: survey?.surveyId,
   //   }));
   // };
 
@@ -150,6 +154,7 @@ const Team = () => {
 
   useEffect(() => {
     console.log("check State: ", submitQueue);
+    if (submitQueue.length > 0) handleClick();
   }, [submitQueue]);
 
   // 로그 출력용
@@ -159,7 +164,12 @@ const Team = () => {
   //   console.log("current queue:", logicQueue);
   //   console.log("currentSlide: ", currentSlide);
   // }
+  const [endSurvey, setEndSurvey] = useState(false);
 
+  const handleClick = () => {
+    setEndSurvey(true);
+    console.log(endSurvey);
+  };
   return (
     <div style={{ height: "100vh", overflow: "hidden" }}>
       <Carousel dotPosition={"right"} ref={carouselRef}>
@@ -227,6 +237,7 @@ const Team = () => {
           </QuestionBox>
         </div>
       </Carousel>
+      {endSurvey && <EndingPage />}
       <QuestionBox>
         <ButtonBox>
           <Button
