@@ -1,22 +1,12 @@
 import styled from "@emotion/styled";
-export const Title = styled.div`
-  border: 0;
-  font-size: 30px;
-  font-weight: 650;
-  margin-bottom: 3px;
-`;
+import { Input } from "antd";
 
-export const Explanation = styled.div`
-  border: 0;
-  font-size: 20px;
-  font-weight: 450;
-  margin-bottom: 10px;
-`;
-
-export const Subjective = styled.input`
+export const Subjective = styled(Input)`
   margin-top: 5px;
-  border-color: aqua;
+  border-color: gray;
   height: 30vh;
-  width: 40vw;
+  width: 50vw;
+  border-width: thin;
   border-radius: 20px;
+  box-sizing: border-box;
 `;
