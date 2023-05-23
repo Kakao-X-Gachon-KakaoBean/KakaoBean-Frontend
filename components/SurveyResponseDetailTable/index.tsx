@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Typography } from "antd";
 const { Paragraph, Title } = Typography;
 import DataTable, {
@@ -12,8 +12,11 @@ import {
   TableDiv,
   Wrapper,
 } from "@components/SurveyResponseDetailTable/styles";
-import { selectedNodeState } from "../../States/SurveyState";
-import { movies } from "./data";
+import {
+  selectedNodeAnswerState,
+  selectedNodeState,
+} from "../../States/SurveyState";
+// import { movies } from "./data";
 import DataRow from "./type";
 
 const columns: TableColumn<DataRow>[] = [
@@ -46,6 +49,9 @@ const columns: TableColumn<DataRow>[] = [
 ];
 const SurveyResponseDetailTable = () => {
   const selectedNode = useRecoilValue(selectedNodeState);
+  const [selectedNodeAnswer, setSelectedNodeAnswer] = useRecoilState(
+    selectedNodeAnswerState
+  );
   const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
     data,
   }) => {
@@ -69,7 +75,7 @@ const SurveyResponseDetailTable = () => {
       <TableDiv>
         <DataTable
           columns={columns}
-          data={movies}
+          data={selectedNodeAnswer}
           pagination
           paginationPerPage={15}
           expandableRows

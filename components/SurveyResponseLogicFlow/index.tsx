@@ -9,9 +9,35 @@ import ReactFlow, {
 import inComingData from "./incoming2.json"; // incoming3.json
 import { Wrapper } from "@components/SurveyResponseLogicFlow/styles";
 import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
-import { selectedNodeState } from "../../States/SurveyState";
+import {
+  selectedNodeAnswerState,
+  selectedNodeState,
+} from "../../States/SurveyState";
 import { useRecoilState, useResetRecoilState } from "recoil";
+import { useMutation } from "react-query";
+import { IUser } from "../../States/UserState";
+import axios, { AxiosError } from "axios";
 
+// const mutation = useMutation<
+//   IUser,
+//   AxiosError,
+//   {
+//     surveyId: string;
+//   }
+// >(
+//   "surveyResponseDetail",
+//   (data) =>
+//     axios
+//       .post("http://localhost:8080/surveyresponsedetail", data)
+//       .then((response) => response.data),
+//   {
+//     onMutate() {},
+//     onSuccess() {},
+//     onError(error) {
+//       alert("양식을 알맞게 작성해주세요");
+//     },
+//   }
+// );
 const SurveyResponseLogicFlow = () => {
   const getRandomColor = () => {
     // 랜덤한 색상을 생성
@@ -196,13 +222,20 @@ const SurveyResponseLogicFlow = () => {
   useEffect(() => {
     return () => {
       resetSelectedNodeState();
+      resetSelectedNodeAnswerState();
     };
   }, []);
 
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useRecoilState(selectedNodeState);
+  const [selectedNodeAnswer, setSelectedNodeAnswer] = useRecoilState(
+    selectedNodeAnswerState
+  );
   const resetSelectedNodeState = useResetRecoilState(selectedNodeState);
+  const resetSelectedNodeAnswerState = useResetRecoilState(
+    selectedNodeAnswerState
+  );
 
   const onNodeClick = (event: React.MouseEvent, node: Node) => {
     console.log(`Clicked node ${node.id} with data:`, node.data);
@@ -211,6 +244,17 @@ const SurveyResponseLogicFlow = () => {
       data: node.data,
       position: node.position,
     });
+    //mutation 되어서 받은 값과 선택된 node.id, node.data를 비교하여 answer를 설정한다.
+    // 이 위치에 node.id에 따른 answer를 불러온다.
+    setSelectedNodeAnswer([
+      {
+        name: "김윤호",
+        mail: "hkj9909@gmail.com",
+        gender: "남자",
+        age: "25",
+        answer: "주관식 문제에 대한 김윤호의 응답",
+      },
+    ]);
   };
 
   return (
