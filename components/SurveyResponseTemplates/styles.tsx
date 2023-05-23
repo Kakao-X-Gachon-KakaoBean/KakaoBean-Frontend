@@ -9,9 +9,6 @@ export const QuestionBox = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  //display: grid; /* 그리드로 변경 */
-  //grid-template-columns: 1fr auto 1fr; /* 3개의 행 설정 */
-  //grid-column-gap: 20px;
   justify-content: center;
   align-items: center;
 `;

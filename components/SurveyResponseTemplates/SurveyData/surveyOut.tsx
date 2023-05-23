@@ -16,4 +16,3 @@ export const postData = async (url: string, data: responseDataList) => {
 
   return response.json();
 };
-// export {};

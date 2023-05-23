@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { forLogic, report, submitAll } from "@pages/Team/index";
+import { forLogic, report, submitAll } from "@pages/Team";
 
 import {
   Answer,
