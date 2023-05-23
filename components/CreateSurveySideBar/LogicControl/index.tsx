@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Edge, Node } from "react-flow-renderer";
 import {
   ConditionSection,
@@ -20,7 +20,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DeleteOption } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   SelNodeState,
   NodeState,
@@ -30,16 +30,10 @@ import {
   QuestionList,
 } from "../../../States/LogicState";
 import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
-import {
-  countState,
-  questionsState,
-  selectedQuestionState,
-} from "../../../States/SurveyState";
+import { countState, questionsState } from "../../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
-import surveyList from "@components/SurveyList";
-import inComingData from "@components/SurveyResponseLogicFlow/incoming2.json";
 
 export const LogicControl = () => {
   type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
@@ -51,13 +45,9 @@ export const LogicControl = () => {
   // 현재 선택한 노드
   const selNode = useRecoilValue(SelNodeState);
   const select = surveyQuestions[Number(Number(selNode) - 1)];
-  const countQuestion = useRecoilValue(countState);
 
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
-  //로직 조건 개수 count
-  const [isMultiCondition, setIsMultiCondition] =
-    useRecoilState(MultiConditionState);
   const [questionList, setQuestionList] = useRecoilState(QuestionList);
   const questionListExceptMe = questionList.filter((question) => {
     if (Number(selNode) != 0)
@@ -74,141 +64,6 @@ export const LogicControl = () => {
     return color;
   };
 
-  useEffect(() => {
-    console.log("Node!!");
-    console.log(nodes);
-    console.log("Edge!!");
-    console.log(edges);
-    console.log("SurveyQuestions!!");
-    console.log(surveyQuestions);
-    console.log("QuestionList!!");
-    console.log(questionList);
-  }, []);
-  //
-  // useEffect(() => {
-  //   const updatedQuestions = surveyQuestions.map((item, index) => {
-  //     if (
-  //       index == surveyQuestions.length - 1 &&
-  //       "finalQuestion" in item &&
-  //       "nextQuestionNumber"
-  //     ) {
-  //       const updatedItem = Object.assign({}, item, {
-  //         finalQuestion: true,
-  //         nextQuestionNumber: "0",
-  //       });
-  //       item = updatedItem;
-  //     }
-  //     return item;
-  //   });
-  //   setSurveyQuestions(() => updatedQuestions as QuestionTypes[]);
-  //
-  //   const updatedSurveyList = [];
-  //   let i = 0;
-  //   for (i; i < surveyQuestions.length; i++) {
-  //     updatedSurveyList.push({ value: String(i + 1), label: String(i + 1) });
-  //   }
-  //
-  //   updatedSurveyList.push({ value: "0", label: "제출하기" });
-  //   setQuestionList(updatedSurveyList);
-  //
-  //   let updatedNodes = JSON.parse(JSON.stringify(nodes));
-  //   const firstSurveyId = surveyQuestions[0]
-  //     ? Number(surveyQuestions[0].id.substring(15))
-  //     : 1;
-  //   i = firstSurveyId;
-  //   const newNodeTuple: Node[] = [];
-  //   const newEdgeTuple: Edge[] = [];
-  //   let newNode, newEdge: Edge<any>;
-  //
-  //   const sortedSurveyQuestionList = [...surveyQuestions].sort(
-  //     (a, b) => a.nextQuestionNumber - b.nextQuestionNumber
-  //   );
-  //
-  //   const groupedQuestionList: SurveyQuestion[][] = [];
-  //   let currentGroup: SurveyQuestion[] = [];
-  //   let prevNextQuestionNumber: number | null = null;
-  //
-  //   sortedSurveyQuestionList.forEach((question) => {
-  //     if (prevNextQuestionNumber === question.nextQuestionNumber) {
-  //       currentGroup.push(question);
-  //     } else {
-  //       if (currentGroup.length > 0) {
-  //         groupedQuestionList.push(currentGroup);
-  //       }
-  //       currentGroup = [question];
-  //       prevNextQuestionNumber = question.nextQuestionNumber;
-  //     }
-  //   });
-  //
-  //   if (currentGroup.length > 0) {
-  //     groupedQuestionList.push(currentGroup);
-  //   }
-  //
-  //   setGroupedSurveyQuestionList(groupedQuestionList);
-  //
-  //   for (i; i < countQuestion; i++) {
-  //     const xAxis = 500;
-  //     const yAxis = 30 + (i - firstSurveyId) * 100;
-  //     newNode = {
-  //       id: String(i),
-  //       data: {
-  //         label:
-  //           surveyQuestions[countQuestion]?.title !== ""
-  //             ? surveyQuestions[countQuestion]?.title
-  //             : "제목 없음",
-  //       },
-  //       position: { x: xAxis, y: yAxis },
-  //     };
-  //
-  //     if (i != countQuestion - 1) {
-  //       newEdge = {
-  //         id: "e" + String(i) + "-" + String(i + 1),
-  //         source: String(i),
-  //         target: String(i + 1),
-  //       };
-  //
-  //       const isDuplicate = newEdgeTuple.some((edge) => {
-  //         return edge.id === newEdge.id;
-  //       });
-  //
-  //       if (!isDuplicate) {
-  //         newEdgeTuple.push(newEdge);
-  //       }
-  //     }
-  //     setCount((prevCount) => [...prevCount, 0]);
-  //     setIsMultiCondition((prevVal) => [...prevVal, 1]);
-  //     newNodeTuple.push(newNode);
-  //   }
-  //
-  //   const submitNode = {
-  //     id: "0",
-  //     type: "output",
-  //     data: { label: "submit" },
-  //     position: { x: 500, y: 30 + surveyQuestions.length * 100 },
-  //   };
-  //
-  //   const submitEdge = {
-  //     id: "e" + String(i) + "-0",
-  //     source: String(surveyQuestions.length),
-  //     target: "0",
-  //   };
-  //
-  //   const isDuplicate = newEdgeTuple.some((edge) => {
-  //     return edge.id === submitEdge.id;
-  //   });
-  //
-  //   if (!isDuplicate) {
-  //     newEdgeTuple.push(submitEdge);
-  //   }
-  //
-  //   newNodeTuple.push(submitNode);
-  //
-  //   setNodes(newNodeTuple);
-  //   setEdges(newEdgeTuple);
-  //
-  //   //isNoLogic();
-  // }, []);
-
   const hasLogics = surveyQuestions.some(
     (question): question is MultipleQuestion => {
       return (
@@ -223,7 +78,7 @@ export const LogicControl = () => {
       (question, index) => {
         if ("logics" in question && question.logics.length > 0) {
           return {
-            id: question.id.toString(),
+            id: question.id.toString().substring(15),
             data: {
               label: question.title ? question.title : "제목없음",
             },
@@ -231,7 +86,7 @@ export const LogicControl = () => {
           };
         } else if (hasLogics) {
           return {
-            id: question.id.toString(),
+            id: question.id.toString().substring(15),
             data: {
               label: question.title ? question.title : "제목없음",
             },
@@ -239,7 +94,7 @@ export const LogicControl = () => {
           };
         } else {
           return {
-            id: question.id.toString(),
+            id: question.id.toString().substring(15),
             data: {
               label: question.title ? question.title : "제목없음",
             },
@@ -251,7 +106,8 @@ export const LogicControl = () => {
     // 새로운 배열을 생성하고 제출 노드를 추가합니다.
     const submitNode: Node<any>[] = [
       {
-        id: "submit",
+        id: "0",
+        type: "output",
         data: {
           label: "제출",
         },
@@ -268,30 +124,34 @@ export const LogicControl = () => {
 
     // Edge 설정
     const initialEdges: Edge<any>[] = surveyQuestions
-      .filter((question) => question.nextQuestionNumber !== "")
       .map((question) => {
         // node question 이 주관식, 혹은 선형배율식일 경우엔 nextQuestionNumber에 해당하는 노드를 찾아서 연결한다.
         if (question.type === "ESSAY" || question.type === "RANGE") {
           if (question.nextQuestionNumber === "0") {
             return {
-              id: `${question.id} to submit`,
-              source: question.id.toString(),
-              target: "submit",
+              id: `${question.id.substring(15)}-0`,
+              source: question.id.toString().substring(15),
+              target: "0",
             };
           } else {
-            const nextQuestion = inComingData.questions.find(
+            const nextQuestion = surveyQuestions.find(
               (q) => q.questionNumber === question.nextQuestionNumber
             );
             if (!nextQuestion) {
-              throw new Error(
-                `Question ${question.nextQuestionNumber} not found`
-              );
+              return {
+                id: `${question.id.substring(15)}-0`,
+                source: question.id.toString().substring(15),
+                target: "0",
+              };
+            } else {
+              return {
+                id: `${question.id.substring(15)}-${nextQuestion.id.substring(
+                  15
+                )}`,
+                source: question.id.toString().substring(15),
+                target: nextQuestion.id.toString().substring(15),
+              };
             }
-            return {
-              id: `${question.id} to ${nextQuestion.questionId}`,
-              source: question.id.toString(),
-              target: nextQuestion.questionId.toString(),
-            };
           }
         }
         // node question이 객관식인 경우
@@ -301,28 +161,35 @@ export const LogicControl = () => {
             const logicEdges = question.logics.map((logic: Logic) => {
               if (logic.nextQuestionNumber === "0") {
                 return {
-                  id: `${question.id} to submit (logic)`,
-                  source: question.id.toString(),
-                  target: "submit",
+                  id: `${question.id.substring(15)}-0 (logic)`,
+                  source: question.id.toString().substring(15),
+                  target: "0",
                   animated: true,
                   style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
                 };
               } else {
-                const nextQuestion = inComingData.questions.find(
+                const nextQuestion = surveyQuestions.find(
                   (q) => q.questionNumber === logic.nextQuestionNumber
                 );
                 if (!nextQuestion) {
-                  throw new Error(
-                    `Question ${logic.nextQuestionNumber} not found`
-                  );
+                  return {
+                    id: `${question.id.substring(15)}-0 (logic)`,
+                    source: question.id.toString().substring(15),
+                    target: "0",
+                    animated: true,
+                    style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
+                  };
+                } else {
+                  return {
+                    id: `${question.id.substring(
+                      15
+                    )}-${nextQuestion.id.substring(15)} (logic)`,
+                    source: question.id.toString().substring(15),
+                    target: nextQuestion.id.toString().substring(15),
+                    animated: true,
+                    style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
+                  };
                 }
-                return {
-                  id: `${question.id} to ${nextQuestion.questionId} (logic)`,
-                  source: question.id.toString(),
-                  target: nextQuestion.questionId.toString(),
-                  animated: true,
-                  style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
-                };
               }
             });
 
@@ -330,208 +197,132 @@ export const LogicControl = () => {
               return [
                 ...logicEdges,
                 {
-                  id: `${question.id} to submit`,
-                  source: question.id.toString(),
-                  target: "submit",
+                  id: `${question.id.substring(15)}-0`,
+                  source: question.id.toString().substring(15),
+                  target: "0",
                 },
               ];
             } else {
               // 로직이 존재하던 존재하지 않던, 기본 이동도 추가한다.
-              const nextQuestion = inComingData.questions.find(
+              const nextQuestion = surveyQuestions.find(
                 (q) => q.questionNumber === question.nextQuestionNumber
               );
               if (!nextQuestion) {
-                throw new Error(
-                  `Question ${question.nextQuestionNumber} not found`
-                );
+                return [
+                  ...logicEdges,
+                  {
+                    id: `${question.id.substring(15)}-0`,
+                    source: question.id.toString().substring(15),
+                    target: "0",
+                  },
+                ];
+              } else {
+                return [
+                  ...logicEdges,
+                  {
+                    id: `${question.id.substring(
+                      15
+                    )}-${nextQuestion.id.substring(15)}`,
+                    source: question.id.toString().substring(15),
+                    target: nextQuestion.id.toString().substring(15),
+                  },
+                ];
               }
-
-              return [
-                ...logicEdges,
-                {
-                  id: `${question.id} to ${nextQuestion.questionId}`,
-                  source: question.id.toString(),
-                  target: nextQuestion.questionId.toString(),
-                },
-              ];
             }
           } else {
             // 로직이 존재하지 않는 경우, 기본 이동만 구현한다.
             if (question.nextQuestionNumber === "0") {
               return {
-                id: `${question.id} to submit`,
-                source: question.id.toString(),
-                target: "submit",
+                id: `${question.id.substring(15)}-0`,
+                source: question.id.toString().substring(15),
+                target: "0",
               };
             } else {
-              const nextQuestion = inComingData.questions.find(
+              const nextQuestion = surveyQuestions.find(
                 (q) => q.questionNumber === question.nextQuestionNumber
               );
               if (!nextQuestion) {
-                throw new Error(
-                  `Question ${question.nextQuestionNumber} not found`
-                );
+                return {
+                  id: `${question.id.substring(15)}-0`,
+                  source: question.id.toString().substring(15),
+                  target: "0",
+                };
+              } else {
+                return {
+                  id: `${question.id.substring(15)}-${nextQuestion.id.substring(
+                    15
+                  )}`,
+                  source: question.id.toString().substring(15),
+                  target: nextQuestion.id.toString().substring(15),
+                };
               }
-              return {
-                id: `${question.id} to ${nextQuestion.questionId}`,
-                source: question.id.toString(),
-                target: nextQuestion.questionId.toString(),
-              };
             }
           }
         }
       })
       .filter((edge): edge is Edge<any> => edge !== undefined)
       .flat(); // 배열 평탄화, logic 값에 의해 묶여진 배열을 평탄화한다.
+    initialEdges.sort();
+    console.log(initialEdges);
     setEdges(initialEdges);
   };
 
-  useEffect(() => {
+  const reDefineSurveyQuestion = () => {
     const updatedSurveyList = [];
-    let i = 0;
-    for (i; i < surveyQuestions.length; i++) {
-      updatedSurveyList.push({ value: String(i + 1), label: String(i + 1) });
-    }
+    const sortedArray = [...surveyQuestions]; // 원래 배열을 변경하지 않고 새로운 배열을 생성합니다.
 
-    updatedSurveyList.push({ value: "0", label: "제출하기" });
-    setQuestionList(updatedSurveyList);
+    sortedArray.sort((a, b) => {
+      return Number(a.questionNumber) - Number(b.questionNumber); // questionNumber를 기준으로 오름차순 정렬합니다.
+    });
 
-    const updatedQuestions = surveyQuestions.map((item, index) => {
-      if (
-        index == surveyQuestions.length - 1 &&
-        "finalQuestion" in item &&
-        "nextQuestionNumber"
-      ) {
-        const updatedItem = Object.assign({}, item, {
+    sortedArray.map((q) => {
+      if (Number(q.id.substring(15)) + 1 == Number(q.nextQuestionNumber)) {
+        return {
+          ...q,
+          id: "KEA-KakaoBeans-" + q.questionNumber,
+          nextQuestionNumber: q.questionNumber + 1,
+        };
+      } else {
+        return q;
+      }
+    });
+
+    sortedArray.map((q, index) => {
+      updatedSurveyList.push({
+        value: q.questionNumber,
+        label: q.questionNumber,
+      });
+      if (index == sortedArray.length - 1) {
+        return {
+          ...q,
           finalQuestion: true,
           nextQuestionNumber: "0",
-        });
-        item = updatedItem;
+        };
       }
-      return item;
     });
-    setSurveyQuestions(() => updatedQuestions as QuestionTypes[]);
+    updatedSurveyList.push({ value: "0", label: "제출하기" });
+    setQuestionList(updatedSurveyList);
+    setSurveyQuestions(sortedArray);
+  };
 
-    redrawNodeAndEdge();
+  useEffect(() => {
+    reDefineSurveyQuestion();
   }, []);
 
   useEffect(() => {
     redrawNodeAndEdge();
-    //isNoLogic();
+
+    console.log("Node!!");
+    console.log(nodes);
+    console.log("Edge!!");
+    console.log(edges);
+    console.log("SurveyQuestions!!");
+    console.log(surveyQuestions);
+    console.log("QuestionList!!");
+    console.log(questionList);
   }, [surveyQuestions]);
 
-  const isNoLogic = () => {
-    const QuestionsList = JSON.parse(JSON.stringify(surveyQuestions));
-    const questionLen = QuestionsList.length;
-    //console.log(QuestionsList);
-    console.log("isLogicStart");
-    let i = 0;
-    if (QuestionsList != undefined) {
-      MainLoop: for (i; i < questionLen; i++) {
-        if (i == questionLen - 1) {
-          console.log("맨 마지막 문제");
-          if (QuestionsList[i]?.nextQuestionNumber != "0") {
-            console.log("마지막 문제가 0이 아님");
-            break;
-          } else if ("logics" in QuestionsList[i]) {
-            let j = 0;
-            for (j; QuestionsList[i].logics.length; j++) {
-              if (QuestionsList[i].logics[j]?.nextQuestionNumber != "0") {
-                console.log("모든 로직에서 이동이 다음 문제가 아님");
-                console.log("원래 다음 문제 : " + "0");
-                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
-                break MainLoop;
-              }
-            }
-          }
-        } else {
-          console.log("마지막 문제 아닌것");
-          if (QuestionsList[i]?.nextQuestionNumber != String(i + 2)) {
-            console.log("다음 문제가 아님");
-            break;
-          } else if ("logics" in QuestionsList[i]) {
-            let j = 0;
-            for (j; QuestionsList[i].logics.length; j++) {
-              if (
-                QuestionsList[i].logics[j]?.nextQuestionNumber != String(i + 2)
-              ) {
-                console.log("모든 로직에서 이동이 다음 문제가 아님");
-                console.log("원래 다음 문제 : " + String(i + 2));
-                console.log(QuestionsList[i].logics[j]?.nextQuestionNumber);
-                break MainLoop;
-              }
-            }
-          }
-        }
-      }
-      console.log("result");
-      console.log(i);
-      console.log(QuestionsList.length);
-
-      if (i == QuestionsList.length) resetNodeAndEdge();
-    }
-  };
-
-  const resetNodeAndEdge = () => {
-    const newNodeTuple: Node[] = [];
-    const newEdgeTuple: Edge[] = [];
-    let newNode, newEdge;
-    let yaxis = 30;
-    const firstSurveyId = surveyQuestions[0]
-      ? Number(surveyQuestions[0].id.substring(15))
-      : 1;
-    let i = 0;
-
-    for (i; i < surveyQuestions.length; i++) {
-      newNode = {
-        id: surveyQuestions[i].id.substring(15),
-        data: {
-          label:
-            surveyQuestions[i].title !== ""
-              ? surveyQuestions[i].title
-              : "제목 없음",
-        },
-        position: { x: 500, y: yaxis },
-      };
-
-      if (i != surveyQuestions.length - 1) {
-        newEdge = {
-          id:
-            "e" +
-            String(i + firstSurveyId) +
-            "-" +
-            String(i + 1 + firstSurveyId),
-          source: String(i + firstSurveyId),
-          target: String(i + 1 + firstSurveyId),
-        };
-        newEdgeTuple.push(newEdge);
-      }
-
-      newNodeTuple.push(newNode);
-
-      yaxis += 100;
-    }
-    const submitNode = {
-      id: "0",
-      type: "output",
-      data: { label: "submit" },
-      position: { x: 500, y: yaxis },
-    };
-
-    const submitEdge = {
-      id: "e" + String(i) + "-0",
-      source: String(surveyQuestions.length),
-      target: "0",
-    };
-
-    newNodeTuple.push(submitNode);
-    newEdgeTuple.push(submitEdge);
-    setNodes(newNodeTuple);
-    setEdges(newEdgeTuple);
-    console.log("No Logic!!");
-  };
-
-  //로직 추가하기
+  //로직 추가
   const addLogic = () => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const updatedCounts = [...count];
@@ -539,7 +330,6 @@ export const LogicControl = () => {
       nextQuestionNumber: any;
       conditionOfQuestionAnswers?: string[];
     };
-    let updatedEdges = JSON.parse(JSON.stringify(edges));
 
     //마지막 질문일 경우 next질문 0 (제출하기)
     if (Number(selNode) == surveyQuestions.length) {
@@ -556,29 +346,8 @@ export const LogicControl = () => {
       };
     }
 
-    // const newEdge: Edge = {
-    //   id: "e" + selNode + "-" + updatedLogics.nextQuestionNumber + "-animated",
-    //   source: String(selNode),
-    //   target: updatedLogics.nextQuestionNumber,
-    //   animated: true,
-    //   style: { stroke: getRandomColor() },
-    // };
-    //
-    // updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
-    // updatedQuestions[Number(selNode) - 1].logics.push(updatedLogics);
-    // updatedEdges.push(newEdge);
-    //
-    // const desiredEdge = edges.find((edge) => {
-    //   return (
-    //     edge.source == String(selNode) &&
-    //     edge.target == updatedLogics.nextQuestionNumber &&
-    //     edge.animated == true
-    //   );
-    // });
-    //
-    // if (!desiredEdge) {
-    //   setEdges(updatedEdges);
-    // }
+    updatedCounts[Number(selNode)] = updatedCounts[Number(selNode)] + 1;
+    updatedQuestions[Number(selNode) - 1].logics.push(updatedLogics);
 
     setSurveyQuestions(updatedQuestions);
     setCount(updatedCounts);
@@ -602,16 +371,7 @@ export const LogicControl = () => {
     }
 
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
-    let updatedEdges = JSON.parse(JSON.stringify(edges));
     const updatedCounts = [...count];
-
-    // updatedEdges = updatedEdges.filter((edge: Edge) => {
-    //   return !(
-    //     edge.source === selNode &&
-    //     edge.target == select.logics[logicIndex].nextQuestionNumber &&
-    //     edge.animated
-    //   );
-    // });
 
     const newLogics = [...select.logics];
     newLogics.splice(logicIndex, 1);
@@ -623,13 +383,10 @@ export const LogicControl = () => {
 
     updatedQuestions[questionIndex - 1] = updatedQuestion;
     setSurveyQuestions(updatedQuestions);
-
-    //setEdges(updatedEdges);
-
     setCount(updatedCounts);
   };
 
-  //로직->조건 변경시 호출.
+  //로직->조건 변경
   const ConditionChange = (i: number, index2: number, value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const selNodeNumber = Number(Number(selNode) - 1);
@@ -639,93 +396,30 @@ export const LogicControl = () => {
     setSurveyQuestions(updatedQuestions);
   };
 
-  //다음 질문 수정될때 node, edge 바뀜
+  //다음 질문 수정
   const NextQuestionChange = (i: number, value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
-    // let updatedEdges = JSON.parse(JSON.stringify(edges));
-    // let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    const newEdge: Edge = {
-      id: "e" + selNode + "-" + value + "-animated",
-      source: String(selNode),
-      target: String(value),
-      animated: true,
-      style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
-    };
-
-    // const originValue =
-    //   updatedQuestions[questionIndex].logics[i].nextQuestionNumber;
-    // const originNextValue = String(Number(selNode) + 1);
-    // const rootXAxis = updatedNodes[questionIndex].position.x;
 
     updatedQuestions[questionIndex].logics[i].nextQuestionNumber = value;
     setSurveyQuestions(updatedQuestions);
-
-    //변경이 필요한 노드들의 위치를 수정
-    // if (value != originValue) {
-    //   if (Number(value) == 0) {
-    //     updatedNodes.forEach((node: Node) => {
-    //       if (Number(node.id) > Number(selNode)) {
-    //         node.position.x = rootXAxis + 100;
-    //       }
-    //     });
-    //   } else if (value == originNextValue) {
-    //     updatedNodes.forEach((node: Node) => {
-    //       if (Number(node.id) > Number(selNode)) {
-    //         node.position.x = node.position.x - 100;
-    //       }
-    //     });
-    //   } else {
-    //     updatedNodes.forEach((node: Node) => {
-    //       if (
-    //         Number(node.id) > Number(selNode) &&
-    //         Number(node.id) < Number(value)
-    //       ) {
-    //         node.position.x = node.position.x + 100;
-    //       }
-    //     });
-    //   }
-    //
-    //   updatedEdges = updatedEdges.filter((edge: Edge) => {
-    //     return !(
-    //       edge.source === selNode &&
-    //       edge.target == originValue &&
-    //       edge.animated == true
-    //     );
-    //   });
-    //   const isDuplicate = updatedEdges.some((edge: Edge) => {
-    //     return edge.id === newEdge.id;
-    //   });
-    //   if (!isDuplicate) {
-    //     updatedEdges.push(newEdge);
-    //   }
-    // }
-    //
-    // setEdges(updatedEdges);
-    // setNodes(updatedNodes);
   };
 
-  //로직 설정 안하고 다음 질문 설정할때 호출 -> 생성이랑 합친 후 node위치 및 edge 수정 필요
+  //기본 이동 설정
   const NoLogicChangeNext = (value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
-    // let updatedEdges = JSON.parse(JSON.stringify(edges));
-    // let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    // const newEdge: Edge = {
-    //   id: "e" + selNode + "-" + value,
-    //   source: String(selNode),
-    //   target: String(value),
-    // };
-    //
-    // const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
-    // const originNextValue = String(Number(selNode) + 1);
-    // const originNode = nodes.find((node) => Number(node.id) == Number(value));
-    // const submitUpperNodeYAxis =
-    //   updatedNodes[surveyQuestions.length - 1].position.y;
-    // const targetUpperNode = nodes.find(
-    //   (node) => Number(node.id) == Number(value) - 1
-    // );
-    // const targetUpperNodeYAxis = targetUpperNode?.position.y;
+    let updatedNodes = JSON.parse(JSON.stringify(nodes));
+
+    const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
+    const originNextValue = String(Number(selNode) + 1);
+    const originNode = nodes.find((node) => Number(node.id) == Number(value));
+    const submitUpperNodeYAxis =
+      updatedNodes[surveyQuestions.length - 1].position.y;
+    const targetUpperNode = nodes.find(
+      (node) => Number(node.id) == Number(value) - 1
+    );
+    const targetUpperNodeYAxis = targetUpperNode?.position.y;
 
     updatedQuestions[questionIndex].nextQuestionNumber = value;
     setSurveyQuestions(updatedQuestions);
@@ -758,20 +452,7 @@ export const LogicControl = () => {
     //       }
     //     });
     //   }
-    //
-    //   updatedEdges = updatedEdges.filter((edge: Edge) => {
-    //     return !(edge.source === selNode && edge.target == originValue);
-    //   });
-    //   const isDuplicate = updatedEdges.some((edge: Edge) => {
-    //     return edge.id === newEdge.id;
-    //   });
-    //   if (!isDuplicate) {
-    //     updatedEdges.push(newEdge);
-    //   }
     // }
-    //
-    // setEdges(updatedEdges);
-    // setNodes(updatedNodes);
   };
 
   return (
@@ -806,119 +487,110 @@ export const LogicControl = () => {
                     <span style={{ color: "#039BA1" }}>+ 로직&nbsp;</span>추가
                     하기
                   </AddLogicButton>
-                  {count[Number(selNode)] >= 0 ? (
-                    <AccordionDiv>
-                      {"logics" in select ? (
-                        select.logics.map((item, i) => (
-                          <Accordion
-                            key={i}
+                  <AccordionDiv>
+                    {"logics" in select ? (
+                      select.logics.map((item, i) => (
+                        <Accordion
+                          key={i}
+                          style={{
+                            marginTop: "1.3rem",
+                            width: "100%",
+                            boxShadow: "0 0 2px rgba(0,0,0,0.3)",
+                          }}
+                        >
+                          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <AccordionSummaryDiv>
+                              <div style={{ fontWeight: "700" }}>
+                                로직 {i + 1}
+                              </div>
+                              <Button
+                                onClick={(e: any) => {
+                                  DeleteLogic(i);
+                                }}
+                                style={DeleteOption()}
+                              >
+                                X
+                              </Button>
+                            </AccordionSummaryDiv>
+                          </AccordionSummary>
+                          <AccordionDetails
                             style={{
-                              marginTop: "1.3rem",
-                              width: "100%",
-                              boxShadow: "0 0 2px rgba(0,0,0,0.3)",
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "1rem",
                             }}
                           >
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                              <AccordionSummaryDiv>
-                                <div style={{ fontWeight: "700" }}>
-                                  로직 {i + 1}
-                                </div>
-                                <Button
-                                  onClick={(e: any) => {
-                                    DeleteLogic(i);
-                                  }}
-                                  style={DeleteOption()}
-                                >
-                                  X
-                                </Button>
-                              </AccordionSummaryDiv>
-                            </AccordionSummary>
-                            <AccordionDetails
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "1rem",
-                              }}
-                            >
-                              <LogicBody>
-                                <LogicBodyHeader>조건</LogicBodyHeader>
-                                {isMultiCondition[Number(selNode)] > 0 &&
-                                "conditionOfQuestionAnswers" in item &&
-                                item.conditionOfQuestionAnswers != null &&
-                                Array.isArray(
-                                  item.conditionOfQuestionAnswers
-                                ) ? (
-                                  <>
-                                    {item.conditionOfQuestionAnswers.length >
-                                      0 && (
-                                      <ConditionSection>
-                                        {[
-                                          ...Array(
-                                            parseInt(
-                                              String(
-                                                select.numberOfAnswerChoices
-                                              )
-                                            )
-                                          ),
-                                        ].map((n, index) => {
-                                          if ("answers" in select) {
-                                            return (
-                                              <Select
-                                                key={index}
-                                                value={
-                                                  select.logics[i]
-                                                    .conditionOfQuestionAnswers[
-                                                    index
-                                                  ]
-                                                }
-                                                style={{ width: 100 }}
-                                                onChange={(e) =>
-                                                  ConditionChange(i, index, e)
-                                                }
-                                                options={select.answers.map(
-                                                  (answer) => ({
-                                                    label: answer,
-                                                    value: answer,
-                                                  })
-                                                )}
-                                              />
-                                            );
-                                          } else {
-                                            return <div key={index}></div>;
-                                          }
-                                        })}
-                                      </ConditionSection>
-                                    )}
-                                  </>
-                                ) : (
-                                  <div></div>
-                                )}
-                              </LogicBody>
-                              <LogicBottom>
-                                <LogicBodyHeader>이동</LogicBodyHeader>
-                                <Select
-                                  value={
-                                    "nextQuestionNumber" in item
-                                      ? item.nextQuestionNumber
-                                      : "0"
-                                  }
-                                  style={{ width: 100 }}
-                                  onChange={(e: string) =>
-                                    NextQuestionChange(i, e)
-                                  }
-                                  options={questionListExceptMe}
-                                />
-                              </LogicBottom>
-                            </AccordionDetails>
-                          </Accordion>
-                        ))
-                      ) : (
-                        <div></div>
-                      )}
-                    </AccordionDiv>
-                  ) : (
-                    <div></div>
-                  )}
+                            <LogicBody>
+                              <LogicBodyHeader>조건</LogicBodyHeader>
+                              {"conditionOfQuestionAnswers" in item &&
+                              item.conditionOfQuestionAnswers != null &&
+                              Array.isArray(item.conditionOfQuestionAnswers) ? (
+                                <>
+                                  {item.conditionOfQuestionAnswers.length >
+                                    0 && (
+                                    <ConditionSection>
+                                      {[
+                                        ...Array(
+                                          parseInt(
+                                            String(select.numberOfAnswerChoices)
+                                          )
+                                        ),
+                                      ].map((n, index) => {
+                                        if ("answers" in select) {
+                                          return (
+                                            <Select
+                                              key={index}
+                                              value={
+                                                select.logics[i]
+                                                  .conditionOfQuestionAnswers[
+                                                  index
+                                                ]
+                                              }
+                                              style={{ width: 100 }}
+                                              onChange={(e) =>
+                                                ConditionChange(i, index, e)
+                                              }
+                                              options={select.answers.map(
+                                                (answer) => ({
+                                                  label: answer,
+                                                  value: answer,
+                                                })
+                                              )}
+                                            />
+                                          );
+                                        } else {
+                                          return <div key={index}></div>;
+                                        }
+                                      })}
+                                    </ConditionSection>
+                                  )}
+                                </>
+                              ) : (
+                                <div></div>
+                              )}
+                            </LogicBody>
+                            <LogicBottom>
+                              <LogicBodyHeader>이동</LogicBodyHeader>
+                              <Select
+                                value={
+                                  "nextQuestionNumber" in item
+                                    ? item.nextQuestionNumber
+                                    : "0"
+                                }
+                                style={{ width: 100 }}
+                                onChange={(e: string) =>
+                                  NextQuestionChange(i, e)
+                                }
+                                options={questionListExceptMe}
+                              />
+                            </LogicBottom>
+                          </AccordionDetails>
+                        </Accordion>
+                      ))
+                    ) : (
+                      <div></div>
+                    )}
+                  </AccordionDiv>
                 </LogicDiv>
               )}
           </div>

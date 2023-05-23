@@ -263,15 +263,6 @@ const CreateSurveyDnd = (): JSX.Element => {
   useEffect(() => {
     setSurveyQuestions(() => surveyQuestions);
 
-    // let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    // const firstSurveyId = surveyQuestions[0]
-    //   ? Number(surveyQuestions[0].id.substring(15))
-    //   : 1;
-    // let i = firstSurveyId;
-    // const newNodeTuple: Node[] = [];
-    // const newEdgeTuple: Edge[] = [];
-    // let newNode, newEdge: Edge<any>;
-
     const updatedQuestions = surveyQuestions.map((item, index) => {
       if ("id" in item) {
         const { id, ...rest } = item;
