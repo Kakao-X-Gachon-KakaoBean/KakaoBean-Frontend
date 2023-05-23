@@ -4,7 +4,8 @@ import { Button } from "antd";
 export const ChoiceBtn = styled(Button)`
   border: 0;
   border-radius: 10px;
-  width: 300px;
+  width: 50vw;
+  height: 5vh;
   color: black;
   text-align: left;
   background-color: ${(props: { checked: boolean }) =>

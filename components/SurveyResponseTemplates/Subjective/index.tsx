@@ -17,6 +17,7 @@ import {
   QuestionBox,
   Title,
 } from "@components/SurveyResponseTemplates/styles";
+import { SpaceBetween } from "@pages/Team/styles";
 
 export const SubjectiveQuestions = (props: subProps) => {
   const [subjectiveQuestions] = useState<SubjectiveQuestion>({
@@ -71,12 +72,16 @@ export const SubjectiveQuestions = (props: subProps) => {
       console.log("submit#", subjectiveQuestions.questionNumber);
     }
   }, [submitEssay]);
+
+  // TODO: textArea로 바꿔서 많은 내용이 들어가도 자동으로 늘어나게 할 것.
+
   return (
     <QuestionBox>
       <Title>{subjectiveQuestions.title}</Title>
       <Explanation>{subjectiveQuestions.explanation}</Explanation>
       <Subjective type="text" value={inputValue} onChange={handleInputChange} />
       {/*<button onClick={() => onSubmit()}>check Recoiled Data</button>*/}
+      {/*<SpaceBetween />*/}
     </QuestionBox>
   );
 };

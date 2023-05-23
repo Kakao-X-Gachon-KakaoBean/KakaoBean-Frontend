@@ -161,7 +161,7 @@ const Team = () => {
   // }
 
   return (
-    <div>
+    <div style={{ height: "100vh", overflow: "hidden" }}>
       <Carousel dotPosition={"right"} ref={carouselRef}>
         {/*TODO:
             1(해결). 버튼으로 바꾸기 - 해결한 듯?
@@ -181,10 +181,6 @@ const Team = () => {
               return (
                 // MULTIPLE 타입에 해당하는 JSX 코드
                 <div>
-                  {/*<button onClick={() => console.log(reportData)}>*/}
-                  {/*  this is the report_recoil_data*/}
-                  {/*</button>*/}
-                  {/*page*/}
                   <MultipleChoiceQuestions thisQuestion={mQuestion} />
                 </div>
               );
@@ -193,7 +189,6 @@ const Team = () => {
               return (
                 // RANGE 타입에 해당하는 JSX 코드
                 <div>
-                  {/*page*/}
                   <RangeBarQuestions thisQuestion={rQuestion} />
                 </div>
               );
@@ -202,7 +197,6 @@ const Team = () => {
               return (
                 // ESSAY 타입에 해당하는 JSX 코드
                 <div>
-                  {/*page*/}
                   <SubjectiveQuestions thisQuestion={sQuestion} />
                 </div>
               );
@@ -218,7 +212,9 @@ const Team = () => {
 
         <div>
           <QuestionBox>
-            <Title>응답해주셔서 감사합니다!</Title>
+            <Title style={{ textAlign: "center" }}>
+              응답해주셔서 감사합니다!
+            </Title>
             <SpaceBetween />
             <ModifiedButton
               onClick={() => {
@@ -231,24 +227,26 @@ const Team = () => {
           </QuestionBox>
         </div>
       </Carousel>
-      <ButtonBox>
-        <Button
-          disabled={currentSlide === 0}
-          onClick={() => {
-            handlePrevClick();
-          }}
-        >
-          <FontAwesomeIcon icon={faChevronLeft} />
-        </Button>
-        <Button
-          disabled={currentSlide === questions.length}
-          onClick={() => {
-            handleNextClick();
-          }}
-        >
-          <FontAwesomeIcon icon={faChevronRight} />
-        </Button>
-      </ButtonBox>
+      <QuestionBox>
+        <ButtonBox>
+          <Button
+            disabled={currentSlide === 0}
+            onClick={() => {
+              handlePrevClick();
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </Button>
+          <Button
+            disabled={currentSlide === questions.length}
+            onClick={() => {
+              handleNextClick();
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronRight} />
+          </Button>
+        </ButtonBox>
+      </QuestionBox>
     </div>
   );
 };

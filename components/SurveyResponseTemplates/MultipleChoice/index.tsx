@@ -166,9 +166,7 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   return (
     <QuestionBox>
       <Title>{question.title}</Title>
-      <SpaceBetween />
       <Explanation>{question.explanation}</Explanation>
-      <SpaceBetween />
       {question.answers.map((question, index) => (
         <MultipleQuestionDiv key={index}>
           <ChoiceBtn
@@ -181,11 +179,8 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
-      <SpaceBetween />
-      <SpaceBetween />
-      <SpaceBetween />
-      <SpaceBetween />
-      <SpaceBetween />
+
+      {/*<SpaceBetween />*/}
       {/*<button*/}
       {/*  onClick={() => {*/}
       {/*    onSubmit();*/}

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const ButtonBox = styled.div`
-  width: 100%;
+  width: 55vw;
   gap: 1.5rem;
   display: flex;
   align-items: center;
@@ -17,13 +17,13 @@ export const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3.3rem;
-  height: 3.3rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 1rem;
   padding: 0.5rem;
   border: none;
   gap: 10px;
-  background-color: rgb(38, 112, 255);
+  background-color: Cyan;
   cursor: pointer;
   pointer-events: auto;
   z-index: 10;
@@ -41,7 +41,7 @@ export const Button = styled.button`
 `;
 
 export const SpaceBetween = styled.div`
-  margin-top: 2rem;
+  margin-top: 3vh;
 `;
 export const ModifiedButton = styled(Button)`
   width: 7rem;
@@ -49,14 +49,5 @@ export const ModifiedButton = styled(Button)`
   color: white;
   font-size: 1rem;
   font-weight: bold;
+  background-color: blue;
 `;
-// export const SubmitPage = styled.div`
-//   dis
-// `;
-
-export const dotStyle = {
-  backgroundColor: "blue", // 점의 원하는 색상으로 변경
-  width: "10px",
-  height: "10px",
-  borderRadius: "50%",
-};

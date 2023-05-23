@@ -82,10 +82,7 @@ export const RangeBarQuestions = (props: subProps) => {
   return (
     <QuestionBox>
       <Title>{rangeBarQuestions.title}</Title>
-      <SpaceBetween />
       <Explanation>{rangeBarQuestions.explanation}</Explanation>
-      <SpaceBetween />
-
       <MinMaxRange
         style={{
           display: "flex",
@@ -107,11 +104,7 @@ export const RangeBarQuestions = (props: subProps) => {
         value={value}
         style={rangeBarStyle}
       />
-      <SpaceBetween />
-      <SpaceBetween />
-      <SpaceBetween />
-      <SpaceBetween />
-      <SpaceBetween />
+      {/*<SpaceBetween />*/}
       {/*<button onClick={() => onSubmit()}>check Recoiled Data</button>*/}
     </QuestionBox>
   );
