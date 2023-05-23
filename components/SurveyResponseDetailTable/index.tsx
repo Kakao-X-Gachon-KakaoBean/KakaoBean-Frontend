@@ -1,7 +1,13 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { Typography } from "antd";
+const { Paragraph, Title } = Typography;
+import DataTable, {
+  ExpanderComponentProps,
+  TableColumn,
+} from "react-data-table-component";
 import {
+  DetailDiv,
   QuestionTitleDiv,
   TableDiv,
   Wrapper,
@@ -12,24 +18,46 @@ import DataRow from "./type";
 
 const columns: TableColumn<DataRow>[] = [
   {
-    name: "Title",
-    selector: (row) => row.title,
+    name: "이름",
+    selector: (row) => row.name,
     sortable: true,
   },
   {
-    name: "Director",
-    selector: (row) => row.director,
+    name: "이메일",
+    selector: (row) => row.mail,
     sortable: true,
   },
   {
-    name: "Runtime",
-    selector: (row) => row.runtime,
+    name: "성별",
+    selector: (row) => row.gender,
+    sortable: true,
+  },
+  {
+    name: "나이",
+    selector: (row) => row.age,
+    sortable: true,
+  },
+  {
+    name: "응답",
+    selector: (row) =>
+      row.answer.length < 20 ? row.answer : row.answer.slice(0, 19) + "...",
     sortable: true,
   },
 ];
 const SurveyResponseDetailTable = () => {
   const selectedNode = useRecoilValue(selectedNodeState);
-
+  const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
+    data,
+  }) => {
+    return (
+      <DetailDiv>
+        <Typography>
+          <Title level={2}>사용자 응답</Title>
+          <Paragraph copyable>{data.answer}</Paragraph>
+        </Typography>
+      </DetailDiv>
+    );
+  };
   return (
     <Wrapper>
       <QuestionTitleDiv>
@@ -39,7 +67,14 @@ const SurveyResponseDetailTable = () => {
           : "질문을 선택해주세요"}
       </QuestionTitleDiv>
       <TableDiv>
-        <DataTable columns={columns} data={movies} pagination />
+        <DataTable
+          columns={columns}
+          data={movies}
+          pagination
+          paginationPerPage={15}
+          expandableRows
+          expandableRowsComponent={ExpandedComponent}
+        />
       </TableDiv>
     </Wrapper>
   );
