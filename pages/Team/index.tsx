@@ -22,7 +22,11 @@ import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/t
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
 import { testInput } from "@pages/Team/testIncomingData";
 import { QuestionBox, Title } from "@components/SurveyResponseTemplates/styles";
-import { QuestionTypes, responseDataList } from "@pages/Team/type";
+import {
+  incomingDataList,
+  QuestionTypes,
+  responseDataList,
+} from "@pages/Team/type";
 import { EndingPage } from "@components/SurveyResponseTemplates/SubmitionCompletePage";
 
 // 실제 데이터 recoil
@@ -50,6 +54,37 @@ export const submitAll = atom<number[]>({
 });
 
 const Team = () => {
+  // 현재 페이지 URL에서 숫자를 추출하는 함수
+  const getSurveyIdFromUrl = () => {
+    const url = window.location.pathname; // 현재 페이지 URL의 경로
+    const surveyId = url.substring(url.lastIndexOf("/") + 1); // 마지막 "/" 이후의 문자열 추출 (숫자 부분)
+    return parseInt(surveyId); // 숫자로 변환하여 반환
+  };
+
+  const surveyId = getSurveyIdFromUrl(); // 현재 페이지의 surveyId 추출
+
+  const {
+    isLoading,
+    isSuccess,
+    status,
+    isError,
+    data: surveyData,
+    error,
+  } = useQuery<any>(
+    ["survey", surveyId],
+    () => fetcher({ queryKey: `http://localhost:8080/surveys/${surveyId}` }),
+    {
+      onSuccess: (data) => {
+        setSurvey(data);
+        setReportData((prevState) => ({
+          ...prevState,
+          surveyId: Number(survey?.surveyId),
+        }));
+      },
+    }
+  );
+
+  //
   // const {
   //   isLoading,
   //   isSuccess,
@@ -58,7 +93,7 @@ const Team = () => {
   //   data: surveyData,
   //   error,
   // } = useQuery<any>(["survey"], () =>
-  //   fetcher({ queryKey: "http://localhost:8080/surveys/31" })
+  //   fetcher({ queryKey: "http://localhost:8080/surveys/2" })
   // );
 
   const carouselRef = useRef<CarouselRef>(null);
@@ -68,27 +103,27 @@ const Team = () => {
   const [logicQueue, setLogicQueue] = useState<number[]>([0]);
   const [counter, setCounter] = useState<number>(0);
 
-  //survey dummy data
-  const [questions, setQuestions] = useState<QuestionTypes[]>(
-    testInput.questions
-  );
-  //surveyID 초기화 함수
-  const initializeReport = () => {
-    setReportData((prevState) => ({
-      ...prevState,
-      surveyId: testInput.surveyId,
-    }));
-  };
+  // //survey dummy data
+  // const [questions, setQuestions] = useState<QuestionTypes[]>(
+  //   testInput.questions
+  // );
+  // //surveyID 초기화 함수
+  // const initializeReport = () => {
+  //   setReportData((prevState) => ({
+  //     ...prevState,
+  //     surveyId: testInput.surveyId,
+  //   }));
+  // };
 
   //실제 데이터 _ 위에 주석하고 사용
   //이건 아직,, const [survey, setSurvey] = useRecoilState(surveyData);
-  // const [survey, setSurvey] = useState(surveyData);
-  // const [questions, setQuestions] = useState<QuestionTypes[]>([]);
-  // useEffect(() => {
-  //   if (survey?.questions) {
-  //     setQuestions(survey.questions);
-  //   }
-  // });
+  const [survey, setSurvey] = useState<incomingDataList>();
+  const [questions, setQuestions] = useState<QuestionTypes[]>([]);
+  useEffect(() => {
+    if (survey?.questions) {
+      setQuestions(survey.questions);
+    }
+  });
 
   // const initializeReport = () => {
   //   setReportData((prevState) => ({
@@ -104,10 +139,10 @@ const Team = () => {
   //logic에 의한 이동 슬라이드 번호
   const [slideToGo, setSlideToGo] = useRecoilState(forLogic);
 
-  // surveyId는 실행시 한번 만 실행
-  useEffect(() => {
-    initializeReport();
-  }, []);
+  // // surveyId는 실행시 한번 만 실행
+  // useEffect(() => {
+  //   initializeReport();
+  // }, [surveyData]);
 
   //carousel(페이지 돌아가는거 구현)
   useEffect(() => {
