@@ -48,10 +48,12 @@ const config: Configuration = {
             "@babel/preset-typescript",
           ],
           plugins: [
-            "react-remove-properties",
-            {
-              properties: ["data-cy"],
-            },
+            [
+              "react-remove-properties",
+              {
+                properties: ["data-cy"],
+              },
+            ],
           ],
 
           env: {

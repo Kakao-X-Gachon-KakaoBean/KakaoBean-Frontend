@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "typeRoots": ["types"],
-    "types": ["cypress"],
+    "types": ["cypress","node"],
     "paths": {
       "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
@@ -22,6 +22,11 @@
     },
   },
   "include": ["cypress/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "image"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs",
