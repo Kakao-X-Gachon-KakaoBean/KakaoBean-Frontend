@@ -16,10 +16,10 @@
       "@components/*": ["components/*"],
       "@layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@typings/*": ["typings/*"]
     }
   },
-  "include": [ "tests"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs",
