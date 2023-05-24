@@ -539,7 +539,7 @@ const CreateSurveyDnd = (): JSX.Element => {
           ]}
           centered
         >
-          <p>{`http://localhost:8080/surveys/${surveyId}`}</p>
+          <p>{`http://localhost:3000/surveys/${surveyId}`}</p>
         </Modal>
       </DragDropContext>
     </Wrapper>

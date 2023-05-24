@@ -1,5 +1,7 @@
 export default interface DataRow {
-  title: string;
-  director: string;
-  runtime: string;
+  name: string;
+  mail: string;
+  gender: string;
+  age: string;
+  answer: string;
 }
