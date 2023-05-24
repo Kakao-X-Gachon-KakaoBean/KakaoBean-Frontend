@@ -24,6 +24,7 @@ const config: Configuration = {
       "@pages": path.resolve(__dirname, "pages"),
       "@utils": path.resolve(__dirname, "utils"),
       "@typings": path.resolve(__dirname, "typings"),
+      "@cypress": path.resolve(__dirname, "cypress"),
     },
   },
   entry: {
@@ -46,6 +47,13 @@ const config: Configuration = {
             "@babel/preset-react",
             "@babel/preset-typescript",
           ],
+          plugins: [
+            "react-remove-properties",
+            {
+              properties: ["data-cy"],
+            },
+          ],
+
           env: {
             development: {
               plugins: [require.resolve("react-refresh/babel")],

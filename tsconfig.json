@@ -11,6 +11,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "typeRoots": ["types"],
+    "types": ["cypress"],
     "paths": {
       "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
@@ -18,8 +19,9 @@
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
       "@typings/*": ["typings/*"]
-    }
+    },
   },
+  "include": ["cypress/**/*"],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs",

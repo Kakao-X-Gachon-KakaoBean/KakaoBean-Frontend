@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { forLogic, report, submitAll } from "@pages/Team/index";
+import { forLogic, report, submitAll } from "@pages/Team";
 
 import {
   Answer,
@@ -9,12 +9,15 @@ import {
 } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import {
   ChoiceBtn,
-  Explanation,
   MultipleQuestionDiv,
-  QuestionBox,
-  Title,
 } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
 import { responseQuestionType } from "@pages/Team/type";
+import { SpaceBetween } from "@pages/Team/styles";
+import {
+  Explanation,
+  QuestionBox,
+  Title,
+} from "@components/SurveyResponseTemplates/styles";
 
 export const MultipleChoiceQuestions = (props: subProps) => {
   const [question] = useState<MultipleQuestion>({
@@ -176,6 +179,8 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
+
+      {/*<SpaceBetween />*/}
       {/*<button*/}
       {/*  onClick={() => {*/}
       {/*    onSubmit();*/}
