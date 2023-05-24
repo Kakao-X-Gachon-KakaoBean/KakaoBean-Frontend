@@ -1,6 +1,6 @@
 import { Wrapper, Text, TextDiv } from "./styles";
 import { Button } from "antd";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useResetRecoilState } from "recoil";
 import {
@@ -12,7 +12,6 @@ import {
 import {
   EdgeState,
   LogicCountState,
-  MultiConditionState,
   NodeState,
   QuestionList,
   SelNodeState,
@@ -29,7 +28,6 @@ const MainFirst = () => {
   const resetEdgeState = useResetRecoilState(EdgeState);
   const resetNodeState = useResetRecoilState(NodeState);
   const resetLogicCountState = useResetRecoilState(LogicCountState);
-  const resetMultiConditionState = useResetRecoilState(MultiConditionState);
   const resetQuestionList = useResetRecoilState(QuestionList);
 
   const resetSurveyAndLogic = () => {
@@ -41,7 +39,6 @@ const MainFirst = () => {
     resetEdgeState();
     resetNodeState();
     resetLogicCountState();
-    resetMultiConditionState();
     resetQuestionList();
   };
 

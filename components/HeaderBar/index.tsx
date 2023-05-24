@@ -1,11 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import Logo from "../../image/beanSolo.png";
+import React, { useCallback, useState } from "react";
 
 import { Link } from "react-router-dom";
 import {
   Bar,
   Header,
-  Img,
   LeftMenu,
   Links,
   MainBar,
@@ -25,7 +23,6 @@ import {
   NodeState,
   EdgeState,
   LogicCountState,
-  MultiConditionState,
   QuestionList,
 } from "../../States/LogicState";
 import { useResetRecoilState } from "recoil";
@@ -44,7 +41,6 @@ const HeaderBar = () => {
   const resetEdgeState = useResetRecoilState(EdgeState);
   const resetNodeState = useResetRecoilState(NodeState);
   const resetLogicCountState = useResetRecoilState(LogicCountState);
-  const resetMultiConditionState = useResetRecoilState(MultiConditionState);
   const resetQuestionList = useResetRecoilState(QuestionList);
 
   const [menuToggle, setMenuToggle] = useState<boolean>(false);
@@ -79,7 +75,6 @@ const HeaderBar = () => {
     resetEdgeState();
     resetNodeState();
     resetLogicCountState();
-    resetMultiConditionState();
     resetQuestionList();
   };
 

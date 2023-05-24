@@ -1,11 +1,11 @@
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   QuestionTypeItem,
   getQuestionType,
@@ -43,30 +43,13 @@ import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/Ran
 import { Button, Input, Modal } from "antd";
 import LogicTab from "@components/LogicTab";
 import { Link, Element } from "react-scroll";
-import {
-  SelNodeState,
-  NodeState,
-  EdgeState,
-  LogicCountState,
-  MultiConditionState,
-  QuestionList,
-} from "../../States/LogicState";
-import { Edge, Node } from "react-flow-renderer";
+import { SelNodeState } from "../../States/LogicState";
 import { useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const CreateSurveyDnd = (): JSX.Element => {
-  const [nodes, setNodes] = useRecoilState(NodeState);
-  const [edges, setEdges] = useRecoilState(EdgeState);
-  // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
-  //로직 개수 count
-  const [count, setCount] = useRecoilState(LogicCountState);
-  //로직 조건 개수 count
-  const [isMultiCondition, setIsMultiCondition] =
-    useRecoilState(MultiConditionState);
-  const [questionList, setQuestionList] = useRecoilState(QuestionList);
 
   const [questionTypeItems, setQuestionTypeItems] = useState<
     QuestionTypeItem[]
@@ -92,7 +75,6 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   const handleOk = () => {
     setIsModalOpen(false);
-    console.log("클릭");
   };
 
   // 하위컴포넌트에서 값 받고 적용
@@ -105,7 +87,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     setSurveyQuestions(() => newQuestionItems);
 
     // 값이 변하면 selectedRecoil 업데이트
-    newQuestionItems.map((item, index) => {
+    newQuestionItems.map((item) => {
       if ("id" in selectedQuestion) {
         if (item.id === selectedQuestion.id) {
           setSelectedQuestion(() => item);

@@ -26,18 +26,13 @@ import {
   NodeState,
   EdgeState,
   LogicCountState,
-  MultiConditionState,
   QuestionList,
 } from "../../../States/LogicState";
 import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
-import { countState, questionsState } from "../../../States/SurveyState";
+import { questionsState } from "../../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
-import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
-import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 
 export const LogicControl = () => {
-  type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
-
   // 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState);
   const [nodes, setNodes] = useRecoilState(NodeState);
@@ -402,8 +397,6 @@ export const LogicControl = () => {
       }
     });
 
-    console.log("sortedArray!!!!!");
-    console.log(sortedArray);
     setSurveyQuestions(sortedArray);
   };
 
@@ -426,15 +419,6 @@ export const LogicControl = () => {
 
   useEffect(() => {
     redrawNodeAndEdge();
-
-    console.log("Node!!");
-    console.log(nodes);
-    console.log("Edge!!");
-    console.log(edges);
-    console.log("SurveyQuestions!!");
-    console.log(surveyQuestions);
-    console.log("QuestionList!!");
-    console.log(questionList);
   }, [surveyQuestions]);
 
   //로직 추가
