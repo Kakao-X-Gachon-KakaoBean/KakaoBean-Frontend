@@ -147,6 +147,7 @@ const CreateSurveyDnd = (): JSX.Element => {
 
     return result.map((question, index) => ({
       ...(question as QuestionTypes),
+      questionNumber: list[index].questionNumber,
       nextQuestionNumber: list[index].nextQuestionNumber,
     }));
   };
@@ -252,14 +253,6 @@ const CreateSurveyDnd = (): JSX.Element => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("questions:", questions);
-  // }, [questions]);
-  //
-  // useEffect(() => {
-  //   console.log("surveyQuestions:", surveyQuestions);
-  // }, [surveyQuestions]);
-
   useEffect(() => {
     setSurveyQuestions(() => surveyQuestions);
 
@@ -285,101 +278,6 @@ const CreateSurveyDnd = (): JSX.Element => {
       return item;
     });
     setQuestions(() => updatedQuestions as QuestionTypes[]);
-
-    // for (i; i < countQuestion; i++) {
-    //   const nodeWithI = updatedNodes.find((node: Node) => node.id == String(i));
-    //   const existQuestion = surveyQuestions.find(
-    //     (surveyQuestions: QuestionTypes) =>
-    //       surveyQuestions.id.substring(15) == String(i)
-    //   );
-    //
-    //   if (nodeWithI && existQuestion) {
-    //     nodeWithI.data.label =
-    //       existQuestion.title !== "" ? existQuestion.title : "제목 없음";
-    //     edges.forEach((edge) => {
-    //       if (edge.source == String(i) && edge.id != "e_submit") {
-    //         newEdgeTuple.push(edge);
-    //       }
-    //     });
-    //     newNodeTuple.push(nodeWithI);
-    //   } else {
-    //     const xAxis = nodes[i - firstSurveyId]?.position?.x
-    //       ? nodes[i - firstSurveyId]?.position?.x
-    //       : 500;
-    //     const yAxis = 30 + (i - firstSurveyId) * 100;
-    //
-    //     if (i == firstSurveyId) {
-    //       newNode = {
-    //         id: String(i),
-    //         type: "input",
-    //         data: {
-    //           label:
-    //             surveyQuestions[countQuestion]?.title !== ""
-    //               ? surveyQuestions[countQuestion]?.title
-    //               : "제목 없음",
-    //         },
-    //         position: { x: xAxis, y: yAxis },
-    //       };
-    //     } else {
-    //       newNode = {
-    //         id: String(i),
-    //         data: {
-    //           label:
-    //             surveyQuestions[countQuestion]?.title !== ""
-    //               ? surveyQuestions[countQuestion]?.title
-    //               : "제목 없음",
-    //         },
-    //         position: { x: xAxis, y: yAxis },
-    //       };
-    //     }
-    //
-    //     if (i != countQuestion - 1) {
-    //       newEdge = {
-    //         id: "e" + String(i) + "-" + String(i + 1),
-    //         source: String(i),
-    //         target: String(i + 1),
-    //       };
-    //
-    //       const isDuplicate = newEdgeTuple.some((edge) => {
-    //         return edge.id === newEdge.id;
-    //       });
-    //
-    //       if (!isDuplicate) {
-    //         newEdgeTuple.push(newEdge);
-    //       }
-    //     }
-    //
-    //     setCount((prevCount) => [...prevCount, 0]);
-    //     setIsMultiCondition((prevVal) => [...prevVal, 1]);
-    //     newNodeTuple.push(newNode);
-    //   }
-    // }
-    //
-    // const submitNode = {
-    //   id: "0",
-    //   type: "output",
-    //   data: { label: "submit" },
-    //   position: { x: 500, y: 30 + surveyQuestions.length * 100 },
-    // };
-    //
-    // const submitEdge = {
-    //   id: "e" + String(i) + "-0",
-    //   source: String(surveyQuestions.length),
-    //   target: "0",
-    // };
-    //
-    // const isDuplicate = newEdgeTuple.some((edge) => {
-    //   return edge.id === submitEdge.id;
-    // });
-    //
-    // if (!isDuplicate) {
-    //   newEdgeTuple.push(submitEdge);
-    // }
-    //
-    // newNodeTuple.push(submitNode);
-    //
-    // setNodes(newNodeTuple);
-    // setEdges(newEdgeTuple);
   }, [surveyQuestions]);
 
   const onClickSurveyDelete = (index: number) => {
@@ -387,16 +285,23 @@ const CreateSurveyDnd = (): JSX.Element => {
       ...surveyQuestions.slice(0, index),
       ...surveyQuestions.slice(index + 1),
     ];
-    const newNodeItems = [...nodes.slice(0, index), ...nodes.slice(index + 1)];
-    const newEdgeItems = [...edges.slice(0, index), ...edges.slice(index + 1)];
-    const newQuestionsTuple = [
-      ...edges.slice(0, index),
-      ...edges.slice(index + 1),
-    ];
 
-    setSurveyQuestions(newQuestionItems);
-    setNodes(newNodeItems);
-    setEdges(newEdgeItems);
+    const updatedSurveyQuestions = newQuestionItems.map((q, index) => {
+      if (Number(q.questionNumber) + 1 == Number(q.nextQuestionNumber)) {
+        return {
+          ...q,
+          questionNumber: String(index + 1),
+          nextQuestionNumber: String(index + 2),
+        };
+      } else {
+        return {
+          ...q,
+          questionNumber: String(index + 1),
+        };
+      }
+    });
+
+    setSurveyQuestions(updatedSurveyQuestions);
   };
 
   const mutation = useMutation<

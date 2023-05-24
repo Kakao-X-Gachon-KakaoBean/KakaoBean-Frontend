@@ -51,7 +51,9 @@ export const LogicControl = () => {
   const [questionList, setQuestionList] = useRecoilState(QuestionList);
   const questionListExceptMe = questionList.filter((question) => {
     if (Number(selNode) != 0)
-      return nodes[Number(selNode) - 1].id != question.value;
+      return (
+        surveyQuestions[Number(selNode) - 1].questionNumber != question.value
+      );
   });
 
   const getRandomColor = () => {
@@ -72,7 +74,37 @@ export const LogicControl = () => {
     }
   );
 
+  const hasNoLogicChange = surveyQuestions.some((question, index) => {
+    return (
+      index != surveyQuestions.length - 1 &&
+      Number(question.nextQuestionNumber) != Number(question.questionNumber) + 1
+    );
+  });
+
   const redrawNodeAndEdge = () => {
+    let logicStart: number[] = [];
+    let logicDest: any[] = [];
+    let noLogicStart: string[] = [];
+    let noLogicDest: string[] = [];
+
+    surveyQuestions.map((question, index) => {
+      if ("logics" in question && question.logics.length > 0) {
+        logicStart.push(index + 1);
+        const nextQuestionNumbers = question.logics.map(
+          (logic) => logic.nextQuestionNumber
+        );
+        logicDest.push(nextQuestionNumbers);
+      }
+      if (
+        index != surveyQuestions.length - 1 &&
+        Number(question.nextQuestionNumber) !=
+          Number(question.questionNumber) + 1
+      ) {
+        noLogicStart.push(question.questionNumber);
+        noLogicDest.push(question.nextQuestionNumber);
+      }
+    });
+
     // Node 설정
     const questionNodes: Node<any>[] = surveyQuestions.map(
       (question, index) => {
@@ -85,13 +117,53 @@ export const LogicControl = () => {
             position: { x: 250, y: 5 + index * 100 },
           };
         } else if (hasLogics) {
-          return {
-            id: question.id.toString().substring(15),
-            data: {
-              label: question.title ? question.title : "제목없음",
-            },
-            position: { x: 350, y: 5 + index * 100 },
-          };
+          if (logicStart.length == 1) {
+            if (logicDest[0] == "0") {
+              if (index < logicStart[0]) {
+                return {
+                  id: question.id.toString().substring(15),
+                  data: {
+                    label: question.title ? question.title : "제목없음",
+                  },
+                  position: { x: 250, y: 5 + index * 100 },
+                };
+              } else {
+                return {
+                  id: question.id.toString().substring(15),
+                  data: {
+                    label: question.title ? question.title : "제목없음",
+                  },
+                  position: { x: 350, y: 5 + index * 100 },
+                };
+              }
+            } else {
+              if (logicStart[0] < index + 1 && index + 1 < logicDest[0]) {
+                return {
+                  id: question.id.toString().substring(15),
+                  data: {
+                    label: question.title ? question.title : "제목없음",
+                  },
+                  position: { x: 350, y: 5 + index * 100 },
+                };
+              } else {
+                return {
+                  id: question.id.toString().substring(15),
+                  data: {
+                    label: question.title ? question.title : "제목없음",
+                  },
+                  position: { x: 250, y: 5 + index * 100 },
+                };
+              }
+            }
+          } else {
+            return {
+              id: question.id.toString().substring(15),
+              data: {
+                label: question.title ? question.title : "제목없음",
+              },
+              position: { x: 350, y: 5 + index * 100 },
+            };
+          }
         } else {
           return {
             id: question.id.toString().substring(15),
@@ -120,6 +192,44 @@ export const LogicControl = () => {
 
     // spread 연산자를 사용하여 두 배열을 합칩니다.
     const initialNodes: Node<any>[] = [...questionNodes, ...submitNode];
+
+    if (hasNoLogicChange) {
+      initialNodes.forEach((node, index) => {
+        const startFlag = noLogicStart.indexOf(
+          surveyQuestions[index]?.questionNumber
+        );
+        if (startFlag !== -1) {
+          const targetNode = initialNodes.find(
+            (node) => node.id == noLogicDest[startFlag]
+          );
+          let targetUpperNode;
+          if (targetNode !== undefined) {
+            targetNode.id == "0"
+              ? (targetUpperNode = initialNodes[initialNodes.length - 2])
+              : (targetUpperNode = initialNodes.find(
+                  (node) =>
+                    Number(node.id) == Number(noLogicDest[startFlag]) - 1
+                ));
+            const targetNodeIndex = initialNodes.indexOf(targetNode);
+
+            if (targetUpperNode !== undefined) {
+              for (let i = index + 1; i < targetNodeIndex; i++) {
+                const currentNode = initialNodes[i];
+                currentNode.position.x = currentNode.position.x + 100;
+              }
+              targetUpperNode.position = {
+                x: node.position.x + 100,
+                y: targetUpperNode.position.y,
+              };
+              node.position = {
+                x: node.position.x - 100,
+                y: targetUpperNode.position.y,
+              };
+            }
+          }
+        }
+      });
+    }
     setNodes(initialNodes);
 
     // Edge 설정
@@ -135,7 +245,7 @@ export const LogicControl = () => {
             };
           } else {
             const nextQuestion = surveyQuestions.find(
-              (q) => q.questionNumber === question.nextQuestionNumber
+              (q) => q.questionNumber == question.nextQuestionNumber
             );
             if (!nextQuestion) {
               return {
@@ -169,7 +279,7 @@ export const LogicControl = () => {
                 };
               } else {
                 const nextQuestion = surveyQuestions.find(
-                  (q) => q.questionNumber === logic.nextQuestionNumber
+                  (q) => q.questionNumber == logic.nextQuestionNumber
                 );
                 if (!nextQuestion) {
                   return {
@@ -192,7 +302,6 @@ export const LogicControl = () => {
                 }
               }
             });
-
             if (question.nextQuestionNumber === "0") {
               return [
                 ...logicEdges,
@@ -205,13 +314,13 @@ export const LogicControl = () => {
             } else {
               // 로직이 존재하던 존재하지 않던, 기본 이동도 추가한다.
               const nextQuestion = surveyQuestions.find(
-                (q) => q.questionNumber === question.nextQuestionNumber
+                (q) => q.questionNumber == question.nextQuestionNumber
               );
               if (!nextQuestion) {
                 return [
                   ...logicEdges,
                   {
-                    id: `${question.id.substring(15)}-0`,
+                    id: `${question.id.substring(15)}-0 llllllllll`,
                     source: question.id.toString().substring(15),
                     target: "0",
                   },
@@ -239,7 +348,7 @@ export const LogicControl = () => {
               };
             } else {
               const nextQuestion = surveyQuestions.find(
-                (q) => q.questionNumber === question.nextQuestionNumber
+                (q) => q.questionNumber == question.nextQuestionNumber
               );
               if (!nextQuestion) {
                 return {
@@ -263,50 +372,56 @@ export const LogicControl = () => {
       .filter((edge): edge is Edge<any> => edge !== undefined)
       .flat(); // 배열 평탄화, logic 값에 의해 묶여진 배열을 평탄화한다.
     initialEdges.sort();
-    console.log(initialEdges);
     setEdges(initialEdges);
   };
 
   const reDefineSurveyQuestion = () => {
-    const updatedSurveyList = [];
-    const sortedArray = [...surveyQuestions]; // 원래 배열을 변경하지 않고 새로운 배열을 생성합니다.
+    let sortedArray = [...surveyQuestions]; // 원래 배열을 변경하지 않고 새로운 배열을 생성합니다.
 
-    sortedArray.sort((a, b) => {
+    sortedArray = sortedArray.sort((a, b) => {
       return Number(a.questionNumber) - Number(b.questionNumber); // questionNumber를 기준으로 오름차순 정렬합니다.
     });
 
-    sortedArray.map((q) => {
-      if (Number(q.id.substring(15)) + 1 == Number(q.nextQuestionNumber)) {
+    sortedArray = sortedArray.map((q, index) => {
+      if (index == sortedArray.length - 1) {
         return {
           ...q,
-          id: "KEA-KakaoBeans-" + q.questionNumber,
-          nextQuestionNumber: q.questionNumber + 1,
+          nextQuestionNumber: "0",
+          finalQuestion: true,
+        };
+      } else if (
+        Number(q.id.substring(15)) + 1 ==
+        Number(q.nextQuestionNumber)
+      ) {
+        return {
+          ...q,
+          nextQuestionNumber: String(Number(q.questionNumber) + 1),
         };
       } else {
         return q;
       }
     });
 
-    sortedArray.map((q, index) => {
-      updatedSurveyList.push({
-        value: q.questionNumber,
-        label: q.questionNumber,
-      });
-      if (index == sortedArray.length - 1) {
-        return {
-          ...q,
-          finalQuestion: true,
-          nextQuestionNumber: "0",
-        };
-      }
-    });
-    updatedSurveyList.push({ value: "0", label: "제출하기" });
-    setQuestionList(updatedSurveyList);
+    console.log("sortedArray!!!!!");
+    console.log(sortedArray);
     setSurveyQuestions(sortedArray);
   };
 
   useEffect(() => {
     reDefineSurveyQuestion();
+
+    const updatedSurveyList: any[] = [];
+    surveyQuestions.map((q) => {
+      updatedSurveyList.push({
+        value: Number(q.questionNumber),
+        label: Number(q.questionNumber),
+      });
+    });
+    updatedSurveyList.sort((a, b) => {
+      return a.value - b.value;
+    });
+    updatedSurveyList.push({ value: "0", label: "제출하기" });
+    setQuestionList(updatedSurveyList);
   }, []);
 
   useEffect(() => {
@@ -409,50 +524,9 @@ export const LogicControl = () => {
   const NoLogicChangeNext = (value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
-    let updatedNodes = JSON.parse(JSON.stringify(nodes));
-
-    const originValue = updatedQuestions[questionIndex].nextQuestionNumber;
-    const originNextValue = String(Number(selNode) + 1);
-    const originNode = nodes.find((node) => Number(node.id) == Number(value));
-    const submitUpperNodeYAxis =
-      updatedNodes[surveyQuestions.length - 1].position.y;
-    const targetUpperNode = nodes.find(
-      (node) => Number(node.id) == Number(value) - 1
-    );
-    const targetUpperNodeYAxis = targetUpperNode?.position.y;
 
     updatedQuestions[questionIndex].nextQuestionNumber = value;
     setSurveyQuestions(updatedQuestions);
-
-    //선택한 값이 기존 값과 다를때만 Node, Edge 변경
-    // if (value != originValue) {
-    //   if (Number(value) == 0) {
-    //     updatedNodes.forEach((node: Node) => {
-    //       if (Number(node.id) == Number(selNode)) {
-    //         node.position.x = node.position.x - 100;
-    //         node.position.y = submitUpperNodeYAxis;
-    //       } else if (Number(node.id) != 0) {
-    //         node.position.x = node.position.x + 100;
-    //       }
-    //     });
-    //   } else if (value == originNextValue && originNode != undefined) {
-    //     updatedNodes[questionIndex].position.x = originNode.position.x;
-    //     updatedNodes[questionIndex].position.y =
-    //       updatedNodes[questionIndex + 1].position.y - 100;
-    //   } else if (
-    //     (targetUpperNode != null || targetUpperNode != undefined) &&
-    //     targetUpperNodeYAxis != null
-    //   ) {
-    //     updatedNodes.forEach((node: Node) => {
-    //       if (Number(node.id) == Number(selNode)) {
-    //         node.position.x = node.position.x - 100;
-    //         node.position.y = targetUpperNodeYAxis;
-    //       } else if (Number(node.id) != 0 && Number(node.id) < Number(value)) {
-    //         node.position.x = node.position.x + 100;
-    //       }
-    //     });
-    //   }
-    // }
   };
 
   return (
