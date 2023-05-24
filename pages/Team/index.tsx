@@ -166,7 +166,7 @@ const Team = () => {
       setLogicQueue((prevState) => {
         return [...prevState, Number(slideToGo) - 1];
       });
-      // setSlideToGo("0");
+      setSlideToGo("0");
     } else {
       console.log("in here");
       setLogicQueue((prevState) => {
