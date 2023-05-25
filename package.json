@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack serve --env development",
     "build": "cross-env NODE_ENV=production webpack",
-    "cypress:open": "cypress open"
+    "cypress": "cypress open"
   },
   "author": "SeongJun",
   "license": "MIT",

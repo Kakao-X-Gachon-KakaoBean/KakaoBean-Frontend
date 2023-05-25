@@ -10,7 +10,7 @@
     "strict": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "typeRoots": ["types"],
+    "typeRoots": ["types","typings", "node_modules/@types"],
     "types": ["cypress","node"],
     "paths": {
       "@hooks/*": ["hooks/*"],
