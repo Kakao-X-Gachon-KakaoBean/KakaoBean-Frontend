@@ -78,7 +78,7 @@ const Team = () => {
         setSurvey(data);
         setReportData((prevState) => ({
           ...prevState,
-          surveyId: Number(survey?.surveyId),
+          surveyId: data?.surveyId,
         }));
       },
     }
