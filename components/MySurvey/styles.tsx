@@ -36,7 +36,7 @@ export const CreateSurveyContainer = styled.div`
 `;
 export const SurveyContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
   grid-row-gap: 2rem;
   @media (max-width: 769px) {
     display: flex;
