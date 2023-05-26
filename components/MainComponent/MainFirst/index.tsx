@@ -57,16 +57,15 @@ const MainFirst = () => {
           Cocoa
           <br />
         </Text>
-        <Link
-          to="/createsurvey"
-          onClick={handleClick}
-          style={{ textDecoration: "none" }}
-        >
-          <Button>
+        <Button>
+          <Link
+            to="/createsurvey"
+            onClick={handleClick}
+            style={{ textDecoration: "none" }}
+          >
             Get Start
-            <br />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </TextDiv>
     </Wrapper>
   );
