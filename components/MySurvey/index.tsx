@@ -14,7 +14,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
 
 const MySurvey = () => {
@@ -29,7 +28,7 @@ const MySurvey = () => {
     fetcher({ queryKey: "http://localhost:8080/surveys/own-survey" })
   );
 
-  const mutation = useMutation<any, AxiosError, { SurveyId: any }>(
+  const mutation = useMutation<string, AxiosError, { SurveyId: string }>(
     "DeleteSurvey",
     ({ SurveyId }) =>
       axios
@@ -44,7 +43,7 @@ const MySurvey = () => {
     {
       onMutate() {},
       onSuccess(data) {
-        alert("성공");
+        alert("설문이 삭제되었습니다.");
       },
       onError(error) {
         alert("실패");
