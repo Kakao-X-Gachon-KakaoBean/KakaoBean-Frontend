@@ -1,0 +1,19 @@
+{
+  "myOwnSurveys": [
+    {
+      "surveyId": 1,
+      "surveyTitle": "내가 만든 설문 제목",
+      "numberOfResponse": 4
+    },
+    {
+      "surveyId": 2,
+      "surveyTitle": "내가 만든 설문 제목2",
+      "numberOfResponse": 6
+    },
+    {
+      "surveyId": 3,
+      "surveyTitle": "내가 만든 설문 제목3",
+      "numberOfResponse": 1
+    }
+  ]
+}
