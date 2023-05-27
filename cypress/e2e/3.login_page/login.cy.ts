@@ -1,9 +1,9 @@
-describe("Login page test", () => {
+describe("3.login_page page test", () => {
   beforeEach(() => {
     cy.visit("/login");
   });
 
-  it("check Login page", () => {
+  it("check 3.login_page page", () => {
     cy.contains("Cocoa");
   });
 

@@ -11,7 +11,13 @@ describe("Header", () => {
     "헤더 바의 메뉴들은 유효한 링크를 가지고 있어야 하며, 각 링크는 메뉴 구성과 같아야 한다.",
     () => {
       it("네비게이션 요소", () => {
-        const menuItems = ["Product", "Team", "MY PAGE", "Login", "Get Start"];
+        const menuItems = [
+          "Product",
+          "Team",
+          "MY PAGE",
+          "3.login_page",
+          "Get Start",
+        ];
         cy.get(".css-120oq2b")
           .find("span")
           .each(($span, index) => {
@@ -40,7 +46,7 @@ describe("Header", () => {
           } else {
             cy.get(":nth-child(4) > a")
               .should("be.visible")
-              .should("have.text", "Login");
+              .should("have.text", "3.login_page");
           }
         });
       });
