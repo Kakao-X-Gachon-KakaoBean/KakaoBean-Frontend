@@ -29,6 +29,7 @@ import { PaswwordModal } from "@components/PasswordModal/type";
 import { useMutation } from "react-query";
 import { Search } from "@components/SearchEmail/type";
 import useInput from "../../hooks/useInput";
+import { IUser } from "../../States/UserState";
 
 const SearchPassword: FC<PaswwordModal> = ({
   name,
@@ -38,12 +39,14 @@ const SearchPassword: FC<PaswwordModal> = ({
   onChangeBirth,
 }) => {
   const [email, onChangeEmail, setEmail] = useInput("");
-  const [password, , setPassword] = useInput("");
-  const [checkPassword, , setCheckPassword] = useInput("");
+  const [passwordToChange, , setPasswordToChange] = useInput("");
+  const [checkPasswordToChange, , setCheckPasswordToChange] = useInput("");
   const [emailAuthKey, onChangeEmailAuthKey, seyAuthKey] = useInput("");
   const [failUseEmail, setFailUseEmail] = useState(false);
   const [mismatchError, setMismatchError] = useState(false);
-
+  const message = (message: string) => (
+    <div style={{ fontSize: "1rem" }}>{message}</div>
+  );
   //입력한 이메일로 인증번호 보내기
   const onSubmitEmail = useCallback(
     (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -77,18 +80,18 @@ const SearchPassword: FC<PaswwordModal> = ({
 
   const onChangePassword = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setPassword(e.target.value);
-      setMismatchError(e.target.value === checkPassword);
+      setPasswordToChange(e.target.value);
+      setMismatchError(e.target.value === checkPasswordToChange);
     },
-    [password, setPassword]
+    [passwordToChange, setPasswordToChange]
   );
 
   const onChangeCheckPassword = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setCheckPassword(e.target.value);
-      setMismatchError(e.target.value === password);
+      setCheckPasswordToChange(e.target.value);
+      setMismatchError(e.target.value === passwordToChange);
     },
-    [password, setCheckPassword]
+    [passwordToChange, setCheckPasswordToChange]
   );
 
   const stopPropagation = useCallback(
@@ -98,48 +101,72 @@ const SearchPassword: FC<PaswwordModal> = ({
     []
   );
 
-  //url 수정 필요할수도
   const mutation = useMutation<
-    Search,
+    string,
     AxiosError,
     {
       email: string;
       emailAuthKey: string;
-      password: string;
-      checkPassword: string;
+      passwordToChange: string;
+      checkPasswordToChange: string;
     }
   >(
-    "searchEmail",
+    "modifyPassword",
     (data) =>
       axios
-        .post("http://localhost:8080/members/find-password", data, {
-          withCredentials: true,
-        })
+        .patch("http://localhost:8080/members/password", data)
         .then((response) => response.data),
     {
       onMutate() {
         // setLogInError(false);
       },
       onSuccess() {
+        toast(message("비밀번호가 변경 되었습니다."), {
+          type: "success",
+        });
         console.log("요청 성공");
       },
       onError(error) {
         // setLogInError(error.response?.data?.code === 401);
-        alert("정보를 잘못 입력하셨습니다.");
+        toast(message("정보를 잘못 입력하셨습니다."), { type: "error" });
+        console.log(error);
       },
     }
   );
 
   const onSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      mutation.mutate({ email, emailAuthKey, password, checkPassword });
+    (e?: React.FormEvent<HTMLFormElement>) => {
+      e?.preventDefault();
+      const message = (message: string) => (
+        <div style={{ fontSize: "1rem" }}>{message}</div>
+      );
+
+      if (email && emailAuthKey && passwordToChange && checkPasswordToChange) {
+        mutation.mutate({
+          email,
+          emailAuthKey,
+          passwordToChange,
+          checkPasswordToChange,
+        });
+      }
     },
-    [email, emailAuthKey, password, checkPassword, mutation]
+    [email, emailAuthKey, passwordToChange, checkPasswordToChange, mutation]
   );
 
   return (
     <Wrapper onClick={stopPropagation}>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      ></ToastContainer>
       <Form>
         <Div>
           <Header>비밀번호 변경</Header>
@@ -181,7 +208,7 @@ const SearchPassword: FC<PaswwordModal> = ({
           type="password"
           id="password"
           name="password"
-          value={password}
+          value={passwordToChange}
           onChange={onChangePassword}
           placeholder="비밀번호"
         />
@@ -191,29 +218,37 @@ const SearchPassword: FC<PaswwordModal> = ({
           type="password"
           id="passwordCheck"
           name="passwordCheck"
-          value={checkPassword}
+          value={checkPasswordToChange}
           onChange={onChangeCheckPassword}
           placeholder="비밀번호 확인"
         />
-        {!mismatchError && checkPassword.length >= 1 && (
+        {!mismatchError && checkPasswordToChange.length >= 1 && (
           <Error>비밀번호가 일치하지 않습니다!</Error>
         )}
-        {mismatchError && checkPassword.length >= 1 && (
+        {mismatchError && checkPasswordToChange.length >= 1 && (
           <Correct>비밀번호가 일치합니다!</Correct>
         )}
       </Label>
 
       {/*{failUseEmail && !proveEmail && (*/}
-      {(!mismatchError && checkPassword.length >= 1) ||
-      (mismatchError && checkPassword.length >= 1) ? (
+      {(!mismatchError && checkPasswordToChange.length >= 1) ||
+      (mismatchError && checkPasswordToChange.length >= 1) ? (
         <InputKeyWithText>
-          <Form onSubmit={onSubmit}>
+          <Form
+            onSubmit={(e) => {
+              onSubmit(e);
+            }}
+          >
             <Button type="submit">비밀번호 변경</Button>
           </Form>
         </InputKeyWithText>
       ) : (
         <InputKey>
-          <Form onSubmit={onSubmit}>
+          <Form
+            onSubmit={(e) => {
+              onSubmit(e);
+            }}
+          >
             <Button type="submit">비밀번호 변경</Button>
           </Form>
         </InputKey>
