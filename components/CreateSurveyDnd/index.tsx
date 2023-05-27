@@ -533,7 +533,7 @@ const CreateSurveyDnd = (): JSX.Element => {
           open={isModalOpen}
           onCancel={handleOk}
           footer={[
-            <CopyToClipboard text={`http://localhost:8080/surveys/${surveyId}`}>
+            <CopyToClipboard text={`http://localhost:3000/surveys/${surveyId}`}>
               <Button type="primary">링크 복사하기</Button>
             </CopyToClipboard>,
           ]}
