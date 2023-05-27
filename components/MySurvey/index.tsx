@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
 import {
@@ -15,8 +15,16 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import axios, { AxiosError } from "axios";
+import { Button, Modal } from "antd";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const MySurvey = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
   const {
     isLoading,
     isSuccess,
@@ -43,7 +51,7 @@ const MySurvey = () => {
     {
       onMutate() {},
       onSuccess(data) {
-        alert("설문이 삭제되었습니다.");
+        setIsModalOpen(true);
       },
       onError(error) {
         alert("실패");
@@ -91,6 +99,13 @@ const MySurvey = () => {
           </Link>
         </CreateSurveyContainer>
       )}
+      <Modal
+        title="Cocoa"
+        open={isModalOpen}
+        onCancel={handleOk}
+        footer={[<p>설문이 삭제되었습니다.</p>]}
+        centered
+      ></Modal>
     </>
   );
 };
