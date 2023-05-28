@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import fetcher from "@utils/fetcher";
 import {
   SurveyBox,
@@ -20,10 +20,25 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const MySurvey = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteSurveyId, setDeleteSurveyId] = useState(""); // 삭제할 설문의 ID 저장
+  const queryClient = useQueryClient();
 
-  const handleOk = () => {
+  const handleDeleteConfirmation = useCallback((SurveyId) => {
+    setDeleteSurveyId(SurveyId);
+    setIsModalOpen(true);
+  }, []);
+
+  const handleDelete = useCallback(() => {
+    if (deleteSurveyId) {
+      DeleteSurvey(deleteSurveyId);
+    }
     setIsModalOpen(false);
-  };
+  }, [deleteSurveyId]);
+
+  const handleCancel = useCallback(() => {
+    setDeleteSurveyId("");
+    setIsModalOpen(false);
+  }, []);
 
   const {
     isLoading,
@@ -51,7 +66,8 @@ const MySurvey = () => {
     {
       onMutate() {},
       onSuccess(data) {
-        setIsModalOpen(true);
+        setIsModalOpen(false);
+        queryClient.invalidateQueries("MySurvey");
       },
       onError(error) {
         alert("실패");
@@ -69,28 +85,23 @@ const MySurvey = () => {
   return (
     <>
       <SurveyHeader>내가 만든 설문 조회</SurveyHeader>
-      {MySurvey ? (
+      {MySurvey?.myOwnSurveys.length >= 1 ? (
         <SurveyContainer>
           {MySurvey &&
-            [...Array(MySurvey?.myOwnSurveys.length)].map((e, index) => {
-              const SurveyId = MySurvey?.myOwnSurveys[index].surveyId;
-              return (
-                <SurveyBox>
-                  <SurveyInfo>
-                    <SurveyTitle>
-                      {MySurvey?.myOwnSurveys[index]?.surveyTitle}
-                    </SurveyTitle>
-                    <FontAwesomeIcon
-                      icon={faTrashCan}
-                      onClick={() => DeleteSurvey(SurveyId)}
-                    />
-                  </SurveyInfo>
-                  <SurveyResult>
-                    응답 개수:{MySurvey?.myOwnSurveys[index]?.numberOfResponse}
-                  </SurveyResult>
-                </SurveyBox>
-              );
-            })}
+            MySurvey.myOwnSurveys.map((survey: any) => (
+              <SurveyBox key={survey.surveyId}>
+                <SurveyInfo>
+                  <SurveyTitle>{survey.surveyTitle}</SurveyTitle>
+                  <FontAwesomeIcon
+                    icon={faTrashCan}
+                    onClick={() => handleDeleteConfirmation(survey.surveyId)}
+                  />
+                </SurveyInfo>
+                <SurveyResult>
+                  응답 개수: {survey.numberOfResponse}
+                </SurveyResult>
+              </SurveyBox>
+            ))}
         </SurveyContainer>
       ) : (
         <CreateSurveyContainer>
@@ -102,10 +113,19 @@ const MySurvey = () => {
       <Modal
         title="Cocoa"
         open={isModalOpen}
-        onCancel={handleOk}
-        footer={[<p>설문이 삭제되었습니다.</p>]}
+        onCancel={handleCancel}
         centered
-      ></Modal>
+        footer={[
+          <Button key="no" onClick={handleCancel}>
+            아니요
+          </Button>,
+          <Button key="yes" type="primary" danger onClick={handleDelete}>
+            예
+          </Button>,
+        ]}
+      >
+        <p>정말 설문을 삭제하시겠습니까?</p>
+      </Modal>
     </>
   );
 };
