@@ -27,7 +27,7 @@ const SurveyList = () => {
   return (
     <>
       <SurveyHeader>참여 설문 조회</SurveyHeader>
-      {SurveyList?.mySubmittedSurveys.length == 0 ? (
+      {SurveyList?.mySubmittedSurveys.length >= 1 ? (
         <SurveyContainer>
           {SurveyList &&
             [...Array(SurveyList?.mySubmittedSurveys.length)].map(
@@ -37,12 +37,12 @@ const SurveyList = () => {
                   <SurveyBox>
                     <SurveyInfo>
                       <SurveyTitle>
-                        {SurveyList?.mySubmittedSurveys?.surveyTitle}
+                        {SurveyList?.mySubmittedSurveys[index]?.surveyTitle}
                       </SurveyTitle>
-                      <FontAwesomeIcon icon={faTrashCan} />
                     </SurveyInfo>
                     <SurveyResult>
-                      마감 일자: {SurveyList?.mySubmittedSurveys?.submittedDate}
+                      마감 일자:
+                      {SurveyList?.mySubmittedSurveys[index]?.submittedDate}
                     </SurveyResult>
                   </SurveyBox>
                 );
