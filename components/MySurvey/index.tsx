@@ -16,14 +16,13 @@ import { Link } from "react-router-dom";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import axios, { AxiosError } from "axios";
 import { Button, Modal } from "antd";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const MySurvey = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteSurveyId, setDeleteSurveyId] = useState(""); // 삭제할 설문의 ID 저장
   const queryClient = useQueryClient();
 
-  const handleDeleteConfirmation = useCallback((SurveyId) => {
+  const handleDeleteConfirmation = useCallback((SurveyId: any) => {
     setDeleteSurveyId(SurveyId);
     setIsModalOpen(true);
   }, []);
@@ -76,7 +75,7 @@ const MySurvey = () => {
   );
 
   const DeleteSurvey = useCallback(
-    (SurveyId) => {
+    (SurveyId: any) => {
       mutation.mutate({ SurveyId });
     },
     [mutation]

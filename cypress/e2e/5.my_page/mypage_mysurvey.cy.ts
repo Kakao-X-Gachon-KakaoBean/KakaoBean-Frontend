@@ -11,29 +11,31 @@ describe("내가 만든 설문 테스트", () => {
     });
   });
 
-  // context("내가 만든 설문이 없을 경우", () => {
-  //   it("플러스 버튼을 클릭했을 때 설문 생성 페이지로 가야한다.", () => {
-  //     cy.get('a[data-testid="createsurvey-link"]').click();
-  //
-  //     cy.url().should("include", "/createsurvey");
-  //   });
-  //
-  //   it("설문 컨테이너가 보이면 안된다.", () => {
-  //     cy.get(".css-i1r8ft > :nth-child(1)");
-  //   });
-  // });
-  //
-  // context("내가 만든 설문이 있을 경우", () => {
-  //   it("설문 컨테이너가 보여야 한다.", () => {
-  //     cy.get(".css-i1r8ft > :nth-child(1)");
-  //   });
-  //
-  //   it("설문 컨테이너에 삭제 버튼이 보여야 한다.", () => {
-  //     cy.get(":nth-child(1) > .css-1hewqy");
-  //   });
-  //
-  //   it("설문 삭제 버튼을 누르면 설문 삭제가 되어야 한다.", () => {
-  //     cy.get(":nth-child(1) > .css-1hewqy");
-  //   });
-  // });
+  context("내가 만든 설문이 있을 경우", () => {
+    it("loads MySurvey data successfully", () => {
+      cy.intercept("GET", "http://localhost:8080/surveys/own-survey", {
+        fixtures: "ownsurvey.json",
+      }).as("MySurvey"); // API 요청을 가로채고 가상의 응답을 제공
+
+      cy.wait("@MySurvey").then((interception) => {
+        // 응답 가져오기
+        const mySurveyResponse = interception.response;
+
+        // 콘솔에 출력
+        alert(mySurveyResponse);
+
+        // 추가 작업 수행
+        // ...
+      });
+
+      cy.get("[data-testid=SurveyContainer]").should("be.visible");
+      cy.get(".css-1ckhj9a").should("not.exist");
+    });
+  });
+
+  context("내가 만든 설문이 없을 경우", () => {
+    it("설문 생성 링크 박스가 보여야 한다.", () => {
+      cy.get(".css-1ckhj9a").should("be.visible");
+    });
+  });
 });
