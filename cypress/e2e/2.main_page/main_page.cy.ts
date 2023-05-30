@@ -26,7 +26,7 @@ describe("메인 페이지", () => {
   });
   context("Get Start 버튼을 클릭했을 경우", () => {
     it("로그인 상태를 확인하고, 로그인 상태면 설문생성으로 이동해야한다.", () => {
-      // localStorage를 확인해서 로그다인 상태인지 확인
+      // localStorage를 확인해서 로그인 상태인지 확인
       cy.window().then((win) => {
         const accessToken = win.localStorage.getItem("accessToken");
         // mockAccessToken으로 테스트 가능
