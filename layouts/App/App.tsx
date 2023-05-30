@@ -23,6 +23,7 @@ const App = () => {
       <Route path="/signup" component={SignUp} />
       <Route path="/login" component={LogIn} />
       <Route path="/team" component={Team} />
+      <Route path="/survey/:id" component={Team} />
       <Route path="/product" component={Product} />
       <Route path="/mypage" component={MyPage} />
       <Route path="/mypage/:id" component={MyPage} />
