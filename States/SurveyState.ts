@@ -40,11 +40,6 @@ export const selectedNodeState = atom<Node>({
   },
 });
 
-export const selectedNodeAnswerState = atom<DataRow[]>({
-  key: "selectedNodeAnswerState",
-  default: [],
-});
-
 type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
 export const questionsState = atom<QuestionTypes[]>({
   key: "questionsState",
