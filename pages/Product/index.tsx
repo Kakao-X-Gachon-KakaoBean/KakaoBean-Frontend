@@ -431,7 +431,6 @@ const Product = () => {
               </SurveySection>
             );
           } else {
-            // Handle other types if needed
             return null;
           }
         })}
