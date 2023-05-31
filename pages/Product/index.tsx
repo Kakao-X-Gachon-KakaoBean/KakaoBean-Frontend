@@ -131,6 +131,16 @@ const Product = () => {
         explanation: "ex2",
         answers: ["1번답변", "2번답변", "3번답변"],
       },
+      {
+        type: "MULTIPLE",
+        title: "123123Multiple Question Title",
+        explanation: "ex3",
+        answers: [
+          { name: "6", value: 20 },
+          { name: "2", value: 65 },
+          { name: "16", value: 15 },
+        ],
+      },
     ],
   };
 
