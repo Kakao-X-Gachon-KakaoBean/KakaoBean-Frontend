@@ -6,39 +6,16 @@ import ReactFlow, {
   useEdgesState,
   Background,
 } from "react-flow-renderer";
-import inComingData from "./incoming2.json"; // incoming3.json
 import { Wrapper } from "@components/SurveyResponseLogicFlow/styles";
 import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
-import {
-  selectedNodeAnswerState,
-  selectedNodeState,
-} from "../../States/SurveyState";
+import { selectedNodeState } from "../../States/SurveyState";
 import { useRecoilState, useResetRecoilState } from "recoil";
-import { useMutation } from "react-query";
-import { IUser } from "../../States/UserState";
-import axios, { AxiosError } from "axios";
+import { incomingSurvey } from "../../pages/Survey/SurveyResponseDetail/type";
 
-// const mutation = useMutation<
-//   IUser,
-//   AxiosError,
-//   {
-//     surveyId: string;
-//   }
-// >(
-//   "surveyResponseDetail",
-//   (data) =>
-//     axios
-//       .post("http://localhost:8080/surveyresponsedetail", data)
-//       .then((response) => response.data),
-//   {
-//     onMutate() {},
-//     onSuccess() {},
-//     onError(error) {
-//       alert("양식을 알맞게 작성해주세요");
-//     },
-//   }
-// );
-const SurveyResponseLogicFlow = () => {
+interface SurveyResponseLogicFlowProps {
+  survey: incomingSurvey;
+}
+const SurveyResponseLogicFlow = ({ survey }: SurveyResponseLogicFlowProps) => {
   const getRandomColor = () => {
     // 랜덤한 색상을 생성
     const letters = "0123456789ABCDEF";
@@ -50,46 +27,45 @@ const SurveyResponseLogicFlow = () => {
   };
 
   // 로직 유무 확인
-  const hasLogics = inComingData.questions.some(
-    (question) => question.logics && question.logics.length > 0
+  const hasLogics = survey.questions.some(
+    (question) =>
+      "logics" in question && question.logics && question.logics.length > 0
   );
 
   // Node 설정
-  const questionNodes: Node<any>[] = inComingData.questions.map(
-    (question, index) => {
-      if (question.logics && question.logics.length > 0) {
-        return {
-          id: question.questionId.toString(),
-          data: {
-            label: question.title,
-          },
-          position: { x: 250, y: 5 + index * 100 },
-        };
-      } else if (hasLogics) {
-        return {
-          id: question.questionId.toString(),
-          data: {
-            label: question.title,
-          },
-          position: { x: 350, y: 5 + index * 100 },
-        };
-      } else {
-        return {
-          id: question.questionId.toString(),
-          data: {
-            label: question.title,
-          },
-          position: { x: 250, y: 5 + index * 100 },
-        };
-      }
+  const questionNodes: Node<any>[] = survey.questions.map((question, index) => {
+    if ("logics" in question && question.logics && question.logics.length > 0) {
+      return {
+        id: question.questionId.toString(),
+        data: {
+          label: question.title,
+        },
+        position: { x: 250, y: 5 + index * 100 },
+      };
+    } else if (hasLogics) {
+      return {
+        id: question.questionId.toString(),
+        data: {
+          label: question.title,
+        },
+        position: { x: 350, y: 5 + index * 100 },
+      };
+    } else {
+      return {
+        id: question.questionId.toString(),
+        data: {
+          label: question.title,
+        },
+        position: { x: 250, y: 5 + index * 100 },
+      };
     }
-  );
+  });
   // 새로운 배열을 생성하고 제출 노드를 추가합니다.
   const submitNode: Node<any>[] = [
     {
       id: "submit",
       data: {
-        label: "제출",
+        label: "제출(전체 응답)",
       },
       position: {
         x: 250,
@@ -102,7 +78,7 @@ const SurveyResponseLogicFlow = () => {
   const initialNodes: Node<any>[] = [...questionNodes, ...submitNode];
 
   // Edge 설정
-  const initialEdges: Edge<any>[] = inComingData.questions
+  const initialEdges: Edge<any>[] = survey.questions
     .filter((question) => question.nextQuestionNumber !== "")
     .map((question) => {
       // node question 이 주관식, 혹은 선형배율식일 경우엔 nextQuestionNumber에 해당하는 노드를 찾아서 연결한다.
@@ -114,7 +90,7 @@ const SurveyResponseLogicFlow = () => {
             target: "submit",
           };
         } else {
-          const nextQuestion = inComingData.questions.find(
+          const nextQuestion = survey.questions.find(
             (q) => q.questionNumber === question.nextQuestionNumber
           );
           if (!nextQuestion) {
@@ -132,7 +108,11 @@ const SurveyResponseLogicFlow = () => {
       // node question이 객관식인 경우
       else if (question.type === "MULTIPLE") {
         // 로직이 존재하는 경우, 로직 length 만큼 edge를 생성한다.
-        if (question.logics && question.logics.length > 0) {
+        if (
+          "logics" in question &&
+          question.logics &&
+          question.logics.length > 0
+        ) {
           const logicEdges = question.logics.map((logic: Logic) => {
             if (logic.nextQuestionNumber === "0") {
               return {
@@ -143,7 +123,7 @@ const SurveyResponseLogicFlow = () => {
                 style: { stroke: getRandomColor() }, // 엣지의 색상을 랜덤으로 변경
               };
             } else {
-              const nextQuestion = inComingData.questions.find(
+              const nextQuestion = survey.questions.find(
                 (q) => q.questionNumber === logic.nextQuestionNumber
               );
               if (!nextQuestion) {
@@ -172,7 +152,7 @@ const SurveyResponseLogicFlow = () => {
             ];
           } else {
             // 로직이 존재하던 존재하지 않던, 기본 이동도 추가한다.
-            const nextQuestion = inComingData.questions.find(
+            const nextQuestion = survey.questions.find(
               (q) => q.questionNumber === question.nextQuestionNumber
             );
             if (!nextQuestion) {
@@ -199,7 +179,7 @@ const SurveyResponseLogicFlow = () => {
               target: "submit",
             };
           } else {
-            const nextQuestion = inComingData.questions.find(
+            const nextQuestion = survey.questions.find(
               (q) => q.questionNumber === question.nextQuestionNumber
             );
             if (!nextQuestion) {
@@ -222,39 +202,21 @@ const SurveyResponseLogicFlow = () => {
   useEffect(() => {
     return () => {
       resetSelectedNodeState();
-      resetSelectedNodeAnswerState();
     };
   }, []);
 
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useRecoilState(selectedNodeState);
-  const [selectedNodeAnswer, setSelectedNodeAnswer] = useRecoilState(
-    selectedNodeAnswerState
-  );
   const resetSelectedNodeState = useResetRecoilState(selectedNodeState);
-  const resetSelectedNodeAnswerState = useResetRecoilState(
-    selectedNodeAnswerState
-  );
 
   const onNodeClick = (event: React.MouseEvent, node: Node) => {
-    console.log(`Clicked node ${node.id} with data:`, node.data);
+    // console.log(`Clicked node ${node.id} with data:`, node.data);
     setSelectedNode({
       id: node.id,
       data: node.data,
       position: node.position,
     });
-    //mutation 되어서 받은 값과 선택된 node.id, node.data를 비교하여 answer를 설정한다.
-    // 이 위치에 node.id에 따른 answer를 불러온다.
-    setSelectedNodeAnswer([
-      {
-        name: "김윤호",
-        mail: "hkj9909@gmail.com",
-        gender: "남자",
-        age: "25",
-        answer: "주관식 문제에 대한 김윤호의 응답",
-      },
-    ]);
   };
 
   return (

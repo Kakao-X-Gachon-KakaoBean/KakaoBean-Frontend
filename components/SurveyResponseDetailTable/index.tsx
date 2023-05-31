@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Typography } from "antd";
 const { Paragraph, Title } = Typography;
@@ -12,12 +12,12 @@ import {
   TableDiv,
   Wrapper,
 } from "@components/SurveyResponseDetailTable/styles";
-import {
-  selectedNodeAnswerState,
-  selectedNodeState,
-} from "../../States/SurveyState";
-// import { movies } from "./data";
+import { selectedNodeState } from "../../States/SurveyState";
 import DataRow from "./type";
+import {
+  incomingResponses,
+  QuestionResponse,
+} from "../../pages/Survey/SurveyResponseDetail/type";
 
 const columns: TableColumn<DataRow>[] = [
   {
@@ -42,16 +42,58 @@ const columns: TableColumn<DataRow>[] = [
   },
   {
     name: "응답",
-    selector: (row) =>
-      row.answer.length < 20 ? row.answer : row.answer.slice(0, 19) + "...",
+    selector: (row) => {
+      let answer = row.answer;
+      if (answer) {
+        if (typeof answer == "number") {
+          answer = answer.toString();
+        } else if (typeof answer == "object") {
+          answer = answer.join(", ");
+        }
+        if (typeof answer == "string" && answer.length > 20) {
+          return answer.slice(0, 19) + "...";
+        } else {
+          return answer;
+        }
+      }
+      return "응답이 없습니다.";
+    },
     sortable: true,
   },
 ];
-const SurveyResponseDetailTable = () => {
+
+interface SurveyResponseDetailTableProps {
+  responses: incomingResponses[];
+}
+const SurveyResponseDetailTable = ({
+  responses,
+}: SurveyResponseDetailTableProps) => {
   const selectedNode = useRecoilValue(selectedNodeState);
-  const [selectedNodeAnswer, setSelectedNodeAnswer] = useRecoilState(
-    selectedNodeAnswerState
-  );
+  const [responseData, setResponseData] = useState<DataRow[]>([]);
+  useEffect(() => {
+    setResponseData([]);
+    const initialResponse: DataRow[] = [];
+    responses.forEach((user, userIndex) => {
+      user.questionResponses.forEach((userResponse, userResponseIndex) => {
+        if (userResponse.questionId.toString() == selectedNode.id) {
+          const newResponse = {
+            name: user.name,
+            mail: user.email,
+            gender: user.gender,
+            age: user.age,
+            answer:
+              userResponse.type == "MULTIPLE" && userResponse.answers
+                ? userResponse.answers.join(", ")
+                : userResponse.answer
+                ? userResponse.answer.toString()
+                : "",
+          };
+          initialResponse.push(newResponse);
+        }
+      });
+    });
+    setResponseData(initialResponse);
+  }, [selectedNode]);
   const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
     data,
   }) => {
@@ -75,7 +117,7 @@ const SurveyResponseDetailTable = () => {
       <TableDiv>
         <DataTable
           columns={columns}
-          data={selectedNodeAnswer}
+          data={responseData}
           pagination
           paginationPerPage={15}
           expandableRows
