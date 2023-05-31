@@ -1,12 +1,5 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { PropsWithChildren } from "react";
 import {
-  LineChart,
-  Line,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -14,14 +7,12 @@ import {
   Legend,
   PieChart,
   Pie,
-  Sector,
   Cell,
   ResponsiveContainer,
   BarChart,
   Bar,
 } from "recharts";
 
-import { Header } from "@components/MyInfo/styles";
 import {
   GoingResult,
   LeftResult,
@@ -62,42 +53,124 @@ import HeaderBar from "@components/HeaderBar";
 import { Link } from "react-router-dom";
 import { Button } from "antd";
 const Product = () => {
-  const data = [
-    {
-      name: "10대",
-      인원수: 10,
-    },
-    {
-      name: "20대",
-      인원수: 20,
-    },
-    {
-      name: "30대",
-      인원수: 30,
-    },
-    {
-      name: "40대",
-      인원수: 3,
-    },
-    {
-      name: "50대",
-      인원수: 3,
-    },
-    {
-      name: "60대",
-      인원수: 5,
-    },
-    {
-      name: "알수 없음",
-      인원수: 8,
-    },
-  ];
+  interface RangeQuestion {
+    type: "RANGE";
+    title: string;
+    explanation: string;
+    min: number;
+    max: number;
+    answers: Array<{ name: string; value: number }>;
+  }
 
-  const data2 = [
-    { name: "남자", value: 40 },
-    { name: "여자", value: 55 },
-    { name: "알수없음", value: 5 },
-  ];
+  interface MultipleQuestion {
+    type: "MULTIPLE";
+    title: string;
+    explanation: string;
+    answers: Array<{ name: string; value: number }>;
+  }
+
+  interface EssayQuestion {
+    type: "ESSAY";
+    title: string;
+    explanation: string;
+    answers: Array<{ text: string }>;
+  }
+
+  type Question = RangeQuestion | MultipleQuestion | EssayQuestion;
+
+  interface SurveyData {
+    // 다른 속성들...
+    questionsResult: Question[];
+  }
+
+  const SurveyData = {
+    surveyId: 1,
+    surveyTitle: "title",
+    surveyDate: "2022-05-05",
+    numberOfResponse: 5,
+    surveyGenderPercent: [
+      { name: "남자", value: 40 },
+      { name: "여자", value: 55 },
+      { name: "알수없음", value: 5 },
+    ],
+    surveyAgePercent: [
+      { name: "10대", 인원수: 10 },
+      { name: "20대", 인원수: 20 },
+      { name: "30대", 인원수: 30 },
+      { name: "40대", 인원수: 3 },
+      { name: "50대", 인원수: 3 },
+      { name: "60대", 인원수: 5 },
+      { name: "알수 없음", 인원수: 8 },
+    ],
+    questionsResult: [
+      {
+        type: "RANGE",
+        title: "Range Bar Question",
+        explanation: "ex1",
+        min: 1,
+        max: 10,
+        answers: [
+          { name: "1", value: 40 },
+          { name: "5", value: 55 },
+          { name: "10", value: 5 },
+        ],
+      },
+      {
+        type: "MULTIPLE",
+        title: "First Multiple Question Title",
+        explanation: "ex3",
+        answers: [
+          { name: "1", value: 40 },
+          { name: "5", value: 55 },
+          { name: "10", value: 5 },
+        ],
+      },
+      {
+        type: "ESSAY",
+        title: "Essay Question Title",
+        explanation: "ex2",
+        answers: ["1번답변", "2번답변", "3번답변"],
+      },
+    ],
+  };
+
+  console.log(SurveyData?.questionsResult[2]?.answers[0]);
+  // const data = [
+  //   {
+  //     name: "10대",
+  //     인원수: 10,
+  //   },
+  //   {
+  //     name: "20대",
+  //     인원수: 20,
+  //   },
+  //   {
+  //     name: "30대",
+  //     인원수: 30,
+  //   },
+  //   {
+  //     name: "40대",
+  //     인원수: 3,
+  //   },
+  //   {
+  //     name: "50대",
+  //     인원수: 3,
+  //   },
+  //   {
+  //     name: "60대",
+  //     인원수: 5,
+  //   },
+  //   {
+  //     name: "알수 없음",
+  //     인원수: 8,
+  //   },
+  // ];
+  //
+  // const data2 = [
+  //   { name: "남자", value: 40 },
+  //   { name: "여자", value: 55 },
+  //   { name: "알수없음", value: 5 },
+  // ];
 
   const COLORS = [
     "#0088FE",
@@ -150,15 +223,15 @@ const Product = () => {
         <ViewSection>
           <TitleResult>
             <div>설문 제목</div>
-            <div>내가 만든 설문</div>
+            <div>{SurveyData?.surveyTitle}</div>
           </TitleResult>
           <ResponseResult>
             <div>생성일</div>
-            <div>2022-05-05</div>
+            <div>{SurveyData?.surveyDate}</div>
           </ResponseResult>
           <GoingResult>
             <div>응답 수</div>
-            <div>13</div>
+            <div>{SurveyData?.numberOfResponse}</div>
           </GoingResult>
           <div
             style={{
@@ -181,7 +254,7 @@ const Product = () => {
               <BarChart
                 width={500}
                 height={300}
-                data={data}
+                data={SurveyData?.surveyAgePercent}
                 margin={{
                   top: 5,
                   right: 30,
@@ -206,8 +279,8 @@ const Product = () => {
                   <PieDescription>해당 설문 기준</PieDescription>
                 </PieHeading>
                 <PieRatioWrapper>
-                  {data2 &&
-                    data2.map((it, idx) => (
+                  {SurveyData?.surveyGenderPercent &&
+                    SurveyData?.surveyGenderPercent.map((it, idx) => (
                       <PieLangColorBoxWrapper key={`${it.name}-${it.value}`}>
                         <PieLangColorBox props={COLORS[idx]} />
                         <div>
@@ -221,7 +294,7 @@ const Product = () => {
               <PieRight>
                 <PieChart width={300} height={300}>
                   <Pie
-                    data={data2}
+                    data={SurveyData?.surveyGenderPercent}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
@@ -231,7 +304,7 @@ const Product = () => {
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {data2.map((entry, index) => (
+                    {SurveyData?.surveyGenderPercent.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}
@@ -244,100 +317,114 @@ const Product = () => {
           </RightResult>
         </StatisticSection>
 
-        {/*객관식, 선형배율일시*/}
-        <SurveySection>
-          <SurveyHeader>객관식</SurveyHeader>
-          <SurveyBody>
-            <SurveyBodyChart>
-              <PieChart width={300} height={200}>
-                <Pie
-                  data={data2}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  innerRadius={30}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {data2.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
-            </SurveyBodyChart>
-            <SurveyBodySummary>몇번</SurveyBodySummary>
-            <SurveyVertical></SurveyVertical>
-            <SurveyBodyResult>
-              <div>1번 50%</div>
-              <div>2번 50%</div>
-              <div>3번 50%</div>
-            </SurveyBodyResult>
-          </SurveyBody>
-        </SurveySection>
-
-        {/*주관식일시*/}
-        <SurveyShortSection>
-          <SurveyHeader>주관식</SurveyHeader>
-          <SurveyShortBody>
-            <SurveyBodyResult>
-              <Accordion sx={{ width: "100%" }}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>설문 답변</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>얍</Typography>
-                  <Typography>얍</Typography>
-                  <Typography>얍</Typography>
-                </AccordionDetails>
-              </Accordion>
-            </SurveyBodyResult>
-          </SurveyShortBody>
-        </SurveyShortSection>
-
-        {/*객관식, 선형배율일시*/}
-        <SurveySection>
-          <SurveyHeader>선형 배율</SurveyHeader>
-          <SurveyBody>
-            <SurveyBodyChart>
-              <PieChart width={300} height={200}>
-                <Pie
-                  data={data2}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  innerRadius={30}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {data2.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
-            </SurveyBodyChart>
-            <SurveyBodySummary>몇번</SurveyBodySummary>
-            <SurveyVertical></SurveyVertical>
-            <SurveyBodyResult>
-              <div>1번 50%</div>
-              <div>2번 50%</div>
-              <div>3번 50%</div>
-            </SurveyBodyResult>
-          </SurveyBody>
-        </SurveySection>
+        {SurveyData.questionsResult.map((question, index) => {
+          if (question.type === "ESSAY") {
+            return (
+              <SurveyShortSection key={index}>
+                <SurveyHeader>{question.title}</SurveyHeader>
+                <SurveyShortBody>
+                  <SurveyBodyResult>
+                    <Accordion sx={{ width: "100%" }}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography>설문 답변</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {question.answers.map((answers: any, answerIndex) => (
+                          <Typography key={answerIndex}>{answers}</Typography>
+                        ))}
+                      </AccordionDetails>
+                    </Accordion>
+                  </SurveyBodyResult>
+                </SurveyShortBody>
+              </SurveyShortSection>
+            );
+          } else if (question.type === "MULTIPLE") {
+            return (
+              <SurveySection key={index}>
+                <SurveyHeader>{question?.title}</SurveyHeader>
+                <SurveyBody>
+                  <SurveyBodyChart>
+                    <PieChart width={300} height={200}>
+                      <Pie
+                        data={question?.answers}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={renderCustomizedLabel}
+                        innerRadius={30}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {question?.answers.map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </SurveyBodyChart>
+                  <SurveyBodySummary>몇번</SurveyBodySummary>
+                  <SurveyVertical></SurveyVertical>
+                  <SurveyBodyResult>
+                    {question.answers.map((answer: any, answerIndex) => (
+                      <div key={answerIndex}>
+                        {answer.name}번 {answer.value}%
+                      </div>
+                    ))}
+                  </SurveyBodyResult>
+                </SurveyBody>
+              </SurveySection>
+            );
+          } else if (question.type === "RANGE") {
+            return (
+              <SurveySection key={index}>
+                <SurveyHeader>{question.title}</SurveyHeader>
+                <SurveyBody>
+                  <SurveyBodyChart>
+                    <PieChart width={300} height={200}>
+                      <Pie
+                        data={question?.answers}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={renderCustomizedLabel}
+                        innerRadius={30}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {question?.answers.map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </SurveyBodyChart>
+                  <SurveyBodySummary>몇번</SurveyBodySummary>
+                  <SurveyVertical></SurveyVertical>
+                  <SurveyBodyResult>
+                    {question.answers.map((answer: any, answerIndex) => (
+                      <div key={answerIndex}>
+                        {answer.name}번 {answer.value}%
+                      </div>
+                    ))}
+                  </SurveyBodyResult>
+                </SurveyBody>
+              </SurveySection>
+            );
+          } else {
+            // Handle other types if needed
+            return null;
+          }
+        })}
       </SectionWrapper>
     </Wrapper>
   );
