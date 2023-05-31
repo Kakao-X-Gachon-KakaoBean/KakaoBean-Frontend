@@ -135,7 +135,7 @@ const LogIn = () => {
               </SearchBtn>
               <div>/</div>
               <SearchBtn type="button" onClick={onClosePasswordModal}>
-                비밀번호 찾기
+                비밀번호 변경
               </SearchBtn>
             </span>
             <Vertical></Vertical>
