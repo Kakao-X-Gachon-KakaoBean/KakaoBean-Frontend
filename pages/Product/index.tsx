@@ -79,7 +79,6 @@ const Product = () => {
   type Question = RangeQuestion | MultipleQuestion | EssayQuestion;
 
   interface SurveyData {
-    // 다른 속성들...
     questionsResult: Question[];
   }
 
