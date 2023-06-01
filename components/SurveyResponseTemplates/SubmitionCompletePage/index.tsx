@@ -31,7 +31,6 @@ export const EndingPage = () => {
       axios
         .post(url, data, {
           headers: {
-            "X-Requested-With": "XMLHttpRequest",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             "Content-Type": "application/json",
           },
