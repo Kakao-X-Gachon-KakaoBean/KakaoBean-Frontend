@@ -16,23 +16,23 @@ const SurveyResponseDetail = () => {
     responses: incomingResponses[];
   }
 
-  const { isLoading, isSuccess, status, isError, data, error } =
-    useQuery<responseDetail>(
-      ["resdetail"],
-      // 추후에 responses/{surveyId}의 surveyId를 동적으로 설정할 수 있어야 한다.
-      () => fetcher({ queryKey: "http://localhost:8080/responses/2" }),
-      {
-        onSuccess: (data) => {
-          setSurvey(data.survey);
-          setResponses(data.responses);
-        },
-      }
-    );
-  // useEffect(()=>{
-  //     const dummyData:responseDetail = dummySurvey;
-  //     setSurvey(dummyData.survey);
-  //     setResponses(dummyData.responses);
-  // },[])
+  // const { isLoading, isSuccess, status, isError, data, error } =
+  //   useQuery<responseDetail>(
+  //     ["resdetail"],
+  //     // 추후에 responses/{surveyId}의 surveyId를 동적으로 설정할 수 있어야 한다.
+  //     () => fetcher({ queryKey: "http://localhost:8080/responses/2" }),
+  //     {
+  //       onSuccess: (data) => {
+  //         setSurvey(data.survey);
+  //         setResponses(data.responses);
+  //       },
+  //     }
+  //   );
+  useEffect(() => {
+    const dummyData: responseDetail = dummySurvey;
+    setSurvey(dummyData.survey);
+    setResponses(dummyData.responses);
+  }, []);
 
   return (
     <Wrapper>
@@ -40,7 +40,7 @@ const SurveyResponseDetail = () => {
       {survey ? (
         <SurveyResponseLogicFlow survey={survey} />
       ) : (
-        <div>설문 로직을 생성 중입니다</div>
+        <div>설문 정보가 존재하지 않습니다.</div>
       )}
       {responses ? (
         <SurveyResponseDetailTable responses={responses} />

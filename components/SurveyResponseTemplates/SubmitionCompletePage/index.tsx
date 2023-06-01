@@ -28,17 +28,13 @@ export const EndingPage = () => {
       });
   }, []);
 
-  if (check) {
-    return (
-      <QuestionBox>
+  return (
+    <QuestionBox>
+      {check ? (
         <Title id={"canvas"}>응답 제출이 완료되었습니다!</Title>
-      </QuestionBox>
-    );
-  } else {
-    return (
-      <QuestionBox>
+      ) : (
         <Title>응답 제출에 실패하였습니다.</Title>
-      </QuestionBox>
-    );
-  }
+      )}
+    </QuestionBox>
+  );
 };

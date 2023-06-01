@@ -21,6 +21,11 @@ import {
 
 const columns: TableColumn<DataRow>[] = [
   {
+    name: "설문 제목",
+    selector: (row) => (row.title ? row.title : ""),
+    sortable: true,
+  },
+  {
     name: "이름",
     selector: (row) => row.name,
     sortable: true,
@@ -70,6 +75,7 @@ const SurveyResponseDetailTable = ({
 }: SurveyResponseDetailTableProps) => {
   const selectedNode = useRecoilValue(selectedNodeState);
   const [responseData, setResponseData] = useState<DataRow[]>([]);
+  console.log(responses);
   useEffect(() => {
     setResponseData([]);
     const initialResponse: DataRow[] = [];
@@ -77,6 +83,7 @@ const SurveyResponseDetailTable = ({
       user.questionResponses.forEach((userResponse, userResponseIndex) => {
         if (userResponse.questionId.toString() == selectedNode.id) {
           const newResponse = {
+            title: userResponse.title,
             name: user.name,
             mail: user.email,
             gender: user.gender,
@@ -89,6 +96,21 @@ const SurveyResponseDetailTable = ({
                 : "",
           };
           initialResponse.push(newResponse);
+        } else if (selectedNode.id == "submit") {
+          const allResponse = {
+            title: userResponse.title,
+            name: user.name,
+            mail: user.email,
+            gender: user.gender,
+            age: user.age,
+            answer:
+              userResponse.type == "MULTIPLE" && userResponse.answers
+                ? userResponse.answers.join(", ")
+                : userResponse.answer
+                ? userResponse.answer.toString()
+                : "",
+          };
+          initialResponse.push(allResponse);
         }
       });
     });
@@ -100,7 +122,7 @@ const SurveyResponseDetailTable = ({
     return (
       <DetailDiv>
         <Typography>
-          <Title level={2}>사용자 응답</Title>
+          <Title level={4}>사용자 응답</Title>
           <Paragraph copyable>{data.answer}</Paragraph>
         </Typography>
       </DetailDiv>
@@ -120,6 +142,7 @@ const SurveyResponseDetailTable = ({
           data={responseData}
           pagination
           paginationPerPage={15}
+          defaultSortFieldId={1}
           expandableRows
           expandableRowsComponent={ExpandedComponent}
         />

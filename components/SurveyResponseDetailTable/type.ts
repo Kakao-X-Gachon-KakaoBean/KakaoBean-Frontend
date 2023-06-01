@@ -1,4 +1,5 @@
 export default interface DataRow {
+  title?: string;
   name: string;
   mail: string;
   gender: string;
