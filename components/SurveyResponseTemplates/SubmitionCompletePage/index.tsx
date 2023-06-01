@@ -7,25 +7,40 @@ import {
 } from "@components/SurveyResponseTemplates/styles";
 import { SpaceBetween } from "@pages/Team/styles";
 import { report } from "@pages/Team";
-import { postData } from "@components/SurveyResponseTemplates/SurveyData/surveyOut";
+import { useMutation } from "react-query";
+import axios, { AxiosError } from "axios";
+import { responseDataList } from "../../../pages/Team/type";
 
 export const EndingPage = () => {
   const [reportData, setReportData] = useRecoilState(report);
   const [url, setUrl] = useState("http://localhost:8080/responses");
-  useEffect(() => {
-    console.log("here!!!");
-  }, []);
-  let check: boolean = false;
+  const [check, setCheck] = useState<boolean>(false);
+  const mutation = useMutation<string, AxiosError, responseDataList>(
+    "registerResponse",
+    (data) =>
+      axios
+        .post(url, data, {
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => response.data),
+    {
+      onMutate() {},
+      onSuccess: (data) => {
+        console.log("요청 성공,", data);
+        setCheck(true);
+      },
+      onError(error) {
+        console.log(error);
+      },
+    }
+  );
 
   useEffect(() => {
-    postData(url, reportData)
-      .then((r) => {
-        console.log("통과!:", r);
-        check = true;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    mutation.mutate(reportData);
   }, []);
 
   return (

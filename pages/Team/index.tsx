@@ -149,8 +149,6 @@ const Team = () => {
     carouselRef.current && carouselRef.current.goTo(currentSlide);
   }, [currentSlide]);
 
-  //뒤로 가기 버튼 ->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
-  //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handlePrevClick = () => {
     setCounter(counter - 1);
     setLogicQueue((prevState) => {
