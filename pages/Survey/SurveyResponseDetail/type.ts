@@ -15,6 +15,7 @@ export interface incomingResponses {
 }
 
 export interface QuestionResponse {
+  title: string;
   type: string;
   questionId: number;
   answer?: string | number;
