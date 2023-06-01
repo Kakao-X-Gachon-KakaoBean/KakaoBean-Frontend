@@ -52,38 +52,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HeaderBar from "@components/HeaderBar";
 import { Link } from "react-router-dom";
 import { Button } from "antd";
+import { SurveyDataType } from "./type";
+
 const Product = () => {
-  interface RangeQuestion {
-    type: "RANGE";
-    title: string;
-    explanation: string;
-    min: number;
-    max: number;
-    answers: Array<{ name: string; value: number }>;
-  }
-
-  interface MultipleQuestion {
-    type: "MULTIPLE";
-    title: string;
-    explanation: string;
-    answers: Array<{ name: string; value: number }>;
-  }
-
-  interface EssayQuestion {
-    type: "ESSAY";
-    title: string;
-    explanation: string;
-    answers: Array<{ text: string }>;
-  }
-
-  type Question = RangeQuestion | MultipleQuestion | EssayQuestion;
-
-  interface SurveyData {
-    // 다른 속성들...
-    questionsResult: Question[];
-  }
-
-  const SurveyData = {
+  const SurveyData: SurveyDataType = {
     surveyId: 1,
     surveyTitle: "title",
     surveyDate: "2022-05-05",
@@ -129,7 +101,15 @@ const Product = () => {
         type: "ESSAY",
         title: "Essay Question Title",
         explanation: "ex2",
-        answers: ["1번답변", "2번답변", "3번답변"],
+        answers: [
+          "1번답변",
+          "2번답변",
+          "3번답변",
+          "4번답변",
+          "5번답변",
+          "6번답변",
+          "7번답변",
+        ],
       },
       {
         type: "MULTIPLE",
@@ -143,44 +123,6 @@ const Product = () => {
       },
     ],
   };
-
-  console.log(SurveyData?.questionsResult[2]?.answers[0]);
-  // const data = [
-  //   {
-  //     name: "10대",
-  //     인원수: 10,
-  //   },
-  //   {
-  //     name: "20대",
-  //     인원수: 20,
-  //   },
-  //   {
-  //     name: "30대",
-  //     인원수: 30,
-  //   },
-  //   {
-  //     name: "40대",
-  //     인원수: 3,
-  //   },
-  //   {
-  //     name: "50대",
-  //     인원수: 3,
-  //   },
-  //   {
-  //     name: "60대",
-  //     인원수: 5,
-  //   },
-  //   {
-  //     name: "알수 없음",
-  //     인원수: 8,
-  //   },
-  // ];
-  //
-  // const data2 = [
-  //   { name: "남자", value: 40 },
-  //   { name: "여자", value: 55 },
-  //   { name: "알수없음", value: 5 },
-  // ];
 
   const COLORS = [
     "#0088FE",
@@ -343,9 +285,18 @@ const Product = () => {
                         <Typography>설문 답변</Typography>
                       </AccordionSummary>
                       <AccordionDetails>
-                        {question.answers.map((answers: any, answerIndex) => (
-                          <Typography key={answerIndex}>{answers}</Typography>
-                        ))}
+                        {question.answers.map(
+                          (
+                            answer: string | { name: string; value: number },
+                            answerIndex
+                          ) => (
+                            <div key={answerIndex}>
+                              {typeof answer === "string"
+                                ? answer
+                                : `${answer.name}번 ${answer.value}%`}
+                            </div>
+                          )
+                        )}
                       </AccordionDetails>
                     </Accordion>
                   </SurveyBodyResult>
@@ -370,23 +321,40 @@ const Product = () => {
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        {question?.answers.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
+                        {question?.answers.map(
+                          (
+                            entry: string | { name: string; value: number },
+                            index
+                          ) => {
+                            if (typeof entry === "string") {
+                              return <div></div>;
+                            } else {
+                              return (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % COLORS.length]}
+                                />
+                              );
+                            }
+                          }
+                        )}
                       </Pie>
                     </PieChart>
                   </SurveyBodyChart>
                   <SurveyBodySummary>몇번</SurveyBodySummary>
                   <SurveyVertical></SurveyVertical>
                   <SurveyBodyResult>
-                    {question.answers.map((answer: any, answerIndex) => (
-                      <div key={answerIndex}>
-                        {answer.name}번 {answer.value}%
-                      </div>
-                    ))}
+                    {question.answers.map((answer, answerIndex) => {
+                      if (typeof answer === "string") {
+                        return <div key={answerIndex}>{answer}</div>;
+                      } else {
+                        return (
+                          <div key={answerIndex}>
+                            {answer.name}번 {answer.value}%
+                          </div>
+                        );
+                      }
+                    })}
                   </SurveyBodyResult>
                 </SurveyBody>
               </SurveySection>
@@ -409,23 +377,40 @@ const Product = () => {
                         fill="#8884d8"
                         dataKey="value"
                       >
-                        {question?.answers.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
+                        {question?.answers.map(
+                          (
+                            entry: string | { name: string; value: number },
+                            index
+                          ) => {
+                            if (typeof entry === "string") {
+                              return <div></div>;
+                            } else {
+                              return (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % COLORS.length]}
+                                />
+                              );
+                            }
+                          }
+                        )}
                       </Pie>
                     </PieChart>
                   </SurveyBodyChart>
                   <SurveyBodySummary>몇번</SurveyBodySummary>
                   <SurveyVertical></SurveyVertical>
                   <SurveyBodyResult>
-                    {question.answers.map((answer: any, answerIndex) => (
-                      <div key={answerIndex}>
-                        {answer.name}번 {answer.value}%
-                      </div>
-                    ))}
+                    {question.answers.map((answer, answerIndex) => {
+                      if (typeof answer === "string") {
+                        return <div key={answerIndex}>{answer}</div>;
+                      } else {
+                        return (
+                          <div key={answerIndex}>
+                            {answer.name}번 {answer.value}%
+                          </div>
+                        );
+                      }
+                    })}
                   </SurveyBodyResult>
                 </SurveyBody>
               </SurveySection>
