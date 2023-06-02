@@ -20,7 +20,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DeleteOption } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/styles";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   SelNodeState,
   NodeState,
@@ -29,7 +29,7 @@ import {
   QuestionList,
 } from "../../../States/LogicState";
 import { Logic } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
-import { questionsState } from "../../../States/SurveyState";
+import { currentTabState, questionsState } from "../../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 
 export const LogicControl = () => {
@@ -38,14 +38,16 @@ export const LogicControl = () => {
   const [nodes, setNodes] = useRecoilState(NodeState);
   const [edges, setEdges] = useRecoilState(EdgeState);
   // 현재 선택한 노드
-  const selNode = useRecoilValue(SelNodeState);
+  const [selNode, setSelNode] = useRecoilState(SelNodeState);
+  const resetSelNodeState = useResetRecoilState(SelNodeState);
   const select = surveyQuestions[Number(Number(selNode) - 1)];
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
 
   //로직 개수 count
   const [count, setCount] = useRecoilState(LogicCountState);
   const [questionList, setQuestionList] = useRecoilState(QuestionList);
   const questionListExceptMe = questionList.filter((question) => {
-    if (Number(selNode) != 0)
+    if (Number(selNode) != 0 && selNode)
       return (
         surveyQuestions[Number(selNode) - 1].questionNumber != question.value
       );
@@ -170,6 +172,7 @@ export const LogicControl = () => {
         }
       }
     );
+
     // 새로운 배열을 생성하고 제출 노드를 추가합니다.
     const submitNode: Node<any>[] = [
       {
@@ -366,16 +369,12 @@ export const LogicControl = () => {
       })
       .filter((edge): edge is Edge<any> => edge !== undefined)
       .flat(); // 배열 평탄화, logic 값에 의해 묶여진 배열을 평탄화한다.
-    initialEdges.sort();
+
     setEdges(initialEdges);
   };
 
   const reDefineSurveyQuestion = () => {
     let sortedArray = [...surveyQuestions]; // 원래 배열을 변경하지 않고 새로운 배열을 생성합니다.
-
-    sortedArray = sortedArray.sort((a, b) => {
-      return Number(a.questionNumber) - Number(b.questionNumber); // questionNumber를 기준으로 오름차순 정렬합니다.
-    });
 
     sortedArray = sortedArray.map((q, index) => {
       if (index == sortedArray.length - 1) {
@@ -401,24 +400,31 @@ export const LogicControl = () => {
   };
 
   useEffect(() => {
-    reDefineSurveyQuestion();
+    setCurrentTab("LogicControl");
 
-    const updatedSurveyList: any[] = [];
-    surveyQuestions.map((q) => {
-      updatedSurveyList.push({
-        value: Number(q.questionNumber),
-        label: Number(q.questionNumber),
+    if (currentTab === "LogicControl") {
+      resetSelNodeState();
+      reDefineSurveyQuestion();
+
+      const updatedSurveyList: any[] = [];
+      surveyQuestions.map((q) => {
+        updatedSurveyList.push({
+          value: Number(q.questionNumber),
+          label: Number(q.questionNumber),
+        });
       });
-    });
-    updatedSurveyList.sort((a, b) => {
-      return a.value - b.value;
-    });
-    updatedSurveyList.push({ value: "0", label: "제출하기" });
-    setQuestionList(updatedSurveyList);
+      updatedSurveyList.sort((a, b) => {
+        return a.value - b.value;
+      });
+      updatedSurveyList.push({ value: "0", label: "제출하기" });
+      setQuestionList(updatedSurveyList);
+    }
   }, []);
 
   useEffect(() => {
-    redrawNodeAndEdge();
+    if (currentTab === "LogicControl") {
+      redrawNodeAndEdge();
+    }
   }, [surveyQuestions]);
 
   //로직 추가

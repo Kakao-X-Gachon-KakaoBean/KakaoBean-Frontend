@@ -5,7 +5,7 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState } from "recoil";
+import { constSelector, useRecoilState, useResetRecoilState } from "recoil";
 import {
   QuestionTypeItem,
   getQuestionType,
@@ -15,6 +15,7 @@ import {
   createSurveyOptionState,
   selectedQuestionState,
   questionsState,
+  currentTabState,
 } from "../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
@@ -60,12 +61,14 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
   );
+  const resetSelectedQuestion = useResetRecoilState(selectedQuestionState);
 
   const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [surveyId, setSurveyId] = useState("");
-  // const [surveyQuestions, setSurveyQuestions] = useState<QuestionTypes[]>([]); // id, value 포함 전체 질문
   const [questions, setQuestions] = useState<QuestionTypes[]>([]); // id, value 제거 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState); // 전체 질문 recoil
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
+
   const isEmptyTitle = (title: string) => {
     return title === "" || title === "제목 없음";
   };
@@ -82,40 +85,32 @@ const CreateSurveyDnd = (): JSX.Element => {
     updatedQuestion: MultipleQuestion | SubjectiveQuestion | RangeBarQuestion,
     index: number
   ) => {
+    setSelectedQuestion(surveyQuestions[index]);
     const newQuestionItems = [...surveyQuestions];
-    newQuestionItems[index] = updatedQuestion;
-    setSurveyQuestions(() => newQuestionItems);
+    const originQuestionNumber = newQuestionItems[index].questionNumber;
+    const originNextQuestionNumber = newQuestionItems[index].nextQuestionNumber;
+    const { questionNumber, nextQuestionNumber, ...rest } = updatedQuestion;
+    newQuestionItems[index] = {
+      nextQuestionNumber: originNextQuestionNumber,
+      questionNumber: originQuestionNumber,
+      ...rest,
+    };
 
-    // 값이 변하면 selectedRecoil 업데이트
-    newQuestionItems.map((item) => {
-      if ("id" in selectedQuestion) {
-        if (item.id === selectedQuestion.id) {
-          setSelectedQuestion(() => item);
-        }
-      }
-    });
+    setSurveyQuestions(() => newQuestionItems);
   };
 
   // recoilValue가 변하면 surveyQuestions 업데이트
-  useEffect(() => {
-    surveyQuestions.map((item, index) => {
-      if ("id" in selectedQuestion) {
-        if (item.id === selectedQuestion.id) {
-          const newQuestionItems = [...surveyQuestions];
-          newQuestionItems[index] = selectedQuestion;
-          setSurveyQuestions(() => newQuestionItems);
-        }
-      }
-    });
-  }, [selectedQuestion]);
-
-  const handleQuestionClick = (
-    clickedQuestion: QuestionTypes,
-    index: number
-  ) => {
-    setSelectedQuestion(() => clickedQuestion);
-    setSelNode(String(index + 1));
-  };
+  // useEffect(() => {
+  //   surveyQuestions.map((item, index) => {
+  //     if ("id" in selectedQuestion) {
+  //       if (item.id === selectedQuestion.id) {
+  //         const newQuestionItems = [...surveyQuestions];
+  //         newQuestionItems[index] = selectedQuestion
+  //         setSurveyQuestions(() => newQuestionItems);
+  //       }
+  //     }
+  //   });
+  // }, [selectedQuestion]);
 
   // 질문 리스트 순서 바꾸기
   const reorderQuestions = (
@@ -236,30 +231,25 @@ const CreateSurveyDnd = (): JSX.Element => {
   };
 
   useEffect(() => {
-    setSurveyQuestions(() => surveyQuestions);
+    setCurrentTab("CreateSurvey");
+    resetSelectedQuestion();
+  }, []);
 
-    const updatedQuestions = surveyQuestions.map((item, index) => {
-      if ("id" in item) {
-        const { id, ...rest } = item;
-        const updatedItem = Object.assign({}, item, {
-          questionNumber: (index + 1).toString(),
-        });
-        item = updatedItem;
-        if (
-          index == surveyQuestions.length - 1 &&
-          "finalQuestion" in item &&
-          "nextQuestionNumber"
-        ) {
-          const updatedItem = Object.assign({}, item, {
-            finalQuestion: true,
-            nextQuestionNumber: "0",
-          });
-          item = updatedItem;
+  useEffect(() => {
+    if (currentTab === "CreateSurvey") {
+      // setSurveyQuestions(() => surveyQuestions);
+
+      const updatedQuestions = surveyQuestions.map((item, index) => {
+        if ("id" in item) {
+          const { id, ...rest } = item;
+          const updatedItem = { ...rest }; // id를 제외한 나머지 속성들을 가진 객체 생성
+          return updatedItem;
         }
-      }
-      return item;
-    });
-    setQuestions(() => updatedQuestions as QuestionTypes[]);
+        return item;
+      });
+
+      setQuestions(() => updatedQuestions as QuestionTypes[]);
+    }
   }, [surveyQuestions]);
 
   const onClickSurveyDelete = (index: number) => {
@@ -360,7 +350,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                           item.type == "ESSAY" ||
                           item.type == "RANGE"
                         ) {
-                          handleQuestionClick(item, index);
+                          setSelectedQuestion(item);
                         }
                       }}
                       style={
@@ -524,7 +514,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 </Button>
               </div>
             ) : (
-              <div></div>
+              <></>
             )}
           </QuestionsListDiv>
         )}
