@@ -7,38 +7,77 @@ import {
 } from "@components/SurveyResponseTemplates/styles";
 import { SpaceBetween } from "@pages/Team/styles";
 import { report } from "@pages/Team";
-import { postData } from "@components/SurveyResponseTemplates/SurveyData/surveyOut";
+import { useMutation } from "react-query";
+import Lottie from "lottie-react";
+import successAnimation from "../../../animation/7893-confetti-cannons.json";
+import failAnimation from "../../../animation/119777-fail.json";
+import axios, { AxiosError } from "axios";
+import { responseDataList } from "../../../pages/Team/type";
+import { Button } from "antd";
+import {
+  EndingMessageDiv,
+  LottieContainer,
+  MessageContainer,
+  Wrapper,
+} from "./styles";
 
 export const EndingPage = () => {
   const [reportData, setReportData] = useRecoilState(report);
   const [url, setUrl] = useState("http://localhost:8080/responses");
-  useEffect(() => {
-    console.log("here!!!");
-  }, []);
-  let check: boolean = false;
-
-  useEffect(() => {
-    postData(url, reportData)
-      .then((r) => {
-        console.log("통과!:", r);
-        check = true;
-      })
-      .catch((error) => {
+  const [check, setCheck] = useState<boolean>(false);
+  const mutation = useMutation<string, AxiosError, responseDataList>(
+    "registerResponse",
+    (data) =>
+      axios
+        .post(url, data, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => response.data),
+    {
+      onMutate() {},
+      onSuccess: (data) => {
+        console.log("요청 성공,", data);
+        setCheck(true);
+      },
+      onError(error) {
         console.log(error);
-      });
+      },
+    }
+  );
+
+  useEffect(() => {
+    mutation.mutate(reportData);
   }, []);
 
-  if (check) {
-    return (
-      <QuestionBox>
-        <Title id={"canvas"}>응답 제출이 완료되었습니다!</Title>
-      </QuestionBox>
-    );
-  } else {
-    return (
-      <QuestionBox>
-        <Title>응답 제출에 실패하였습니다.</Title>
-      </QuestionBox>
-    );
-  }
+  return (
+    <Wrapper>
+      {check ? (
+        <MessageContainer>
+          <LottieContainer>
+            <Lottie animationData={successAnimation} />
+          </LottieContainer>
+          <EndingMessageDiv>응답 제출이 완료되었습니다!</EndingMessageDiv>
+        </MessageContainer>
+      ) : (
+        <MessageContainer>
+          <LottieContainer>
+            <Lottie animationData={failAnimation} />
+          </LottieContainer>
+          <EndingMessageDiv>
+            응답 제출에 실패하였습니다..{" "}
+            <span
+              onClick={() => window.location.reload()}
+              style={{ color: "blue", cursor: "pointer" }}
+            >
+              다시 시도
+            </span>
+            해주세요
+          </EndingMessageDiv>
+        </MessageContainer>
+      )}
+    </Wrapper>
+  );
 };

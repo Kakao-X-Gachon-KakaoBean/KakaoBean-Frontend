@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Typography } from "antd";
 const { Paragraph, Title } = Typography;
@@ -12,14 +12,19 @@ import {
   TableDiv,
   Wrapper,
 } from "@components/SurveyResponseDetailTable/styles";
-import {
-  selectedNodeAnswerState,
-  selectedNodeState,
-} from "../../States/SurveyState";
-// import { movies } from "./data";
+import { selectedNodeState } from "../../States/SurveyState";
 import DataRow from "./type";
+import {
+  incomingResponses,
+  QuestionResponse,
+} from "../../pages/Survey/SurveyResponseDetail/type";
 
 const columns: TableColumn<DataRow>[] = [
+  {
+    name: "설문 제목",
+    selector: (row) => (row.title ? row.title : ""),
+    sortable: true,
+  },
   {
     name: "이름",
     selector: (row) => row.name,
@@ -42,23 +47,82 @@ const columns: TableColumn<DataRow>[] = [
   },
   {
     name: "응답",
-    selector: (row) =>
-      row.answer.length < 20 ? row.answer : row.answer.slice(0, 19) + "...",
+    selector: (row) => {
+      let answer = row.answer;
+      if (answer) {
+        if (typeof answer == "number") {
+          answer = answer.toString();
+        } else if (typeof answer == "object") {
+          answer = answer.join(", ");
+        }
+        if (typeof answer == "string" && answer.length > 20) {
+          return answer.slice(0, 19) + "...";
+        } else {
+          return answer;
+        }
+      }
+      return "응답이 없습니다.";
+    },
     sortable: true,
   },
 ];
-const SurveyResponseDetailTable = () => {
+
+interface SurveyResponseDetailTableProps {
+  responses: incomingResponses[];
+}
+const SurveyResponseDetailTable = ({
+  responses,
+}: SurveyResponseDetailTableProps) => {
   const selectedNode = useRecoilValue(selectedNodeState);
-  const [selectedNodeAnswer, setSelectedNodeAnswer] = useRecoilState(
-    selectedNodeAnswerState
-  );
+  const [responseData, setResponseData] = useState<DataRow[]>([]);
+  console.log(responses);
+  useEffect(() => {
+    setResponseData([]);
+    const initialResponse: DataRow[] = [];
+    responses.forEach((user, userIndex) => {
+      user.questionResponses.forEach((userResponse, userResponseIndex) => {
+        if (userResponse.questionId.toString() == selectedNode.id) {
+          const newResponse = {
+            title: userResponse.title,
+            name: user.name,
+            mail: user.email,
+            gender: user.gender,
+            age: user.age,
+            answer:
+              userResponse.type == "MULTIPLE" && userResponse.answers
+                ? userResponse.answers.join(", ")
+                : userResponse.answer
+                ? userResponse.answer.toString()
+                : "",
+          };
+          initialResponse.push(newResponse);
+        } else if (selectedNode.id == "submit") {
+          const allResponse = {
+            title: userResponse.title,
+            name: user.name,
+            mail: user.email,
+            gender: user.gender,
+            age: user.age,
+            answer:
+              userResponse.type == "MULTIPLE" && userResponse.answers
+                ? userResponse.answers.join(", ")
+                : userResponse.answer
+                ? userResponse.answer.toString()
+                : "",
+          };
+          initialResponse.push(allResponse);
+        }
+      });
+    });
+    setResponseData(initialResponse);
+  }, [selectedNode]);
   const ExpandedComponent: React.FC<ExpanderComponentProps<DataRow>> = ({
     data,
   }) => {
     return (
       <DetailDiv>
         <Typography>
-          <Title level={2}>사용자 응답</Title>
+          <Title level={4}>사용자 응답</Title>
           <Paragraph copyable>{data.answer}</Paragraph>
         </Typography>
       </DetailDiv>
@@ -75,9 +139,10 @@ const SurveyResponseDetailTable = () => {
       <TableDiv>
         <DataTable
           columns={columns}
-          data={selectedNodeAnswer}
+          data={responseData}
           pagination
           paginationPerPage={15}
+          defaultSortFieldId={1}
           expandableRows
           expandableRowsComponent={ExpandedComponent}
         />
