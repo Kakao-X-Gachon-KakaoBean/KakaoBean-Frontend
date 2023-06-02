@@ -41,7 +41,7 @@ const SurveyList = () => {
                       </SurveyTitle>
                     </SurveyInfo>
                     <SurveyResult>
-                      마감 일자:
+                      응답 일자:
                       {SurveyList?.mySubmittedSurveys[index]?.submittedDate}
                     </SurveyResult>
                   </SurveyBox>

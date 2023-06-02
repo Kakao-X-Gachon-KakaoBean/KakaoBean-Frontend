@@ -87,20 +87,27 @@ const MySurvey = () => {
       {MySurvey?.myOwnSurveys.length >= 1 ? (
         <SurveyContainer>
           {MySurvey &&
-            MySurvey.myOwnSurveys.map((survey: any) => (
-              <SurveyBox key={survey.surveyId}>
-                <SurveyInfo>
-                  <SurveyTitle>{survey.surveyTitle}</SurveyTitle>
-                  <FontAwesomeIcon
-                    icon={faTrashCan}
-                    onClick={() => handleDeleteConfirmation(survey.surveyId)}
-                  />
-                </SurveyInfo>
-                <SurveyResult>
-                  응답 개수: {survey.numberOfResponse}
-                </SurveyResult>
-              </SurveyBox>
-            ))}
+            MySurvey.myOwnSurveys.map((survey: any) => {
+              const Id = survey.surveyId;
+              return (
+                <Link to={`/surveydetail/${Id}`}>
+                  <SurveyBox key={survey.surveyId}>
+                    <SurveyInfo>
+                      <SurveyTitle>{survey.surveyTitle}</SurveyTitle>
+                      <FontAwesomeIcon
+                        icon={faTrashCan}
+                        onClick={() =>
+                          handleDeleteConfirmation(survey.surveyId)
+                        }
+                      />
+                    </SurveyInfo>
+                    <SurveyResult>
+                      응답 개수: {survey.numberOfResponse}
+                    </SurveyResult>
+                  </SurveyBox>
+                </Link>
+              );
+            })}
         </SurveyContainer>
       ) : (
         <CreateSurveyContainer>
