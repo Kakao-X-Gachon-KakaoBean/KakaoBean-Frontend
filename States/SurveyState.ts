@@ -45,3 +45,8 @@ export const questionsState = atom<QuestionTypes[]>({
   key: "questionsState",
   default: [],
 });
+
+export const currentTabState = atom({
+  key: "currentTab",
+  default: "CreateSurvey",
+});

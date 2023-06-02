@@ -8,6 +8,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { SelNodeState, NodeState, EdgeState } from "../../States/LogicState";
+import { currentTabState } from "../../States/SurveyState";
 
 export default function LogicTab() {
   const nodes = useRecoilValue(NodeState);
@@ -15,6 +16,7 @@ export default function LogicTab() {
 
   // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
 
   //노드 클릭하면 selNode에다가 아이디 넣어주기
   const onNodeClick = useCallback(
@@ -34,6 +36,7 @@ export default function LogicTab() {
 
   useEffect(() => {
     setSelNode("0");
+    setCurrentTab("LogicControl");
   }, []);
 
   return (

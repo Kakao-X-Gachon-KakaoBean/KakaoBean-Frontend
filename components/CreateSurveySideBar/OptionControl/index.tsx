@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedQuestionState } from "../../../States/SurveyState";
+import {
+  questionsState,
+  selectedQuestionState,
+} from "../../../States/SurveyState";
 import { Wrapper } from "@components/CreateSurveySideBar/OptionControl/styles";
 import { MultipleOptionControl } from "@components/CreateSurveySideBar/OptionControl/MultipleOptionControl";
 import { SubjectiveOptionControl } from "@components/CreateSurveySideBar/OptionControl/SubjectiveOptionControl";
