@@ -97,8 +97,8 @@ export const PieRatioWrapper = styled.div`
 `;
 
 export const PieLangColorBox = styled.div<{ props: any }>`
-  width: 12.5px;
-  height: 12.5px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   margin-right: 7px;
   background-color: ${({ props }) => props};
@@ -116,7 +116,7 @@ export const PieLangCircle = styled.span`
   border-radius: 50%;
 `;
 export const PieLangText = styled.span`
-  font-size: 9px;
+  font-size: 15px;
   margin-right: 7px;
 `;
 
