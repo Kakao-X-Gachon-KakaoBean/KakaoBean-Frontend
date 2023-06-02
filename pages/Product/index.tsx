@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useCallback } from "react";
 import {
   CartesianGrid,
   XAxis,
@@ -53,8 +53,13 @@ import HeaderBar from "@components/HeaderBar";
 import { Link } from "react-router-dom";
 import { Button } from "antd";
 import { SurveyDataType } from "./type";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import axios, { AxiosError } from "axios";
+import fetcher from "../../utils/fetcher";
+import { useLocation } from "react-router";
 
 const Product = () => {
+  const queryClient = useQueryClient();
   const SurveyData: SurveyDataType = {
     surveyId: 1,
     surveyTitle: "title",
@@ -168,6 +173,55 @@ const Product = () => {
       </text>
     );
   };
+
+  const location = useLocation();
+  // const {
+  //   isLoading,
+  //   isSuccess,
+  //   status,
+  //   isError,
+  //   data: MySurvey,
+  //   error,
+  // } = useQuery(["MySurvey"], () =>
+  //   fetcher({
+  //     queryKey: `http://localhost:8080/surveys/${
+  //       location.pathname.split("/")[3]
+  //     }`,
+  //   })
+  // );
+
+  // SurveyData 이것으로 변경 예정
+
+  const mutation = useMutation<string, AxiosError, { SurveyId: string }>(
+    "EndSurvey",
+    ({ SurveyId }) =>
+      axios
+        .patch(`http://localhost:8080/surveys/${SurveyId}`, {
+          withCredentials: true,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        })
+        .then((response) => response.data),
+    {
+      onMutate() {},
+      onSuccess(data) {
+        queryClient.invalidateQueries("MySurvey");
+      },
+      onError(error) {
+        alert("실패");
+      },
+    }
+  );
+
+  const EndSurvey = useCallback(
+    (SurveyId: any) => {
+      mutation.mutate({ SurveyId });
+    },
+    [mutation]
+  );
+
   return (
     <Wrapper>
       <HeaderBar />
