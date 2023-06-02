@@ -25,6 +25,7 @@ export const EndingPage = () => {
   const [reportData, setReportData] = useRecoilState(report);
   const [url, setUrl] = useState("http://localhost:8080/responses");
   const [check, setCheck] = useState<boolean>(false);
+
   const mutation = useMutation<string, AxiosError, responseDataList>(
     "registerResponse",
     (data) =>

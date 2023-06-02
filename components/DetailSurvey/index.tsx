@@ -42,7 +42,7 @@ import {
   SurveyVertical,
   ViewSection,
   Wrapper,
-} from "@pages/Product/styles";
+} from "@components/DetailSurvey/styles";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -58,7 +58,7 @@ import axios, { AxiosError } from "axios";
 import fetcher from "../../utils/fetcher";
 import { useLocation } from "react-router";
 
-const Product = () => {
+const DetailSurvey = () => {
   const queryClient = useQueryClient();
   const SurveyData: SurveyDataType = {
     surveyId: 1,
@@ -185,7 +185,7 @@ const Product = () => {
   // } = useQuery(["MySurvey"], () =>
   //   fetcher({
   //     queryKey: `http://localhost:8080/surveys/${
-  //       location.pathname.split("/")[3]
+  //       location.pathname.split("/")[2]
   //     }`,
   //   })
   // );
@@ -478,4 +478,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default DetailSurvey;

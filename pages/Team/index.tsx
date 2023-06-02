@@ -33,6 +33,7 @@ import { EndingPage } from "@components/SurveyResponseTemplates/SubmitionComplet
 ////이건 아직이다.. import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
 import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
+import { useLocation } from "react-router";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -54,15 +55,18 @@ export const submitAll = atom<number[]>({
 });
 
 const Team = () => {
+  const location = useLocation();
+
   // 현재 페이지 URL에서 숫자를 추출하는 함수
-  const getSurveyIdFromUrl = () => {
-    const url = window.location.pathname; // 현재 페이지 URL의 경로
-    const surveyId = url.substring(url.lastIndexOf("/") + 1); // 마지막 "/" 이후의 문자열 추출 (숫자 부분)
-    return parseInt(surveyId); // 숫자로 변환하여 반환
-  };
+  // const getSurveyIdFromUrl = () => {
+  //   const url = window.location.pathname; // 현재 페이지 URL의 경로
+  //   const surveyId = url.substring(url.lastIndexOf("/") + 1); // 마지막 "/" 이후의 문자열 추출 (숫자 부분)
+  //   return parseInt(surveyId); // 숫자로 변환하여 반환
+  // };
 
-  const surveyId = getSurveyIdFromUrl(); // 현재 페이지의 surveyId 추출
+  // const surveyId = getSurveyIdFromUrl(); // 현재 페이지의 surveyId 추출
 
+  const surveyId = location.pathname.split("/")[2];
   const {
     isLoading,
     isSuccess,
@@ -78,23 +82,11 @@ const Team = () => {
         setSurvey(data);
         setReportData((prevState) => ({
           ...prevState,
-          surveyId: Number(survey?.surveyId),
+          surveyId: parseInt(location.pathname.split("/")[2]),
         }));
       },
     }
   );
-
-  //
-  // const {
-  //   isLoading,
-  //   isSuccess,
-  //   status,
-  //   isError,
-  //   data: surveyData,
-  //   error,
-  // } = useQuery<any>(["survey"], () =>
-  //   fetcher({ queryKey: "http://localhost:8080/surveys/2" })
-  // );
 
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
