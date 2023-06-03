@@ -95,22 +95,21 @@ const CreateSurveyDnd = (): JSX.Element => {
       questionNumber: originQuestionNumber,
       ...rest,
     };
-
     setSurveyQuestions(() => newQuestionItems);
   };
 
-  // recoilValue가 변하면 surveyQuestions 업데이트
-  // useEffect(() => {
-  //   surveyQuestions.map((item, index) => {
-  //     if ("id" in selectedQuestion) {
-  //       if (item.id === selectedQuestion.id) {
-  //         const newQuestionItems = [...surveyQuestions];
-  //         newQuestionItems[index] = selectedQuestion
-  //         setSurveyQuestions(() => newQuestionItems);
-  //       }
-  //     }
-  //   });
-  // }, [selectedQuestion]);
+  //recoilValue가 변하면 surveyQuestions 업데이트
+  useEffect(() => {
+    surveyQuestions.map((item, index) => {
+      if ("id" in selectedQuestion) {
+        if (item.id === selectedQuestion.id) {
+          const newQuestionItems = [...surveyQuestions];
+          newQuestionItems[index] = selectedQuestion;
+          setSurveyQuestions(() => newQuestionItems);
+        }
+      }
+    });
+  }, [selectedQuestion]);
 
   // 질문 리스트 순서 바꾸기
   const reorderQuestions = (
@@ -237,7 +236,7 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   useEffect(() => {
     if (currentTab === "CreateSurvey") {
-      // setSurveyQuestions(() => surveyQuestions);
+      setSurveyQuestions(() => surveyQuestions);
 
       const updatedQuestions = surveyQuestions.map((item, index) => {
         if ("id" in item) {
@@ -250,6 +249,8 @@ const CreateSurveyDnd = (): JSX.Element => {
 
       setQuestions(() => updatedQuestions as QuestionTypes[]);
     }
+
+    console.log(surveyQuestions);
   }, [surveyQuestions]);
 
   const onClickSurveyDelete = (index: number) => {
@@ -307,9 +308,26 @@ const CreateSurveyDnd = (): JSX.Element => {
     }
   );
 
+  const finalCheck = () => {
+    const updatedQuestion = [...surveyQuestions];
+    updatedQuestion.map((item, index) => {
+      const { finalQuestion, nextQuestionNumber, ...rest } = item;
+      if (index == updatedQuestion.length - 1) {
+        updatedQuestion[index] = {
+          finalQuestion: true,
+          nextQuestionNumber: "0",
+          ...rest,
+        };
+      }
+    });
+
+    setSurveyQuestions(updatedQuestion);
+  };
+
   const onSubmit = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
+      finalCheck();
       if (surveyTitle && questions) {
         mutation.mutate({
           surveyTitle,
