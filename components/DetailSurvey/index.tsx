@@ -60,74 +60,6 @@ import { useLocation } from "react-router";
 
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
-  const SurveyData: SurveyDataType = {
-    surveyId: 1,
-    surveyTitle: "title",
-    surveyDate: "2022-05-05",
-    numberOfResponse: 5,
-    surveyGenderPercent: [
-      { name: "남자", value: 40 },
-      { name: "여자", value: 55 },
-      { name: "알수없음", value: 5 },
-    ],
-    surveyAgePercent: [
-      { name: "10대", 인원수: 10 },
-      { name: "20대", 인원수: 20 },
-      { name: "30대", 인원수: 30 },
-      { name: "40대", 인원수: 3 },
-      { name: "50대", 인원수: 3 },
-      { name: "60대", 인원수: 5 },
-      { name: "알수 없음", 인원수: 8 },
-    ],
-    questionsResult: [
-      {
-        type: "RANGE",
-        title: "Range Bar Question",
-        explanation: "ex1",
-        min: 1,
-        max: 10,
-        answers: [
-          { name: "1", value: 40 },
-          { name: "5", value: 55 },
-          { name: "10", value: 5 },
-        ],
-      },
-      {
-        type: "MULTIPLE",
-        title: "First Multiple Question Title",
-        explanation: "ex3",
-        answers: [
-          { name: "1", value: 40 },
-          { name: "5", value: 55 },
-          { name: "10", value: 5 },
-        ],
-      },
-      {
-        type: "ESSAY",
-        title: "Essay Question Title",
-        explanation: "ex2",
-        answers: [
-          "1번답변",
-          "2번답변",
-          "3번답변",
-          "4번답변",
-          "5번답변",
-          "6번답변",
-          "7번답변",
-        ],
-      },
-      {
-        type: "MULTIPLE",
-        title: "123123Multiple Question Title",
-        explanation: "ex3",
-        answers: [
-          { name: "6", value: 20 },
-          { name: "2", value: 65 },
-          { name: "16", value: 15 },
-        ],
-      },
-    ],
-  };
 
   const COLORS = [
     "#0088FE",
@@ -175,22 +107,21 @@ const DetailSurvey = () => {
   };
 
   const location = useLocation();
-  // const {
-  //   isLoading,
-  //   isSuccess,
-  //   status,
-  //   isError,
-  //   data: MySurvey,
-  //   error,
-  // } = useQuery(["MySurvey"], () =>
-  //   fetcher({
-  //     queryKey: `http://localhost:8080/surveys/${
-  //       location.pathname.split("/")[2]
-  //     }`,
-  //   })
-  // );
 
-  // SurveyData 이것으로 변경 예정
+  const {
+    isLoading,
+    isSuccess,
+    status,
+    isError,
+    data: SurveyData,
+    error,
+  } = useQuery<SurveyDataType>(["SurveyResult"], () =>
+    fetcher({
+      queryKey: `http://localhost:8080/responses/survey-statistics/${
+        location.pathname.split("/")[2]
+      }`,
+    })
+  );
 
   const mutation = useMutation<string, AxiosError, { SurveyId: string }>(
     "EndSurvey",
@@ -199,7 +130,6 @@ const DetailSurvey = () => {
         .patch(`http://localhost:8080/surveys/${SurveyId}`, {
           withCredentials: true,
           headers: {
-            "X-Requested-With": "XMLHttpRequest",
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         })
@@ -207,7 +137,8 @@ const DetailSurvey = () => {
     {
       onMutate() {},
       onSuccess(data) {
-        queryClient.invalidateQueries("MySurvey");
+        queryClient.invalidateQueries("EndSurvey");
+        alert("설문이 마감되었습니다.");
       },
       onError(error) {
         alert("실패");
@@ -216,7 +147,8 @@ const DetailSurvey = () => {
   );
 
   const EndSurvey = useCallback(
-    (SurveyId: any) => {
+    (SurveyId: string) => {
+      console.log(SurveyId);
       mutation.mutate({ SurveyId });
     },
     [mutation]
@@ -242,8 +174,10 @@ const DetailSurvey = () => {
           <div
             style={{
               display: "flex",
+              flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
+              gap: "1rem",
             }}
           >
             <Link to="/surveyresponsedetail" style={{ textDecoration: "none" }}>
@@ -252,6 +186,17 @@ const DetailSurvey = () => {
                 <br />
               </Button>
             </Link>
+            <Button
+              onClick={() =>
+                EndSurvey(
+                  {
+                    SurveyId: location.pathname.split("/")[2],
+                  }.SurveyId.toString()
+                )
+              }
+            >
+              마감하기
+            </Button>
           </div>
         </ViewSection>
         <StatisticSection>
@@ -273,7 +218,7 @@ const DetailSurvey = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="인원수" fill="#82ca9d" />
+                <Bar dataKey="value" fill="#82ca9d" />
               </BarChart>
             </ResponsiveContainer>
           </LeftResult>
@@ -298,7 +243,7 @@ const DetailSurvey = () => {
                 </PieRatioWrapper>
               </PieLeft>
               <PieRight>
-                <PieChart width={300} height={300}>
+                <PieChart width={400} height={400}>
                   <Pie
                     data={SurveyData?.surveyGenderPercent}
                     cx="50%"
@@ -323,7 +268,7 @@ const DetailSurvey = () => {
           </RightResult>
         </StatisticSection>
 
-        {SurveyData.questionsResult.map((question, index) => {
+        {SurveyData?.questionsResult.map((question, index) => {
           if (question.type === "ESSAY") {
             return (
               <SurveyShortSection key={index}>
@@ -395,7 +340,28 @@ const DetailSurvey = () => {
                       </Pie>
                     </PieChart>
                   </SurveyBodyChart>
-                  <SurveyBodySummary>몇번</SurveyBodySummary>
+                  <SurveyBodySummary>
+                    <PieRatioWrapper>
+                      {question?.answers &&
+                        question?.answers.map((answer, answerIndex) => {
+                          if (typeof answer === "string") {
+                            return <div key={answerIndex}>{answer}</div>;
+                          } else {
+                            return (
+                              <PieLangColorBoxWrapper
+                                key={`${answer.name}-${answer.value}`}
+                              >
+                                <PieLangColorBox props={COLORS[answerIndex]} />
+                                <div>
+                                  <PieLangText>{answer.name}</PieLangText>
+                                  <PieLangText>{answer.value}%</PieLangText>
+                                </div>
+                              </PieLangColorBoxWrapper>
+                            );
+                          }
+                        })}
+                    </PieRatioWrapper>
+                  </SurveyBodySummary>
                   <SurveyVertical></SurveyVertical>
                   <SurveyBodyResult>
                     {question.answers.map((answer, answerIndex) => {
@@ -451,7 +417,28 @@ const DetailSurvey = () => {
                       </Pie>
                     </PieChart>
                   </SurveyBodyChart>
-                  <SurveyBodySummary>몇번</SurveyBodySummary>
+                  <SurveyBodySummary>
+                    <PieRatioWrapper>
+                      {question?.answers &&
+                        question?.answers.map((answer, answerIndex) => {
+                          if (typeof answer === "string") {
+                            return <div key={answerIndex}>{answer}</div>;
+                          } else {
+                            return (
+                              <PieLangColorBoxWrapper
+                                key={`${answer.name}-${answer.value}`}
+                              >
+                                <PieLangColorBox props={COLORS[answerIndex]} />
+                                <div>
+                                  <PieLangText>{answer.name}</PieLangText>
+                                  <PieLangText>{answer.value}%</PieLangText>
+                                </div>
+                              </PieLangColorBoxWrapper>
+                            );
+                          }
+                        })}
+                    </PieRatioWrapper>
+                  </SurveyBodySummary>
                   <SurveyVertical></SurveyVertical>
                   <SurveyBodyResult>
                     {question.answers.map((answer, answerIndex) => {
@@ -460,7 +447,7 @@ const DetailSurvey = () => {
                       } else {
                         return (
                           <div key={answerIndex}>
-                            {answer.name}번 {answer.value}%
+                            {answer.name} {answer.value}%
                           </div>
                         );
                       }
