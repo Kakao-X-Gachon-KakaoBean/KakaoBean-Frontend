@@ -18,6 +18,8 @@ import axios, { AxiosError } from "axios";
 import { Button, Modal } from "antd";
 
 const MySurvey = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteSurveyId, setDeleteSurveyId] = useState(""); // 삭제할 설문의 ID 저장
   const queryClient = useQueryClient();
@@ -47,14 +49,14 @@ const MySurvey = () => {
     data: MySurvey,
     error,
   } = useQuery(["MySurvey"], () =>
-    fetcher({ queryKey: "http://localhost:8080/surveys/own-survey" })
+    fetcher({ queryKey: `${baseUrl}/surveys/own-survey` })
   );
 
   const mutation = useMutation<string, AxiosError, { SurveyId: string }>(
     "DeleteSurvey",
     ({ SurveyId }) =>
       axios
-        .delete(`http://localhost:8080/surveys/${SurveyId}`, {
+        .delete(`${baseUrl}/surveys/${SurveyId}`, {
           withCredentials: true,
           headers: {
             "X-Requested-With": "XMLHttpRequest",

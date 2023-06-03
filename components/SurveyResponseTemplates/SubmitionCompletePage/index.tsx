@@ -22,8 +22,10 @@ import {
 } from "./styles";
 
 export const EndingPage = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [reportData, setReportData] = useRecoilState(report);
-  const [url, setUrl] = useState("http://localhost:8080/responses");
+  const [url, setUrl] = useState(`${baseUrl}/responses`);
   const [check, setCheck] = useState<boolean>(false);
 
   const mutation = useMutation<string, AxiosError, responseDataList>(

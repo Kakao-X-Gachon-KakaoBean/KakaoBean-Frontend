@@ -60,6 +60,7 @@ import { useLocation } from "react-router";
 
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
+  const baseUrl = process.env.REACT_APP_BASE_URL;
 
   const COLORS = [
     "#0088FE",
@@ -117,7 +118,7 @@ const DetailSurvey = () => {
     error,
   } = useQuery<SurveyDataType>(["SurveyResult"], () =>
     fetcher({
-      queryKey: `http://localhost:8080/responses/survey-statistics/${
+      queryKey: `${baseUrl}/responses/survey-statistics/${
         location.pathname.split("/")[2]
       }`,
     })
@@ -127,7 +128,7 @@ const DetailSurvey = () => {
     "EndSurvey",
     ({ SurveyId }) =>
       axios
-        .patch(`http://localhost:8080/surveys/${SurveyId}`, {
+        .patch(`${baseUrl}/surveys/${SurveyId}`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

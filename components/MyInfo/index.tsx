@@ -10,6 +10,8 @@ import {
 } from "@components/MyInfo/styles";
 
 const MyInfo = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   interface UserInfo {
     name: string;
     age: number;
@@ -19,7 +21,7 @@ const MyInfo = () => {
   }
   const { isLoading, isSuccess, status, isError, data, error } =
     useQuery<UserInfo>(["user"], () =>
-      fetcher({ queryKey: "http://localhost:8080/members/info" })
+      fetcher({ queryKey: `${baseUrl}/members/info` })
     );
 
   return (

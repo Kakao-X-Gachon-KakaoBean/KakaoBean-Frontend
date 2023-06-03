@@ -33,6 +33,8 @@ import { Button, Modal } from "antd";
 import { Redirect } from "react-router";
 
 const SignUp = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
@@ -65,9 +67,7 @@ const SignUp = () => {
   >(
     "user",
     (data) =>
-      axios
-        .post("http://localhost:8080/members", data)
-        .then((response) => response.data),
+      axios.post(`${baseUrl}/members`, data).then((response) => response.data),
     {
       onMutate() {
         setSignUpError("");
@@ -150,11 +150,7 @@ const SignUp = () => {
       if (!email || !email.trim()) return;
 
       axios
-        .post(
-          "http://localhost:8080/emails",
-          { email },
-          { withCredentials: true }
-        )
+        .post(`${baseUrl}/emails`, { email }, { withCredentials: true })
         .then((response) => {
           setFailUseEmail(true);
           toast(message("메일로 인증번호가 발송되었습니다."), {
