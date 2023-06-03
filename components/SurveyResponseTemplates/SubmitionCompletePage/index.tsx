@@ -94,7 +94,7 @@ export const EndingPage = () => {
           wrapperClass=""
           visible={true}
           ariaLabel="oval-loading"
-          secondaryColor="#4fa94d"
+          secondaryColor="skyblue"
           strokeWidth={2}
           strokeWidthSecondary={2}
         />
