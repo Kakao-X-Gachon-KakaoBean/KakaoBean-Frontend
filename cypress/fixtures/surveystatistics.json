@@ -1,0 +1,152 @@
+{
+  "surveyId": 2,
+  "surveyTitle": "설문 제목",
+  "surveyDate": "23-6-2",
+  "numberOfResponse": 3,
+  "surveyGenderPercent": [
+    {
+      "name": "남자",
+      "value": 67
+    },
+    {
+      "name": "여자",
+      "value": 33
+    },
+    {
+      "name": "알수없음",
+      "value": 0
+    }
+  ],
+  "surveyAgePercent": [
+    {
+      "name": "10대",
+      "value": 0
+    },
+    {
+      "name": "20대",
+      "value": 67
+    },
+    {
+      "name": "30대",
+      "value": 33
+    },
+    {
+      "name": "40대",
+      "value": 0
+    },
+    {
+      "name": "50대",
+      "value": 0
+    },
+    {
+      "name": "60대",
+      "value": 0
+    },
+    {
+      "name": "알수없음",
+      "value": 0
+    }
+  ],
+  "questionsResult": [
+    {
+      "type": "ESSAY",
+      "title": "Essay Question Title",
+      "explanation": "ex2",
+      "answers": [
+        "에세이 질문 답변11",
+        "에세이 질문 답변22",
+        "에세이 질문 답변33"
+      ]
+    },
+    {
+      "type": "MULTIPLE",
+      "title": "First Multip Question Title",
+      "explanation": "ex3",
+      "answers": [
+        {
+          "name": "임인범", // "임인범" 이라는 보기를 고른 사람
+          "value": 33
+        },
+        {
+          "name": "손흥민",
+          "value": 33
+        },
+        {
+          "name": "조연겸",
+          "value": 17
+        },
+        {
+          "name": "박지성",
+          "value": 17
+        }
+      ]
+    },
+    {
+      "type": "RANGE",
+      "title": "Range Bar Question",
+      "explanation": "ex1",
+      "min": 1,
+      "max": 10,
+      "answers": [
+        {
+          "name": "6", // 6을 선택한 사람
+          "value": 67
+        },
+        {
+          "name": "3", // 3을 선택한 사람
+          "value": 33
+        }
+      ]
+    },
+    {
+      "type": "MULTIPLE",
+      "title": "Multiple Question Title",
+      "explanation": "without logic",
+      "answers": [
+        {
+          "name": "단일 선택 객관식 22", // "단일 선택 객관식 22"라는 보기를 고른 사람
+          "value": 67
+        },
+        {
+          "name": "단일 선택 객관식 11",
+          "value": 33
+        }
+      ]
+    },
+    {
+      "type": "ESSAY",
+      "title": "Essay Question Title",
+      "explanation": "ex2",
+      "answers": [
+        "에세이 질문 답변11",
+        "에세이 질문 답변22",
+        "에세이 질문 답변22"
+      ]
+    },
+    {
+      "type": "ESSAY",
+      "title": "Essay Question Title",
+      "explanation": "ex2",
+      "answers": [
+        "에세이 질문 답변11",
+        "에세이 질문 답변22",
+        "에세이 질문 답변22333"
+      ]
+    },
+    {
+      "type": "MULTIPLE",
+      "title": "Multiple Question Title",
+      "explanation": "without logic",
+      "answers": [
+        {
+          "name": "단일 선택 객관식 22",
+          "value": 67
+        },
+        {
+          "name": "단일 선택 객관식 11",
+          "value": 33
+        }
+      ]
+    }
+  ]
+}

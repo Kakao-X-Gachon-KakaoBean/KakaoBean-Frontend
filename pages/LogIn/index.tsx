@@ -34,6 +34,8 @@ import SearchPassword from "@components/PasswordModal";
 import { LeftMenu } from "@components/HeaderBar/styles";
 
 const LogIn = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [email, onChangeEmail, setEmail] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
 
@@ -63,7 +65,7 @@ const LogIn = () => {
     "user",
     (data) =>
       axios
-        .post("http://localhost:8080/local/login", data, {
+        .post(`${baseUrl}/local/login`, data, {
           withCredentials: true,
         })
         .then((response) => response.data),
@@ -84,7 +86,7 @@ const LogIn = () => {
 
   //로컬 로그인
   const onSubmit = useCallback(
-    (e) => {
+    (e: any) => {
       e.preventDefault();
       mutation.mutate({ email, password });
     },
@@ -149,17 +151,13 @@ const LogIn = () => {
         <Line>또는</Line>
         <SocialLogin>
           <GoogleBtn
-            href={
-              "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/main"
-            }
+            href={`${baseUrl}/oauth2/authorization/google?redirect_uri=http://localhost:3000/main`}
           >
             <Img src={GoogleImg} alt="Google" />
             <div>Google로 계속</div>
           </GoogleBtn>
           <KakaoBtn
-            href={
-              "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main"
-            }
+            href={`${baseUrl}/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main`}
           >
             <Img src={KakaoImg} alt="Google" />
             <div>KaKao로 계속</div>

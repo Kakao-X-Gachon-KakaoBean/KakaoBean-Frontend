@@ -59,6 +59,8 @@ import fetcher from "../../utils/fetcher";
 import { useLocation } from "react-router";
 
 const Product = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const queryClient = useQueryClient();
   const SurveyData: SurveyDataType = {
     surveyId: 1,
@@ -196,7 +198,7 @@ const Product = () => {
     "EndSurvey",
     ({ SurveyId }) =>
       axios
-        .patch(`http://localhost:8080/surveys/${SurveyId}`, {
+        .patch(`${baseUrl}/surveys/${SurveyId}`, {
           withCredentials: true,
           headers: {
             "X-Requested-With": "XMLHttpRequest",
