@@ -52,6 +52,12 @@ export const LogicControl = () => {
         surveyQuestions[Number(selNode) - 1].questionNumber != question.value
       );
   });
+  const foundQuestion = select
+    ? surveyQuestions.find(
+        (question) => question.questionNumber === select.nextQuestionNumber
+      )
+    : surveyQuestions[1];
+  console.log(foundQuestion);
 
   const getRandomColor = () => {
     // 랜덤한 색상을 생성
@@ -410,7 +416,7 @@ export const LogicControl = () => {
       surveyQuestions.map((q) => {
         updatedSurveyList.push({
           value: Number(q.questionNumber),
-          label: Number(q.questionNumber),
+          label: q.title ? q.title : "제목 없음",
         });
       });
       updatedSurveyList.sort((a, b) => {
@@ -514,8 +520,10 @@ export const LogicControl = () => {
   const NoLogicChangeNext = (value: string) => {
     const updatedQuestions = JSON.parse(JSON.stringify(surveyQuestions));
     const questionIndex = Number(selNode) - 1;
-
+    if (value == "0") updatedQuestions[questionIndex].finalQuestion = true;
+    else updatedQuestions[questionIndex].finalQuestion = false;
     updatedQuestions[questionIndex].nextQuestionNumber = value;
+
     setSurveyQuestions(updatedQuestions);
   };
 
@@ -531,9 +539,10 @@ export const LogicControl = () => {
               <OptionHeader>기본 이동</OptionHeader>
               <Select
                 value={
-                  "nextQuestionNumber" in select
-                    ? select.nextQuestionNumber
-                    : "-1"
+                  !select.finalQuestion
+                    ? surveyQuestions[Number(select.nextQuestionNumber) - 1]
+                        .title
+                    : "제출 하기"
                 }
                 style={{
                   width: "7rem",
@@ -637,9 +646,11 @@ export const LogicControl = () => {
                               <LogicBodyHeader>이동</LogicBodyHeader>
                               <Select
                                 value={
-                                  "nextQuestionNumber" in item
-                                    ? item.nextQuestionNumber
-                                    : "0"
+                                  !select.finalQuestion
+                                    ? surveyQuestions[
+                                        Number(select.nextQuestionNumber) - 1
+                                      ].title
+                                    : "제출 하기"
                                 }
                                 style={{ width: 100 }}
                                 onChange={(e: string) =>

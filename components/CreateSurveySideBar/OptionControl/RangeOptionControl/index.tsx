@@ -56,7 +56,7 @@ export const RangeOptionControl = () => {
         "explanation" in prevQuestion ? prevQuestion.explanation : "",
       questionNumber: prevQuestion.questionNumber,
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: String(Number(prevQuestion.questionNumber) + 1),
       numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
@@ -73,7 +73,7 @@ export const RangeOptionControl = () => {
         "explanation" in prevQuestion ? prevQuestion.explanation : "",
       questionNumber: prevQuestion.questionNumber,
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: String(Number(prevQuestion.questionNumber) + 1),
     }));
   };
 
