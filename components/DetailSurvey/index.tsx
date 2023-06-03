@@ -50,7 +50,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HeaderBar from "@components/HeaderBar";
-import { Link } from "react-router-dom";
+import { Link, LinkProps } from "react-router-dom";
 import { Button } from "antd";
 import { SurveyDataType } from "./type";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -180,7 +180,15 @@ const DetailSurvey = () => {
               gap: "1rem",
             }}
           >
-            <Link to="/surveyresponsedetail" style={{ textDecoration: "none" }}>
+            <Link
+              to={{
+                pathname: "/surveyresponsedetail",
+                state: {
+                  surveyId: location.pathname.split("/")[2].toString(),
+                },
+              }}
+              style={{ textDecoration: "none" }}
+            >
               <Button type="primary">
                 조회하기
                 <br />

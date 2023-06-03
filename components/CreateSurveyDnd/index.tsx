@@ -303,7 +303,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         setSurveyId(returnData?.surveyId);
       },
       onError(error) {
-        alert("양식을 알맞게 작성해주세요");
+        alert("에러가 발생하였습니다: " + error);
       },
     }
   );

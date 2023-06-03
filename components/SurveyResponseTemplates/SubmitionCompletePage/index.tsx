@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { Oval } from "react-loader-spinner";
 import {
   Explanation,
   QuestionBox,
@@ -26,7 +27,11 @@ export const EndingPage = () => {
   const [url, setUrl] = useState("http://localhost:8080/responses");
   const [check, setCheck] = useState<boolean>(false);
 
-  const mutation = useMutation<string, AxiosError, responseDataList>(
+  const { mutate, isLoading, error } = useMutation<
+    string,
+    AxiosError,
+    responseDataList
+  >(
     "registerResponse",
     (data) =>
       axios
@@ -50,34 +55,49 @@ export const EndingPage = () => {
   );
 
   useEffect(() => {
-    mutation.mutate(reportData);
+    mutate(reportData);
   }, []);
 
   return (
     <Wrapper>
-      {check ? (
-        <MessageContainer>
-          <LottieContainer>
-            <Lottie animationData={successAnimation} />
-          </LottieContainer>
-          <EndingMessageDiv>응답 제출이 완료되었습니다!</EndingMessageDiv>
-        </MessageContainer>
+      {!isLoading ? (
+        check ? (
+          <MessageContainer>
+            <LottieContainer>
+              <Lottie animationData={successAnimation} />
+            </LottieContainer>
+            <EndingMessageDiv>응답 제출이 완료되었습니다!</EndingMessageDiv>
+          </MessageContainer>
+        ) : (
+          <MessageContainer>
+            <LottieContainer>
+              <Lottie animationData={failAnimation} />
+            </LottieContainer>
+            <EndingMessageDiv>
+              응답 제출에 실패하였습니다..{" "}
+              <span
+                onClick={() => window.location.reload()}
+                style={{ color: "blue", cursor: "pointer" }}
+              >
+                다시 시도
+              </span>
+              해주세요
+            </EndingMessageDiv>
+          </MessageContainer>
+        )
       ) : (
-        <MessageContainer>
-          <LottieContainer>
-            <Lottie animationData={failAnimation} />
-          </LottieContainer>
-          <EndingMessageDiv>
-            응답 제출에 실패하였습니다..{" "}
-            <span
-              onClick={() => window.location.reload()}
-              style={{ color: "blue", cursor: "pointer" }}
-            >
-              다시 시도
-            </span>
-            해주세요
-          </EndingMessageDiv>
-        </MessageContainer>
+        <Oval
+          height={80}
+          width={80}
+          color="blue"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          ariaLabel="oval-loading"
+          secondaryColor="skyblue"
+          strokeWidth={2}
+          strokeWidthSecondary={2}
+        />
       )}
     </Wrapper>
   );
