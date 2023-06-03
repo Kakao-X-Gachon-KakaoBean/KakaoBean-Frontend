@@ -150,11 +150,20 @@ export const SurveyShortSection = styled.div`
 
 export const SurveyHeader = styled.div`
   width: 100%;
-  height: 4rem;
-  font-size: 1.2rem;
+  height: 4.5rem;
+  font-size: 1.4rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   padding-left: 1rem;
+
+  & div:first-child {
+    font-weight: bold;
+  }
+  & div:last-child {
+    font-size: 1rem;
+    color: #bc9595;
+  }
 `;
 export const SurveyBody = styled.div`
   flex: 1;
@@ -181,4 +190,11 @@ export const SurveyVertical = styled.div`
 export const SurveyBodyResult = styled.div`
   width: 100%;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  & div:first-child {
+    font-size: 1.2rem;
+    border-bottom: 0.5rem;
+  }
 `;

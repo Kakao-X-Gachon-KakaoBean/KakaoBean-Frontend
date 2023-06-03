@@ -272,7 +272,10 @@ const DetailSurvey = () => {
           if (question.type === "ESSAY") {
             return (
               <SurveyShortSection key={index}>
-                <SurveyHeader>{question.title}</SurveyHeader>
+                <SurveyHeader>
+                  <div>{question.title}</div>
+                  <div>{question.explanation}</div>
+                </SurveyHeader>
                 <SurveyShortBody>
                   <SurveyBodyResult>
                     <Accordion sx={{ width: "100%" }}>
@@ -305,7 +308,10 @@ const DetailSurvey = () => {
           } else if (question.type === "MULTIPLE") {
             return (
               <SurveySection key={index}>
-                <SurveyHeader>{question?.title}</SurveyHeader>
+                <SurveyHeader>
+                  <div>{question.title}</div>
+                  <div>{question.explanation}</div>
+                </SurveyHeader>
                 <SurveyBody>
                   <SurveyBodyChart>
                     <PieChart width={300} height={200}>
@@ -364,15 +370,12 @@ const DetailSurvey = () => {
                   </SurveyBodySummary>
                   <SurveyVertical></SurveyVertical>
                   <SurveyBodyResult>
+                    <div>선택 된 번호</div>
                     {question.answers.map((answer, answerIndex) => {
                       if (typeof answer === "string") {
                         return <div key={answerIndex}>{answer}</div>;
                       } else {
-                        return (
-                          <div key={answerIndex}>
-                            {answer.name}번 {answer.value}%
-                          </div>
-                        );
+                        return <div key={answerIndex}>{answer.name}</div>;
                       }
                     })}
                   </SurveyBodyResult>
@@ -382,7 +385,10 @@ const DetailSurvey = () => {
           } else if (question.type === "RANGE") {
             return (
               <SurveySection key={index}>
-                <SurveyHeader>{question.title}</SurveyHeader>
+                <SurveyHeader>
+                  <div>{question.title}</div>
+                  <div>{question.explanation}</div>
+                </SurveyHeader>
                 <SurveyBody>
                   <SurveyBodyChart>
                     <PieChart width={300} height={200}>
@@ -441,17 +447,8 @@ const DetailSurvey = () => {
                   </SurveyBodySummary>
                   <SurveyVertical></SurveyVertical>
                   <SurveyBodyResult>
-                    {question.answers.map((answer, answerIndex) => {
-                      if (typeof answer === "string") {
-                        return <div key={answerIndex}>{answer}</div>;
-                      } else {
-                        return (
-                          <div key={answerIndex}>
-                            {answer.name} {answer.value}%
-                          </div>
-                        );
-                      }
-                    })}
+                    <span>최대 범위:{question?.max}</span>
+                    <span>최소 범위:{question?.min}</span>
                   </SurveyBodyResult>
                 </SurveyBody>
               </SurveySection>
