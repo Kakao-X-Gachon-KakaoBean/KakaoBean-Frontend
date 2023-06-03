@@ -13,6 +13,8 @@ import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
 
 const SurveyList = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const {
     isLoading,
     isSuccess,
@@ -21,7 +23,7 @@ const SurveyList = () => {
     data: SurveyList,
     error,
   } = useQuery(["SurveyList"], () =>
-    fetcher({ queryKey: "http://localhost:8080/surveys/submitted-survey" })
+    fetcher({ queryKey: `${baseUrl}/surveys/submitted-survey` })
   );
 
   return (

@@ -50,6 +50,8 @@ import axios, { AxiosError } from "axios";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const CreateSurveyDnd = (): JSX.Element => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
 
   const [questionTypeItems, setQuestionTypeItems] = useState<
@@ -288,7 +290,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     "createSurvey",
     (data) =>
       axios
-        .post("http://localhost:8080/surveys", data, {
+        .post(`${baseUrl}/surveys`, data, {
           withCredentials: true,
           headers: {
             "X-Requested-With": "XMLHttpRequest",
@@ -303,7 +305,7 @@ const CreateSurveyDnd = (): JSX.Element => {
         setSurveyId(returnData?.surveyId);
       },
       onError(error) {
-        alert("양식을 알맞게 작성해주세요");
+        alert("에러가 발생하였습니다: " + error);
       },
     }
   );

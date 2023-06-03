@@ -55,6 +55,8 @@ export const submitAll = atom<number[]>({
 });
 
 const Team = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const location = useLocation();
 
   // 현재 페이지 URL에서 숫자를 추출하는 함수
@@ -76,7 +78,7 @@ const Team = () => {
     error,
   } = useQuery<any>(
     ["survey", surveyId],
-    () => fetcher({ queryKey: `http://localhost:8080/surveys/${surveyId}` }),
+    () => fetcher({ queryKey: `${baseUrl}/surveys/${surveyId}` }),
     {
       onSuccess: (data) => {
         setSurvey(data);

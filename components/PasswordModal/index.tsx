@@ -38,6 +38,8 @@ const SearchPassword: FC<PaswwordModal> = ({
   birth,
   onChangeBirth,
 }) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [email, onChangeEmail, setEmail] = useInput("");
   const [passwordToChange, , setPasswordToChange] = useInput("");
   const [checkPasswordToChange, , setCheckPasswordToChange] = useInput("");
@@ -58,11 +60,7 @@ const SearchPassword: FC<PaswwordModal> = ({
       if (!email || !email.trim()) return;
 
       axios
-        .post(
-          "http://localhost:8080/emails",
-          { email },
-          { withCredentials: true }
-        )
+        .post(`${baseUrl}/emails`, { email }, { withCredentials: true })
         .then((response) => {
           setFailUseEmail(true);
           toast(message("메일로 인증번호가 발송되었습니다."), {
@@ -114,7 +112,7 @@ const SearchPassword: FC<PaswwordModal> = ({
     "modifyPassword",
     (data) =>
       axios
-        .patch("http://localhost:8080/members/password", data)
+        .patch(`${baseUrl}/members/password`, data)
         .then((response) => response.data),
     {
       onMutate() {
