@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import HeaderBar from "@components/HeaderBar";
 import MainFirst from "@components/MainComponent/MainFirst";
 import HorizonScroll from "@components/MainComponent/MainTouchScroll";
@@ -30,12 +32,16 @@ const Main = () => {
     }, [token]);
   }
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
   return (
     <>
       <div>
         <HeaderBar />
         <MainFirst />
-        <HorizonScroll />
+        {/*<HorizonScroll />*/}
         <DNDText />
         <GreyField />
         <BlackField />
