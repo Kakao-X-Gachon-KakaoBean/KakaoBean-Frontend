@@ -27,7 +27,7 @@ const SurveyList = () => {
   );
 
   return (
-    <>
+    <div style={{ paddingTop: "2%", paddingLeft: "10%" }}>
       <SurveyHeader>참여 설문 조회</SurveyHeader>
       {SurveyList?.mySubmittedSurveys.length >= 1 ? (
         <SurveyContainer>
@@ -52,9 +52,9 @@ const SurveyList = () => {
             )}
         </SurveyContainer>
       ) : (
-        <div>참여한 설문이 없습니다.</div>
+        <div style={{ paddingLeft: "1.2%" }}>참여한 설문이 없습니다.</div>
       )}
-    </>
+    </div>
   );
 };
 
