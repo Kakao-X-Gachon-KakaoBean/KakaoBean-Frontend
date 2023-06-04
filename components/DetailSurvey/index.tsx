@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback } from "react";
+import React, { PropsWithChildren, useCallback, useState } from "react";
 import {
   CartesianGrid,
   XAxis,
@@ -56,11 +56,13 @@ import { SurveyDataType } from "./type";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios, { AxiosError } from "axios";
 import fetcher from "../../utils/fetcher";
-import { useLocation } from "react-router";
+import { Redirect, useLocation } from "react-router";
 
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
   const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const [patch, setPatch] = useState(false);
 
   const COLORS = [
     "#0088FE",
@@ -128,17 +130,22 @@ const DetailSurvey = () => {
     "EndSurvey",
     ({ SurveyId }) =>
       axios
-        .patch(`${baseUrl}/surveys/${SurveyId}`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        })
+        .patch(
+          `${baseUrl}/surveys/${SurveyId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+            withCredentials: true,
+          }
+        )
         .then((response) => response.data),
     {
       onMutate() {},
       onSuccess(data) {
         queryClient.invalidateQueries("EndSurvey");
+        setPatch(true);
         alert("설문이 마감되었습니다.");
       },
       onError(error) {
@@ -155,6 +162,10 @@ const DetailSurvey = () => {
     [mutation]
   );
 
+  if (patch) {
+    return <Redirect to={"/mypage/mysurvey"} />;
+  }
+
   return (
     <Wrapper>
       <HeaderBar />
@@ -162,7 +173,7 @@ const DetailSurvey = () => {
         <ViewSection>
           <TitleResult>
             <div>설문 제목</div>
-            <div name={"SurveyName"}>{SurveyData?.surveyTitle}</div>
+            <div>{SurveyData?.surveyTitle}</div>
           </TitleResult>
           <ResponseResult>
             <div>생성일</div>
