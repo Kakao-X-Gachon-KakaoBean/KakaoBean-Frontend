@@ -15,7 +15,7 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import axios, { AxiosError } from "axios";
-import { Button, Modal } from "antd";
+import { Button, Empty, Modal } from "antd";
 
 const MySurvey = () => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
@@ -112,11 +112,20 @@ const MySurvey = () => {
             })}
         </SurveyContainer>
       ) : (
-        <CreateSurveyContainer>
+        // <CreateSurveyContainer>
+        //   <Link to="/createsurvey">
+        //     <FontAwesomeIcon icon={faCirclePlus} style={{ fontSize: "2rem" }} />
+        //   </Link>
+        // </CreateSurveyContainer>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          imageStyle={{ height: 100 }}
+          description={<span>작성한 설문이 없습니다.</span>}
+        >
           <Link to="/createsurvey">
-            <FontAwesomeIcon icon={faCirclePlus} style={{ fontSize: "2rem" }} />
+            <Button type="primary">설문 생성하기</Button>
           </Link>
-        </CreateSurveyContainer>
+        </Empty>
       )}
       <Modal
         title="Cocoa"

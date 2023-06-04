@@ -94,14 +94,6 @@ const HeaderBar = () => {
           </Link>
           <RightMenu>
             <Links>
-              <Link to="/product">Product</Link>
-            </Links>
-            <Links>
-              <Link to="/team">
-                <span>Team</span>
-              </Link>
-            </Links>
-            <Links>
               <Link to="/mypage/myinfo">
                 <span>MY PAGE</span>
               </Link>

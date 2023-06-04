@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
+import { Empty } from "antd";
 
 const SurveyList = () => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
@@ -52,7 +53,11 @@ const SurveyList = () => {
             )}
         </SurveyContainer>
       ) : (
-        <div style={{ paddingLeft: "1.2%" }}>참여한 설문이 없습니다.</div>
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          imageStyle={{ height: 100 }}
+          description={<span>참여한 설문이 없습니다.</span>}
+        />
       )}
     </div>
   );
