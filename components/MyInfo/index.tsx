@@ -7,6 +7,7 @@ import {
   Header,
   SectionHeader,
   SectionBody,
+  InfoDiv,
 } from "@components/MyInfo/styles";
 
 const MyInfo = () => {
@@ -28,26 +29,28 @@ const MyInfo = () => {
     <>
       <Wrapper>
         <Header>내 정보</Header>
-        <InfoSection>
-          <SectionHeader>이름</SectionHeader>
-          <SectionBody>{data?.name}</SectionBody>
-        </InfoSection>
-        <InfoSection>
-          <SectionHeader>나이</SectionHeader>
-          <SectionBody>{data?.age}</SectionBody>
-        </InfoSection>
-        <InfoSection>
-          <SectionHeader>성별</SectionHeader>
-          <SectionBody>{data?.gender}</SectionBody>
-        </InfoSection>
-        <InfoSection>
-          <SectionHeader>이메일</SectionHeader>
-          <SectionBody>{data?.email}</SectionBody>
-        </InfoSection>
-        <InfoSection>
-          <SectionHeader>생일</SectionHeader>
-          <SectionBody>{data?.birth}</SectionBody>
-        </InfoSection>
+        <InfoDiv>
+          <InfoSection>
+            <SectionHeader>이름</SectionHeader>
+            <SectionBody>{data?.name}</SectionBody>
+          </InfoSection>
+          <InfoSection>
+            <SectionHeader>나이</SectionHeader>
+            <SectionBody>{data?.age}</SectionBody>
+          </InfoSection>
+          <InfoSection>
+            <SectionHeader>성별</SectionHeader>
+            <SectionBody>{data?.gender}</SectionBody>
+          </InfoSection>
+          <InfoSection>
+            <SectionHeader>이메일</SectionHeader>
+            <SectionBody>{data?.email}</SectionBody>
+          </InfoSection>
+          <InfoSection>
+            <SectionHeader>생일</SectionHeader>
+            <SectionBody>{data?.birth}</SectionBody>
+          </InfoSection>
+        </InfoDiv>
       </Wrapper>
     </>
   );

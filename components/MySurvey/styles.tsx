@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const SurveyHeader = styled.div`
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 600;
   margin-bottom: 0.8rem;
   margin-left: 1rem;
