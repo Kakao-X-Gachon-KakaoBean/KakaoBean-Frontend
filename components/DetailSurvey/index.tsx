@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, useCallback, useEffect ,useState} from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   CartesianGrid,
   XAxis,
@@ -40,6 +45,7 @@ import {
   SurveyShortSection,
   SurveyShortBody,
   SurveyVertical,
+  CopySection,
   ViewSection,
   Wrapper,
   DetailButton,
@@ -53,19 +59,19 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HeaderBar from "@components/HeaderBar";
-import { Link, LinkProps } from "react-router-dom";
-import { Button } from "antd";
 import { SurveyDataType } from "./type";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { format, parse, parseISO } from "date-fns";
+import { format, parse } from "date-fns";
 import axios, { AxiosError } from "axios";
 import fetcher from "../../utils/fetcher";
 import { Redirect, useLocation } from "react-router";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-solid-svg-icons/faCopy";
 
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
   const baseUrl = process.env.REACT_APP_BASE_URL;
-
   const [patch, setPatch] = useState(false);
 
   const COLORS = [
@@ -159,6 +165,10 @@ const DetailSurvey = () => {
     }
   );
 
+  if (patch) {
+    return <Redirect to={"/mypage/mysurvey"} />;
+  }
+
   const EndSurvey = useCallback(
     (SurveyId: string) => {
       console.log(SurveyId);
@@ -167,9 +177,6 @@ const DetailSurvey = () => {
     [mutation]
   );
 
-  if (patch) {
-    return <Redirect to={"/mypage/mysurvey"} />;
-  }
   useEffect(() => {
     window.addEventListener("error", (e) => {
       if (e.message === "ResizeObserver loop limit exceeded") {
@@ -193,6 +200,15 @@ const DetailSurvey = () => {
     <Wrapper>
       <HeaderBar />
       <SectionWrapper>
+        <CopySection>
+          <div>http://localhost:3000/survey/{SurveyData?.surveyId}</div>
+          <CopyToClipboard
+            text={`http://localhost:3000/survey/${SurveyData?.surveyId}`}
+          >
+            <FontAwesomeIcon icon={faCopy} />
+          </CopyToClipboard>
+        </CopySection>
+
         <ViewSection>
           <TitleResult>
             <div>설문 제목</div>

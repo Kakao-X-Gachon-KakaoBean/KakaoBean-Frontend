@@ -8,6 +8,18 @@ export const Wrapper = styled.div`
   padding-bottom: 9rem;
   background-color: #fbf9f9ff;
 `;
+
+export const CopySection = styled.div`
+  width: 100%;
+  border-radius: 25px;
+  border: 1px solid white;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 5fr 0.1fr;
+  align-items: center;
+  padding: 1rem;
+  font-size: 1.2rem;
+`;
 export const ViewSection = styled.div`
   width: 100%;
   display: grid;
@@ -91,7 +103,7 @@ export const SectionWrapper = styled.div`
   width: 90%;
   display: grid;
   justify-content: center;
-  grid-template-rows: 1fr 4fr;
+  grid-template-rows: 0.5fr 1fr 4fr;
   grid-row-gap: 1rem;
   margin: 0 auto;
 `;
