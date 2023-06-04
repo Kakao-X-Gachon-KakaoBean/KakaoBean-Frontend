@@ -1,16 +1,17 @@
 import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
-  margin-top: 7rem;
-  margin-bottom: 7rem;
-  padding: 3rem;
-  background-color: lightgrey;
+  width: 100%;
+  height: 70%;
+  margin-top: 10%;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Div = styled.div`
   justify-content: space-around;
-  flex-direction: row;
   display: flex;
+  flex-direction: row;
 `;
 
 export const TextDiv = styled.div`
@@ -22,7 +23,8 @@ export const TextDiv = styled.div`
 `;
 
 export const Text = styled.div`
-  font-size: 50px;
+  font-size: 3.5rem;
+  font-weight: bold;
 `;
 
 export const SmallText = styled.div`
