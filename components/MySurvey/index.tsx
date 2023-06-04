@@ -84,7 +84,7 @@ const MySurvey = () => {
   );
 
   return (
-    <>
+    <div style={{ paddingTop: "2%", paddingLeft: "10%" }}>
       <SurveyHeader>내가 만든 설문 조회</SurveyHeader>
       {MySurvey?.myOwnSurveys.length >= 1 ? (
         <SurveyContainer>
@@ -143,7 +143,7 @@ const MySurvey = () => {
       >
         <p>정말 설문을 삭제하시겠습니까?</p>
       </Modal>
-    </>
+    </div>
   );
 };
 
