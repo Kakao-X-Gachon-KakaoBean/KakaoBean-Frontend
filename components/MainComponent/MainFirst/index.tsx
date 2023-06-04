@@ -1,6 +1,7 @@
-import { Wrapper, Text, TextDiv } from "./styles";
-import { Button } from "antd";
-import React from "react";
+import { Wrapper, Text, TextDiv, StartButton } from "./styles";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useResetRecoilState } from "recoil";
 import {
@@ -45,27 +46,34 @@ const MainFirst = () => {
   const handleClick = () => {
     resetSurveyAndLogic();
   };
+  useEffect(() => {
+    AOS.init();
+  }, []);
 
   return (
     <Wrapper>
-      <TextDiv>
+      <TextDiv
+        data-aos="fade-up"
+        data-aos-delay="1000"
+        data-aos-duration="1000"
+      >
         <Text>
-          업무를 빠르고 쉽게
+          설문을 빠르고 쉽게
           <br />
         </Text>
         <Text>
           Cocoa
           <br />
         </Text>
-        <Button>
+        <StartButton>
           <Link
             to="/createsurvey"
             onClick={handleClick}
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: "none", color: "white" }}
           >
-            Get Start
+            바로 시작하기
           </Link>
-        </Button>
+        </StartButton>
       </TextDiv>
     </Wrapper>
   );
