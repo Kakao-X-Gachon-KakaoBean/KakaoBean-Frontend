@@ -9,19 +9,23 @@ describe("메인 페이지", () => {
   });
   context("메인 페이지 렌더링 시", () => {
     it("메인 페이지 가이드 라인 문구는 사용자에게 보여져야 한다.", () => {
-      cy.get(".css-e467n0 > .css-1e91d6q > :nth-child(1)").should("be.visible");
-      cy.get(".css-e467n0 > .css-1e91d6q > :nth-child(2)").should("be.visible");
-      cy.get(".css-0 > .css-1e91d6q > .css-6khpng").should("be.visible");
-      cy.get(".css-1lr4xyl").should("be.visible");
-      cy.get(".css-1edcj4h > .css-1e91d6q > .css-6khpng").should("be.visible");
-      cy.get(".css-1edcj4h > .css-1e91d6q > :nth-child(2)").should(
-        "be.visible"
-      );
-      cy.get(".css-1edcj4h > .css-1e91d6q > :nth-child(3)").should(
-        "be.visible"
-      );
-      // cy.scrollTo("bottom", { duration: 2000 });
-      // cy.scrollTo("top", { duration: 2000 });
+      cy.get(".css-yv3pru > :nth-child(1)").should("be.visible");
+      cy.get(".css-yv3pru > :nth-child(2)").should("be.visible");
+      cy.get(".css-1u7g3ak").should("be.visible");
+
+      //여기서부턴 스크롤 내려야 보임
+      cy.get(".css-1l5y9fy > div.aos-init > .css-rxxf9o").should("be.visible");
+      cy.get(".css-1l5y9fy > div.aos-init > .css-end85d").should("be.visible");
+      cy.get("video.aos-init").should("be.visible");
+      cy.get(".css-1e91d6q > .css-rxxf9o").should("be.visible");
+      cy.get(".css-1e91d6q > :nth-child(2)").should("be.visible");
+      cy.get(".css-1e91d6q > :nth-child(3)").should("be.visible");
+      cy.get(".css-1wvi6it").should("be.visible");
+      cy.get(".css-vkg5qd").should("be.visible");
+      cy.get(":nth-child(1) > .css-1hi0zda").should("be.visible");
+      cy.get(".css-aqo0mr").should("be.visible");
+      cy.get(":nth-child(2) > .css-1hi0zda").should("be.visible");
+      cy.get(".css-lc7fha").should("be.visible");
     });
   });
   context("Get Start 버튼을 클릭했을 경우", () => {

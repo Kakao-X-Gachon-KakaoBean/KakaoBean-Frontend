@@ -162,7 +162,7 @@ const DetailSurvey = () => {
         <ViewSection>
           <TitleResult>
             <div>설문 제목</div>
-            <div name={"SurveyName"}>{SurveyData?.surveyTitle}</div>
+            <div>{SurveyData?.surveyTitle}</div>
           </TitleResult>
           <ResponseResult>
             <div>생성일</div>
