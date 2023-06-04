@@ -18,7 +18,7 @@ export const Info = styled.div`
 
   & span {
     margin-top: 0.5rem;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: rgba(0, 0, 0, 0.4);
   }
