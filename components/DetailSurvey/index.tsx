@@ -51,6 +51,7 @@ import {
   DetailButton,
   CloseSurveyButton,
   ButtonDiv,
+  StyledFontAwesomeIcon,
 } from "@components/DetailSurvey/styles";
 
 import Accordion from "@mui/material/Accordion";
@@ -72,6 +73,7 @@ import { faCopy } from "@fortawesome/free-solid-svg-icons/faCopy";
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
   const baseUrl = process.env.REACT_APP_BASE_URL;
+  const frontbaseUrl = process.env.REACT_APP_FRONT_BASE_URL;
   const [patch, setPatch] = useState(false);
 
   const COLORS = [
@@ -165,10 +167,6 @@ const DetailSurvey = () => {
     }
   );
 
-  if (patch) {
-    return <Redirect to={"/mypage/mysurvey"} />;
-  }
-
   const EndSurvey = useCallback(
     (SurveyId: string) => {
       console.log(SurveyId);
@@ -176,6 +174,10 @@ const DetailSurvey = () => {
     },
     [mutation]
   );
+
+  if (patch) {
+    return <Redirect to={"/mypage/mysurvey"} />;
+  }
 
   useEffect(() => {
     window.addEventListener("error", (e) => {
@@ -201,11 +203,13 @@ const DetailSurvey = () => {
       <HeaderBar />
       <SectionWrapper>
         <CopySection>
-          <div>http://localhost:3000/survey/{SurveyData?.surveyId}</div>
+          <div>
+            {frontbaseUrl}/survey/{SurveyData?.surveyId}
+          </div>
           <CopyToClipboard
-            text={`http://localhost:3000/survey/${SurveyData?.surveyId}`}
+            text={`${frontbaseUrl}/survey/${SurveyData?.surveyId}`}
           >
-            <FontAwesomeIcon icon={faCopy} />
+            <StyledFontAwesomeIcon icon={faCopy} />
           </CopyToClipboard>
         </CopySection>
 
@@ -217,12 +221,10 @@ const DetailSurvey = () => {
           <ResponseResult>
             <div>생성일</div>
             <div>
-              {SurveyData
-                ? format(
-                    parse(SurveyData?.surveyDate, "yy-M-d", new Date()),
-                    "yyyy.MM.dd"
-                  )
-                : ""}
+              <div>{SurveyData?.surveyDate} </div>
+              {SurveyData?.closeStatus ? (
+                <div>설문이 마감되었습니다.</div>
+              ) : null}
             </div>
           </ResponseResult>
           <GoingResult>
