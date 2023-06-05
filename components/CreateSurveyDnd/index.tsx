@@ -51,6 +51,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const CreateSurveyDnd = (): JSX.Element => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
+  const frontbaseUrl = process.env.REACT_APP_FRONT_BASE_URL;
 
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
 
@@ -543,13 +544,13 @@ const CreateSurveyDnd = (): JSX.Element => {
           open={isModalOpen}
           onCancel={handleOk}
           footer={[
-            <CopyToClipboard text={`http://localhost:3000/survey/${surveyId}`}>
+            <CopyToClipboard text={`${frontbaseUrl}/survey/${surveyId}`}>
               <Button type="primary">링크 복사하기</Button>
             </CopyToClipboard>,
           ]}
           centered
         >
-          <p>{`http://localhost:3000/survey/${surveyId}`}</p>
+          <p>{`${frontbaseUrl}/survey/${surveyId}`}</p>
         </Modal>
       </DragDropContext>
     </Wrapper>
