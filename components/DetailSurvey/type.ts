@@ -3,6 +3,7 @@ export interface SurveyDataType {
   surveyTitle: string;
   surveyDate: string;
   numberOfResponse: number;
+  closeStatus: boolean;
   surveyGenderPercent: { name: string; value: number }[];
   surveyAgePercent: { name: string; 인원수: number }[];
   questionsResult: QuestionResult[];
