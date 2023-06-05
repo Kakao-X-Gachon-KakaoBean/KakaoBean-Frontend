@@ -1,10 +1,12 @@
 import { Client, Message } from "@stomp/stompjs";
 import { useRecoilState } from "recoil";
-import { chatList } from "@components/CreateSurveyChatBot";
 import { RecommendedChatTitle } from "@components/CreateSurveyChatBot/type";
+
 export class ChatService {
   private client: Client;
-  public message: string;
+  public answerList: RecommendedChatTitle[];
+  public counter: number;
+
   constructor() {
     this.client = new Client();
     this.client.configure({
@@ -13,27 +15,39 @@ export class ChatService {
         this.client.subscribe("/topic/public", this.handleMessage);
       },
     });
-    this.message = "";
+    this.answerList = [];
+    this.counter = 1;
   }
+
+  get getMessage() {
+    return this.answerList;
+  }
+
+  // set setMessage(newValue) {
+  //   this.message = newValue;
+  // }
 
   handleMessage = (message: Message) => {
     const chatMessage = JSON.parse(message.body);
-    const extractedMessage = chatMessage.content.replace(/\[|\]/g, "");
-    console.log(extractedMessage);
+    const extractedMessage: string = chatMessage.content.replace(/\[|\]/g, "");
+    const messageList = extractedMessage.split(".");
+    // console.log(extractedMessage);
     // 받은 메시지 처리 로직 작성
     //   TODO: 들어온 데이터를 가공해서 recommendedChatTitle 형식으로 바꾸기
-    this.message = extractedMessage;
-    const [chatMessages, setChatMessages] = useRecoilState(chatList);
-    setChatMessages((prevState) => {
-      const newMessage: RecommendedChatTitle = {
-        id: 1,
-        title: this.message,
-        checked: false,
-      };
-      console.log(newMessage);
-      return prevState.concat(newMessage);
+    messageList.map((msg, index) => {
+      const newMessage: RecommendedChatTitle[] = [
+        {
+          id: index + this.counter,
+          title: msg,
+          checked: false,
+        },
+      ];
+      this.answerList = this.answerList.concat(newMessage);
+      console.log(this.answerList);
     });
+    this.counter = this.counter + 5;
   };
+
   // {type: 'CHAT', content: '[\n\nHello! How are you?]', sender: 'ChatGpt'}
   sendMessage = (message: string) => {
     const question = {
