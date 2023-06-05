@@ -132,6 +132,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
 
   const showDrawer = () => {
     setOpenDrawer(true);
+    chatService.connect();
   };
 
   const closeDrawer = () => {
@@ -220,7 +221,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
 
         {userQuestion
           .map((question, index) => {
-            if (titleSet[index] !== null && titleSet[index] !== undefined) {
+            if (titleSet[index]?.answer?.length > 0) {
               return (
                 <div>
                   <ResponsesDiv>
