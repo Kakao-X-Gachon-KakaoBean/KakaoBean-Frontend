@@ -1,18 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChatTitleButton,
   CreateQuestionsBtnDiv,
   DialogButton,
   ResponsesDiv,
 } from "@components/CreateSurveyChatBot/styles";
-import { RecommendedChatTitle } from "./type";
+import { allChat, RecommendedChatTitle, userChat } from "./type";
 import { Button, Drawer, Input } from "antd";
-import { useRecoilState } from "recoil";
+import { atom, useRecoilState } from "recoil";
 import {
   countState,
   createSurveyOptionState,
   questionsState,
 } from "../../States/SurveyState";
+import { ChatService } from "@components/CreateSurveyChatBot/chatMessage";
+
+export const chatList = atom<RecommendedChatTitle[]>({
+  key: "chat",
+  default: [],
+});
+
+const chatService = new ChatService();
 
 const CreateSurveyChatBot = (): JSX.Element => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -22,38 +30,45 @@ const CreateSurveyChatBot = (): JSX.Element => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [findBtnLoadings, setFindBtnLoadings] = useState<boolean[]>([]);
   const [submitBtnLoadings, setSubmitBtnLoadings] = useState<boolean[]>([]);
-  const [recommendedChatTitle, setRecommendedChatTitle] = useState<
-    RecommendedChatTitle[]
-  >([
-    {
-      id: 1,
-      title: "어떤 용도로 컴퓨터를 사용하시나요?",
-      checked: false,
-    },
-    {
-      id: 2,
-      title: "얼마 정도의 예산을 가지고 계신가요?",
-      checked: false,
-    },
-    {
-      id: 3,
-      title: "어떤 종류의 그래픽 카드를 선호하시나요?",
-      checked: false,
-    },
-    {
-      id: 4,
-      title: "노트북 또는 데스크탑 컴퓨터 중 어떤 것을 선호하시나요?",
-      checked: false,
-    },
-    {
-      id: 5,
-      title: "어떤 운영체제를 사용하고 싶으신가요?",
-      checked: false,
-    },
-  ]);
+
+  //뭐 들어오면 쭈욱 1~5, 6~10 이렇게 넣기
+  const [chatMessages, setChatMessages] = useState<allChat[]>([]);
+  //recoil recommended list
+  const [recommendedChatTitles, setRecommendedChatTitles] =
+    useRecoilState(chatList);
+
+  useEffect(() => {
+    chatService.connect();
+
+    return () => {
+      chatService.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    setChatMessages((prevState) => {
+      return prevState.concat(recommendedChatTitles);
+    });
+    console.log("chat", recommendedChatTitles);
+  }, [recommendedChatTitles]);
+
+  const handleChatTitleClick = (index: number) => {
+    const updatedChatTitle = [...recommendedChatTitles];
+    updatedChatTitle[index].checked = !updatedChatTitle[index].checked;
+    //업데이트
+    setRecommendedChatTitles(updatedChatTitle);
+  };
 
   const FindQuestion = () => {
+    chatService.sendMessage(input);
     enterFindLoading(0);
+    setChatMessages((prevState) => {
+      const newChat: userChat = {
+        message: input,
+        user: "user",
+      };
+      return prevState.concat(newChat);
+    });
   };
 
   const enterFindLoading = (index: number) => {
@@ -77,6 +92,10 @@ const CreateSurveyChatBot = (): JSX.Element => {
     enterSubmitLoading(0);
   };
 
+  useEffect(() => {
+    enterSubmitLoading(0);
+  }, [recommendedChatTitles]);
+
   const enterSubmitLoading = (index: number) => {
     CreateQuestion();
 
@@ -92,14 +111,8 @@ const CreateSurveyChatBot = (): JSX.Element => {
         newLoadings[index] = false;
         return newLoadings;
       });
-      closeDrawer();
+      // closeDrawer();
     }, 1000);
-  };
-
-  const handleChatTitleClick = (index: number) => {
-    const updatedChatTitle = [...recommendedChatTitle];
-    updatedChatTitle[index].checked = !updatedChatTitle[index].checked;
-    setRecommendedChatTitle(updatedChatTitle);
   };
 
   const showDrawer = () => {
@@ -108,7 +121,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
 
   const closeDrawer = () => {
     // Drawer 닫을 시 초기화
-    setRecommendedChatTitle([]);
+    setChatMessages([]);
     setIsSubmitted(false);
     setOpenDrawer(false);
   };
@@ -119,7 +132,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
 
   const CreateQuestion = () => {
     let newCountQuestion = countQuestion - 1;
-    recommendedChatTitle
+    recommendedChatTitles
       .filter((item) => item.checked)
       .forEach((item) => {
         newCountQuestion += 1;
@@ -141,6 +154,11 @@ const CreateSurveyChatBot = (): JSX.Element => {
       });
   };
 
+  const [input, setInput] = useState("");
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
+
   return (
     <div>
       {viewLogic === "logic" ? (
@@ -148,54 +166,90 @@ const CreateSurveyChatBot = (): JSX.Element => {
       ) : (
         <DialogButton onClick={showDrawer}>AI 추천</DialogButton>
       )}
-
+      {/*---------------DRAWER--------------- */}
       <Drawer
         title="AI로 질문 추천 받기"
         placement="right"
         onClose={closeDrawer}
         open={openDrawer}
       >
+        {/*---------------채팅 입력칸--------------- */}
         <p>질문 입력란</p>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Input
             placeholder={"ex) 컴퓨터 구매에 관련된 설문 문제를 추천해주세요"}
             style={{ marginRight: "3%" }}
+            type="text"
+            value={input}
+            onChange={handleInputChange}
           />
+          {/*---------------채팅 전송 버튼--------------- */}
           <Button
             type={"primary"}
             onClick={FindQuestion}
             loading={findBtnLoadings[0]}
           >
-            제출
+            전송
           </Button>
+          {/*---------------채팅 박스 생성 공간--------------- */}
         </div>
-        {isSubmitted ? (
-          <div>
-            <ResponsesDiv>
-              {recommendedChatTitle.map((item, index) => (
-                <div style={{ marginTop: "1rem" }} key={index}>
-                  <ChatTitleButton
-                    type={item.checked ? "primary" : "default"}
-                    onClick={() => handleChatTitleClick(index)}
-                  >
-                    {item.title}
-                  </ChatTitleButton>
+        {chatMessages
+          .map((message, indexOfall) => {
+            //--------------------- 챗지피티에서 받아온 정보------------------------------
+            if (Array.isArray(message)) {
+              console.log("here i am!!!!");
+              return (
+                <div key={indexOfall}>
+                  {/*---------------추천된 설문 박스--------------- */}
+                  <ResponsesDiv>
+                    {/*---------------설문 버튼 여러개 생성 map--------------- */}
+                    {message.map((item, indexOfGptMessage) => (
+                      <div
+                        style={{ marginTop: "1rem" }}
+                        key={indexOfGptMessage}
+                      >
+                        {/*---------------설문 제목 별 버튼--------------- */}
+                        <ChatTitleButton
+                          type={item.checked ? "primary" : "default"}
+                          onClick={() =>
+                            handleChatTitleClick(indexOfGptMessage)
+                          }
+                        >
+                          {item.title}
+                        </ChatTitleButton>
+                        {/*---------------설문 제목 별 버튼--------------- */}
+                      </div>
+                    ))}
+                    {/*---------------설문 버튼 여러개 생성 map--------------- */}
+
+                    {/*---------------설문 생성 버튼--------------- */}
+                    <CreateQuestionsBtnDiv>
+                      <Button
+                        type={"primary"}
+                        onClick={SubmitQuestion}
+                        loading={submitBtnLoadings[0]}
+                      >
+                        질문 생성하기
+                      </Button>
+                    </CreateQuestionsBtnDiv>
+                    {/*---------------설문 생성 버튼--------------- */}
+                  </ResponsesDiv>
+                  {/*---------------추천된 설문 박스////--------------- */}
                 </div>
-              ))}
-            </ResponsesDiv>
-            <CreateQuestionsBtnDiv>
-              <Button
-                type={"primary"}
-                onClick={SubmitQuestion}
-                loading={submitBtnLoadings[0]}
-              >
-                질문 생성하기
-              </Button>
-            </CreateQuestionsBtnDiv>
-          </div>
-        ) : (
-          <div></div>
-        )}
+              );
+            }
+
+            //--------------------- user 일 때 일반적인 채팅 출력-------------------------
+            else {
+              return (
+                <ResponsesDiv>
+                  <h1>{message.user}</h1>
+                  <h3>{message.message}</h3>
+                </ResponsesDiv>
+              );
+            }
+          })
+          .reverse()}
       </Drawer>
     </div>
   );
