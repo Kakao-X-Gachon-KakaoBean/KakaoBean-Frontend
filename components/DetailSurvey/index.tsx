@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback } from "react";
+import React, { PropsWithChildren, useCallback, useEffect ,useState} from "react";
 import {
   CartesianGrid,
   XAxis,
@@ -42,6 +42,9 @@ import {
   SurveyVertical,
   ViewSection,
   Wrapper,
+  DetailButton,
+  CloseSurveyButton,
+  ButtonDiv,
 } from "@components/DetailSurvey/styles";
 
 import Accordion from "@mui/material/Accordion";
@@ -54,21 +57,25 @@ import { Link, LinkProps } from "react-router-dom";
 import { Button } from "antd";
 import { SurveyDataType } from "./type";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { format, parse, parseISO } from "date-fns";
 import axios, { AxiosError } from "axios";
 import fetcher from "../../utils/fetcher";
-import { useLocation } from "react-router";
+import { Redirect, useLocation } from "react-router";
 
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
+  const [patch, setPatch] = useState(false);
+
   const COLORS = [
-    "#0088FE",
-    "#FF8042",
-    "#FFBB28",
-    "#00C49F",
-    "#ba4c4c",
-    "#98cdd6",
+    "#0058ffff",
+    "#ea4335ff",
+    "#fbbc04ff",
+    "#157145",
+    "#156345",
+    "#66c1d4ff",
+    "#dfecffff",
   ];
 
   interface CustomizedLabelProps {
@@ -128,17 +135,22 @@ const DetailSurvey = () => {
     "EndSurvey",
     ({ SurveyId }) =>
       axios
-        .patch(`${baseUrl}/surveys/${SurveyId}`, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        })
+        .patch(
+          `${baseUrl}/surveys/${SurveyId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+            withCredentials: true,
+          }
+        )
         .then((response) => response.data),
     {
       onMutate() {},
       onSuccess(data) {
         queryClient.invalidateQueries("EndSurvey");
+        setPatch(true);
         alert("설문이 마감되었습니다.");
       },
       onError(error) {
@@ -155,6 +167,28 @@ const DetailSurvey = () => {
     [mutation]
   );
 
+  if (patch) {
+    return <Redirect to={"/mypage/mysurvey"} />;
+  }
+  useEffect(() => {
+    window.addEventListener("error", (e) => {
+      if (e.message === "ResizeObserver loop limit exceeded") {
+        const resizeObserverErrDiv = document.getElementById(
+          "webpack-dev-server-client-overlay-div"
+        );
+        const resizeObserverErr = document.getElementById(
+          "webpack-dev-server-client-overlay"
+        );
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute("style", "display: none");
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute("style", "display: none");
+        }
+      }
+    });
+  }, []);
+
   return (
     <Wrapper>
       <HeaderBar />
@@ -166,36 +200,31 @@ const DetailSurvey = () => {
           </TitleResult>
           <ResponseResult>
             <div>생성일</div>
-            <div>{SurveyData?.surveyDate}</div>
+            <div>
+              {SurveyData
+                ? format(
+                    parse(SurveyData?.surveyDate, "yy-M-d", new Date()),
+                    "yyyy.MM.dd"
+                  )
+                : ""}
+            </div>
           </ResponseResult>
           <GoingResult>
             <div>응답 수</div>
             <div>{SurveyData?.numberOfResponse}</div>
           </GoingResult>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "1rem",
-            }}
-          >
-            <Link
+          <ButtonDiv>
+            <DetailButton
               to={{
                 pathname: "/surveyresponsedetail",
                 state: {
                   surveyId: location.pathname.split("/")[2].toString(),
                 },
               }}
-              style={{ textDecoration: "none" }}
             >
-              <Button type="primary">
-                조회하기
-                <br />
-              </Button>
-            </Link>
-            <Button
+              데이터 조회
+            </DetailButton>
+            <CloseSurveyButton
               onClick={() =>
                 EndSurvey(
                   {
@@ -204,16 +233,14 @@ const DetailSurvey = () => {
                 )
               }
             >
-              마감하기
-            </Button>
-          </div>
+              설문 마감
+            </CloseSurveyButton>
+          </ButtonDiv>
         </ViewSection>
         <StatisticSection>
           <LeftResult>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="95%" height="90%">
               <BarChart
-                width={500}
-                height={300}
                 data={SurveyData?.surveyAgePercent}
                 margin={{
                   top: 5,
@@ -227,7 +254,7 @@ const DetailSurvey = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="value" fill="#82ca9d" />
+                <Bar dataKey="value" fill="#35a753ff" />
               </BarChart>
             </ResponsiveContainer>
           </LeftResult>
@@ -235,7 +262,7 @@ const DetailSurvey = () => {
             <PieContainer>
               <PieLeft>
                 <PieHeading>
-                  <PieTitle>설문 연령 비율</PieTitle>
+                  <PieTitle>성별 비율</PieTitle>
                   <PieDescription>해당 설문 기준</PieDescription>
                 </PieHeading>
                 <PieRatioWrapper>
@@ -258,7 +285,6 @@ const DetailSurvey = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={renderCustomizedLabel}
                     innerRadius={30}
                     outerRadius={80}
                     fill="#8884d8"
@@ -302,6 +328,7 @@ const DetailSurvey = () => {
                             answerIndex
                           ) => (
                             <div key={answerIndex}>
+                              {answerIndex + 1} {". "}
                               {typeof answer === "string"
                                 ? answer
                                 : `${answer.name}번 ${answer.value}%`}
@@ -329,7 +356,6 @@ const DetailSurvey = () => {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={renderCustomizedLabel}
                         innerRadius={30}
                         outerRadius={80}
                         fill="#8884d8"
@@ -379,7 +405,7 @@ const DetailSurvey = () => {
                   </SurveyBodySummary>
                   <SurveyVertical></SurveyVertical>
                   <SurveyBodyResult>
-                    <div>선택 된 번호</div>
+                    <div>선택된 번호</div>
                     {question.answers.map((answer, answerIndex) => {
                       if (typeof answer === "string") {
                         return <div key={answerIndex}>{answer}</div>;
@@ -406,7 +432,6 @@ const DetailSurvey = () => {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={renderCustomizedLabel}
                         innerRadius={30}
                         outerRadius={80}
                         fill="#8884d8"

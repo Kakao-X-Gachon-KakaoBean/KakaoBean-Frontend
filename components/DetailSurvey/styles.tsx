@@ -1,9 +1,12 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 export const Wrapper = styled.div`
-  width: 100vw;
-  min-height: 100vh;
-  margin-top: 9rem;
+  width: 100%;
+  min-height: 100%;
+  padding-top: 9rem;
+  padding-bottom: 9rem;
+  background-color: #fbf9f9ff;
 `;
 export const ViewSection = styled.div`
   width: 100%;
@@ -16,7 +19,7 @@ export const ViewSection = styled.div`
 export const ResponseResult = styled.div`
   text-align: center;
   background-color: #ffffff;
-  border: 1px solid #ede1e1;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -28,12 +31,61 @@ export const ResponseResult = styled.div`
   }
 
   & > div:last-child {
-    font-size: 2rem;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 600;
   }
 `;
 export const GoingResult = styled(ResponseResult)``;
 export const TitleResult = styled(ResponseResult)``;
+
+export const ButtonDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+`;
+export const DetailButton = styled(Link)`
+  display: flex;
+  width: 45%;
+  color: black;
+  text-decoration: none;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border-width: 0;
+
+  &:hover {
+    background-color: rgba(0, 88, 255, 0.7);
+    color: white;
+  }
+`;
+
+export const CloseSurveyButton = styled.button`
+  width: 45%;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  transition: background-color 0.3s;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border-width: 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 88, 255, 0.7);
+    color: white;
+  }
+`;
 
 export const SectionWrapper = styled.div`
   width: 90%;
@@ -56,7 +108,7 @@ export const LeftResult = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-  border: 1px solid #ede1e1;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 `;
 export const RightResult = styled(LeftResult)``;
@@ -123,14 +175,14 @@ export const PieLangText = styled.span`
 export const ResultSection = styled.div`
   width: 100%;
   background-color: #ffffff;
-  border: 1px solid #ede1e1;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   margin: 0 auto;
 `;
 export const SurveySection = styled.div`
   width: 100%;
   height: 18rem;
   background-color: #ffffff;
-  border: 1px solid #ede1e1;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   margin: 0 auto;
   display: flex;
@@ -141,7 +193,7 @@ export const SurveyShortSection = styled.div`
   width: 100%;
   height: 18rem;
   background-color: #ffffff;
-  border: 1px solid #ede1e1;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   margin: 0 auto;
   display: flex;
