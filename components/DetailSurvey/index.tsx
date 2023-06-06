@@ -69,12 +69,19 @@ import { Redirect, useLocation } from "react-router";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons/faCopy";
+import { Button, Modal } from "antd";
+import { Link } from "react-router-dom";
 
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
   const baseUrl = process.env.REACT_APP_BASE_URL;
   const frontbaseUrl = process.env.REACT_APP_FRONT_BASE_URL;
   const [patch, setPatch] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
 
   const COLORS = [
     "#0058ffff",
@@ -169,8 +176,11 @@ const DetailSurvey = () => {
 
   const EndSurvey = useCallback(
     (SurveyId: string) => {
-      console.log(SurveyId);
-      mutation.mutate({ SurveyId });
+      if (SurveyData?.closeStatus) {
+        setIsModalOpen(true);
+      } else {
+        mutation.mutate({ SurveyId });
+      }
     },
     [mutation]
   );
@@ -179,24 +189,24 @@ const DetailSurvey = () => {
     return <Redirect to={"/mypage/mysurvey"} />;
   }
 
-  useEffect(() => {
-    window.addEventListener("error", (e) => {
-      if (e.message === "ResizeObserver loop limit exceeded") {
-        const resizeObserverErrDiv = document.getElementById(
-          "webpack-dev-server-client-overlay-div"
-        );
-        const resizeObserverErr = document.getElementById(
-          "webpack-dev-server-client-overlay"
-        );
-        if (resizeObserverErr) {
-          resizeObserverErr.setAttribute("style", "display: none");
-        }
-        if (resizeObserverErrDiv) {
-          resizeObserverErrDiv.setAttribute("style", "display: none");
-        }
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("error", (e) => {
+  //     if (e.message === "ResizeObserver loop limit exceeded") {
+  //       const resizeObserverErrDiv = document.getElementById(
+  //         "webpack-dev-server-client-overlay-div"
+  //       );
+  //       const resizeObserverErr = document.getElementById(
+  //         "webpack-dev-server-client-overlay"
+  //       );
+  //       if (resizeObserverErr) {
+  //         resizeObserverErr.setAttribute("style", "display: none");
+  //       }
+  //       if (resizeObserverErrDiv) {
+  //         resizeObserverErrDiv.setAttribute("style", "display: none");
+  //       }
+  //     }
+  //   });
+  // }, []);
 
   return (
     <Wrapper>
@@ -510,6 +520,15 @@ const DetailSurvey = () => {
           }
         })}
       </SectionWrapper>
+      <Modal
+        title="Cocoa"
+        onCancel={handleOk}
+        open={isModalOpen}
+        onOk={handleOk}
+        centered
+      >
+        <p>마감된 설문입니다.</p>
+      </Modal>
     </Wrapper>
   );
 };
