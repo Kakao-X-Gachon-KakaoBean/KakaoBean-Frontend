@@ -7,8 +7,6 @@ import {
   SurveyTitle,
   SurveyInfo,
 } from "@components/MySurvey/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
 import { Empty } from "antd";
@@ -42,11 +40,11 @@ const SurveyList = () => {
                       <SurveyTitle>
                         {SurveyList?.mySubmittedSurveys[index]?.surveyTitle}
                       </SurveyTitle>
+                      <SurveyResult>
+                        응답 일자:
+                        {SurveyList?.mySubmittedSurveys[index]?.submittedDate}
+                      </SurveyResult>
                     </SurveyInfo>
-                    <SurveyResult>
-                      응답 일자:
-                      {SurveyList?.mySubmittedSurveys[index]?.submittedDate}
-                    </SurveyResult>
                   </SurveyBox>
                 );
               }

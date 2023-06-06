@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { PropsWithChildren, useCallback, useState } from "react";
 import {
   CartesianGrid,
   XAxis,

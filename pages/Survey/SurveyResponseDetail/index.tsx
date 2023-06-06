@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Wrapper } from "@pages/Survey/SurveyResponseDetail/styles";
 import SurveyResponseLogicFlow from "@components/SurveyResponseLogicFlow";
 import HeaderBar from "@components/HeaderBar";
