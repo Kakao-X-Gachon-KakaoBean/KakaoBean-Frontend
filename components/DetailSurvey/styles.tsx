@@ -71,8 +71,26 @@ export const ResponseResult = styled.div`
     }
   }
 `;
-export const GoingResult = styled(ResponseResult)``;
-export const TitleResult = styled(ResponseResult)``;
+export const GoingResult = styled.div`
+  text-align: center;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  padding: 1rem;
+
+  & > div:first-child {
+  }
+
+  & > div:last-child {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+`;
+export const TitleResult = styled(GoingResult)``;
 
 export const ButtonDiv = styled.div`
   display: flex;
