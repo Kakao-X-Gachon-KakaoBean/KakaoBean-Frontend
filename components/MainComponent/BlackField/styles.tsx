@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 export const Wrapper = styled.div`
   margin-top: 7rem;
   padding: 3rem;
-  background-color: black;
+  background-color: #1a1f28ff;
   color: white;
   flex-direction: column;
   display: flex;
@@ -19,11 +19,6 @@ export const CorTextDiv = styled.div`
 
 export const BeanText = styled.div`
   font-size: 30px;
-`;
-
-export const CorText = styled.div`
-  margin-left: 10px;
-  font-size: 20px;
 `;
 
 export const TextDiv = styled.div`

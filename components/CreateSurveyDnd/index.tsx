@@ -1,11 +1,11 @@
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import {
   QuestionTypeItem,
   getQuestionType,
@@ -15,6 +15,7 @@ import {
   createSurveyOptionState,
   selectedQuestionState,
   questionsState,
+  currentTabState,
 } from "../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
@@ -43,30 +44,16 @@ import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/Ran
 import { Button, Input, Modal } from "antd";
 import LogicTab from "@components/LogicTab";
 import { Link, Element } from "react-scroll";
-import {
-  SelNodeState,
-  NodeState,
-  EdgeState,
-  LogicCountState,
-  MultiConditionState,
-  QuestionList,
-} from "../../States/LogicState";
-import { Edge, Node } from "react-flow-renderer";
+import { SelNodeState } from "../../States/LogicState";
 import { useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const CreateSurveyDnd = (): JSX.Element => {
-  const [nodes, setNodes] = useRecoilState(NodeState);
-  const [edges, setEdges] = useRecoilState(EdgeState);
-  // 현재 선택한 노드
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const frontbaseUrl = process.env.REACT_APP_FRONT_BASE_URL;
+
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
-  //로직 개수 count
-  const [count, setCount] = useRecoilState(LogicCountState);
-  //로직 조건 개수 count
-  const [isMultiCondition, setIsMultiCondition] =
-    useRecoilState(MultiConditionState);
-  const [questionList, setQuestionList] = useRecoilState(QuestionList);
 
   const [questionTypeItems, setQuestionTypeItems] = useState<
     QuestionTypeItem[]
@@ -77,12 +64,14 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
   );
+  const resetSelectedQuestion = useResetRecoilState(selectedQuestionState);
 
   const [surveyTitle, setSurveyTitle] = useState<string>("");
   const [surveyId, setSurveyId] = useState("");
-  // const [surveyQuestions, setSurveyQuestions] = useState<QuestionTypes[]>([]); // id, value 포함 전체 질문
   const [questions, setQuestions] = useState<QuestionTypes[]>([]); // id, value 제거 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState); // 전체 질문 recoil
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
+
   const isEmptyTitle = (title: string) => {
     return title === "" || title === "제목 없음";
   };
@@ -92,7 +81,6 @@ const CreateSurveyDnd = (): JSX.Element => {
 
   const handleOk = () => {
     setIsModalOpen(false);
-    console.log("클릭");
   };
 
   // 하위컴포넌트에서 값 받고 적용
@@ -100,21 +88,20 @@ const CreateSurveyDnd = (): JSX.Element => {
     updatedQuestion: MultipleQuestion | SubjectiveQuestion | RangeBarQuestion,
     index: number
   ) => {
+    setSelectedQuestion(surveyQuestions[index]);
     const newQuestionItems = [...surveyQuestions];
-    newQuestionItems[index] = updatedQuestion;
+    const originQuestionNumber = newQuestionItems[index].questionNumber;
+    const originNextQuestionNumber = newQuestionItems[index].nextQuestionNumber;
+    const { questionNumber, nextQuestionNumber, ...rest } = updatedQuestion;
+    newQuestionItems[index] = {
+      nextQuestionNumber: originNextQuestionNumber,
+      questionNumber: originQuestionNumber,
+      ...rest,
+    };
     setSurveyQuestions(() => newQuestionItems);
-
-    // 값이 변하면 selectedRecoil 업데이트
-    newQuestionItems.map((item, index) => {
-      if ("id" in selectedQuestion) {
-        if (item.id === selectedQuestion.id) {
-          setSelectedQuestion(() => item);
-        }
-      }
-    });
   };
 
-  // recoilValue가 변하면 surveyQuestions 업데이트
+  //recoilValue가 변하면 surveyQuestions 업데이트
   useEffect(() => {
     surveyQuestions.map((item, index) => {
       if ("id" in selectedQuestion) {
@@ -126,14 +113,6 @@ const CreateSurveyDnd = (): JSX.Element => {
       }
     });
   }, [selectedQuestion]);
-
-  const handleQuestionClick = (
-    clickedQuestion: QuestionTypes,
-    index: number
-  ) => {
-    setSelectedQuestion(() => clickedQuestion);
-    setSelNode(String(index + 1));
-  };
 
   // 질문 리스트 순서 바꾸기
   const reorderQuestions = (
@@ -147,6 +126,7 @@ const CreateSurveyDnd = (): JSX.Element => {
 
     return result.map((question, index) => ({
       ...(question as QuestionTypes),
+      questionNumber: list[index].questionNumber,
       nextQuestionNumber: list[index].nextQuestionNumber,
     }));
   };
@@ -252,268 +232,52 @@ const CreateSurveyDnd = (): JSX.Element => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("questions:", questions);
-  // }, [questions]);
-  //
-  // useEffect(() => {
-  //   console.log("surveyQuestions:", surveyQuestions);
-  // }, [surveyQuestions]);
+  useEffect(() => {
+    setCurrentTab("CreateSurvey");
+    resetSelectedQuestion();
+  }, []);
 
   useEffect(() => {
-    setSurveyQuestions(() => surveyQuestions);
+    if (currentTab === "CreateSurvey") {
+      setSurveyQuestions(() => surveyQuestions);
 
-    let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    const firstSurveyId = surveyQuestions[0]
-      ? Number(surveyQuestions[0].id.substring(15))
-      : 1;
-    let i = firstSurveyId;
-    const newNodeTuple: Node[] = [];
-    const newEdgeTuple: Edge[] = [];
-    let newNode, newEdge: Edge<any>;
-
-    const updatedQuestions = surveyQuestions.map((item, index) => {
-      if ("id" in item) {
-        const { id, ...rest } = item;
-        const updatedItem = Object.assign({}, item, {
-          questionNumber: (index + 1).toString(),
-        });
-        item = updatedItem;
-        if (
-          index == surveyQuestions.length - 1 &&
-          "finalQuestion" in item &&
-          "nextQuestionNumber"
-        ) {
-          const updatedItem = Object.assign({}, item, {
-            finalQuestion: true,
-            nextQuestionNumber: "0",
-          });
-          item = updatedItem;
+      const updatedQuestions = surveyQuestions.map((item, index) => {
+        if ("id" in item) {
+          const { id, ...rest } = item;
+          const updatedItem = { ...rest }; // id를 제외한 나머지 속성들을 가진 객체 생성
+          return updatedItem;
         }
-      }
-      return item;
-    });
-    setQuestions(() => updatedQuestions as QuestionTypes[]);
+        return item;
+      });
 
-    for (i; i < countQuestion; i++) {
-      const nodeWithI = updatedNodes.find((node: Node) => node.id == String(i));
-      const existQuestion = surveyQuestions.find(
-        (surveyQuestions: QuestionTypes) =>
-          surveyQuestions.id.substring(15) == String(i)
-      );
-
-      if (nodeWithI && existQuestion) {
-        nodeWithI.data.label =
-          existQuestion.title !== "" ? existQuestion.title : "제목 없음";
-        edges.forEach((edge) => {
-          if (edge.source == String(i) && edge.id != "e_submit") {
-            newEdgeTuple.push(edge);
-          }
-        });
-        newNodeTuple.push(nodeWithI);
-      } else {
-        const xAxis = nodes[i - firstSurveyId]?.position?.x
-          ? nodes[i - firstSurveyId]?.position?.x
-          : 500;
-        const yAxis = 30 + (i - firstSurveyId) * 100;
-
-        if (i == firstSurveyId) {
-          newNode = {
-            id: String(i),
-            type: "input",
-            data: {
-              label:
-                surveyQuestions[countQuestion]?.title !== ""
-                  ? surveyQuestions[countQuestion]?.title
-                  : "제목 없음",
-            },
-            position: { x: xAxis, y: yAxis },
-          };
-        } else {
-          newNode = {
-            id: String(i),
-            data: {
-              label:
-                surveyQuestions[countQuestion]?.title !== ""
-                  ? surveyQuestions[countQuestion]?.title
-                  : "제목 없음",
-            },
-            position: { x: xAxis, y: yAxis },
-          };
-        }
-
-        if (i != countQuestion - 1) {
-          newEdge = {
-            id: "e" + String(i) + "-" + String(i + 1),
-            source: String(i),
-            target: String(i + 1),
-          };
-
-          const isDuplicate = newEdgeTuple.some((edge) => {
-            return edge.id === newEdge.id;
-          });
-
-          if (!isDuplicate) {
-            newEdgeTuple.push(newEdge);
-          }
-        }
-
-        setCount((prevCount) => [...prevCount, 0]);
-        setIsMultiCondition((prevVal) => [...prevVal, 1]);
-        newNodeTuple.push(newNode);
-      }
+      setQuestions(() => updatedQuestions as QuestionTypes[]);
     }
 
-    const submitNode = {
-      id: "0",
-      type: "output",
-      data: { label: "submit" },
-      position: { x: 500, y: 30 + surveyQuestions.length * 100 },
-    };
-
-    const submitEdge = {
-      id: "e" + String(i) + "-0",
-      source: String(surveyQuestions.length),
-      target: "0",
-    };
-
-    const isDuplicate = newEdgeTuple.some((edge) => {
-      return edge.id === submitEdge.id;
-    });
-
-    if (!isDuplicate) {
-      newEdgeTuple.push(submitEdge);
-    }
-
-    newNodeTuple.push(submitNode);
-
-    setNodes(newNodeTuple);
-    setEdges(newEdgeTuple);
+    console.log(surveyQuestions);
   }, [surveyQuestions]);
-
-  ////설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
-  // useEffect(() => {
-  //   let updatedNodes = JSON.parse(JSON.stringify(nodes));
-  //
-  //   let i = 0;
-  //   const newNodeTuple: Node[] = [];
-  //   const newEdgeTuple: Edge[] = [];
-  //   const newQuestionTuple: any[] = [];
-  //   let newNode, newEdge;
-
-  // for (i = 0; i < surveyQuestions.length; i++) {
-  //   const nodeWithI = updatedNodes.find(
-  //     (node: Node) => node.id == String(i + 1)
-  //   );
-  //   const existQuestion = surveyQuestions.find(
-  //     (surveyQuestions: QuestionTypes) =>
-  //       surveyQuestions.id.substring(15) == String(i + 1)
-  //   );
-  //
-  //   if (nodeWithI && existQuestion) {
-  //     nodeWithI.data.label =
-  //       existQuestion.title !== "" ? existQuestion.title : "제목 없음";
-  //     edges.forEach((edge) => {
-  //       if (edge.source == String(i + 1) && edge.id != "e_submit") {
-  //         newEdgeTuple.push(edge);
-  //       }
-  //     });
-  //     newNodeTuple.push(nodeWithI);
-  //     newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
-  //   } else {
-  //     const xAxis = nodes[i]?.position?.x ? nodes[i]?.position?.x : 500;
-  //     const yAxis = 30 + i * 100;
-  //
-  //     if (i == 0) {
-  //       newNode = {
-  //         id: String(i + 1),
-  //         type: "input",
-  //         data: {
-  //           label:
-  //             surveyQuestions[countQuestion]?.title !== ""
-  //               ? surveyQuestions[countQuestion]?.title
-  //               : "제목 없음",
-  //         },
-  //         position: { x: xAxis, y: yAxis },
-  //       };
-  //     } else {
-  //       if (i == surveyQuestions.length - 1) {
-  //         newNode = {
-  //           id: String(i + 1),
-  //           data: {
-  //             label:
-  //               surveyQuestions[countQuestion]?.title !== ""
-  //                 ? surveyQuestions[countQuestion]?.title
-  //                 : "제목 없음",
-  //           },
-  //           position: { x: xAxis, y: yAxis },
-  //         };
-  //       } else {
-  //         newNode = {
-  //           id: String(i + 1),
-  //           data: {
-  //             label:
-  //               surveyQuestions[countQuestion]?.title !== ""
-  //                 ? surveyQuestions[countQuestion]?.title
-  //                 : "제목 없음",
-  //           },
-  //           position: { x: xAxis, y: yAxis },
-  //         };
-  //       }
-  //     }
-  //
-  //     newEdge = {
-  //       id: "e" + String(i + 1) + "-" + String(i + 2),
-  //       source: String(i + 1),
-  //       target: String(i + 2),
-  //     };
-  //
-  //     setCount((prevCount) => [...prevCount, 0]);
-  //     setIsMultiCondition((prevVal) => [...prevVal, 1]);
-  //     newNodeTuple.push(newNode);
-  //     newEdgeTuple.push(newEdge);
-  //     newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
-  //   }
-  // }
-  //
-  // const submitNode = {
-  //   id: "0",
-  //   type: "output",
-  //   data: { label: "submit" },
-  //   position: { x: 500, y: 30 + surveyQuestions.length * 100 },
-  // };
-  //
-  // const submitEdge = {
-  //   id: "e_submit",
-  //   source: String(surveyQuestions.length),
-  //   target: "0",
-  // };
-  //
-  // newNodeTuple.push(submitNode);
-  // newEdgeTuple.push(submitEdge);
-  // newQuestionTuple.push({ value: "0", label: "제출하기" });
-  //
-  // console.log(newEdgeTuple);
-  // setNodes(newNodeTuple);
-  // setEdges(newEdgeTuple);
-  // setQuestionList(newQuestionTuple);
-  // }, [surveyQuestions.length]);
 
   const onClickSurveyDelete = (index: number) => {
     const newQuestionItems = [
       ...surveyQuestions.slice(0, index),
       ...surveyQuestions.slice(index + 1),
     ];
-    const newNodeItems = [...nodes.slice(0, index), ...nodes.slice(index + 1)];
-    const newEdgeItems = [...edges.slice(0, index), ...edges.slice(index + 1)];
-    const newQuestionsTuple = [
-      ...edges.slice(0, index),
-      ...edges.slice(index + 1),
-    ];
 
-    setSurveyQuestions(newQuestionItems);
-    setNodes(newNodeItems);
-    setEdges(newEdgeItems);
+    const updatedSurveyQuestions = newQuestionItems.map((q, index) => {
+      if (Number(q.questionNumber) + 1 == Number(q.nextQuestionNumber)) {
+        return {
+          ...q,
+          questionNumber: String(index + 1),
+          nextQuestionNumber: String(index + 2),
+        };
+      } else {
+        return {
+          ...q,
+          questionNumber: String(index + 1),
+        };
+      }
+    });
+
+    setSurveyQuestions(updatedSurveyQuestions);
   };
 
   const mutation = useMutation<
@@ -527,7 +291,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     "createSurvey",
     (data) =>
       axios
-        .post("http://localhost:8080/surveys", data, {
+        .post(`${baseUrl}/surveys`, data, {
           withCredentials: true,
           headers: {
             "X-Requested-With": "XMLHttpRequest",
@@ -542,22 +306,44 @@ const CreateSurveyDnd = (): JSX.Element => {
         setSurveyId(returnData?.surveyId);
       },
       onError(error) {
-        alert("양식을 알맞게 작성해주세요");
+        alert("에러가 발생하였습니다: " + error);
       },
     }
   );
 
+  const finalCheck = () => {
+    const updatedQuestion = [...surveyQuestions];
+    updatedQuestion.map((item, index) => {
+      const { finalQuestion, nextQuestionNumber, ...rest } = item;
+      if (index == updatedQuestion.length - 1) {
+        updatedQuestion[index] = {
+          finalQuestion: true,
+          nextQuestionNumber: "0",
+          ...rest,
+        };
+      }
+    });
+
+    setSurveyQuestions(updatedQuestion);
+  };
+
   const onSubmit = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
+      finalCheck();
+
       if (surveyTitle && questions) {
         mutation.mutate({
           surveyTitle,
           questions: questions,
         });
+      } else {
+        if (!surveyTitle) {
+          alert("설문 제목을 입력해주세요");
+        }
       }
     },
-    [surveyTitle, surveyQuestions, mutation]
+    [surveyTitle, surveyQuestions, mutation, finalCheck]
   );
 
   return (
@@ -590,7 +376,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                           item.type == "ESSAY" ||
                           item.type == "RANGE"
                         ) {
-                          handleQuestionClick(item, index);
+                          setSelectedQuestion(item);
                         }
                       }}
                       style={
@@ -754,7 +540,7 @@ const CreateSurveyDnd = (): JSX.Element => {
                 </Button>
               </div>
             ) : (
-              <div></div>
+              <></>
             )}
           </QuestionsListDiv>
         )}
@@ -763,13 +549,13 @@ const CreateSurveyDnd = (): JSX.Element => {
           open={isModalOpen}
           onCancel={handleOk}
           footer={[
-            <CopyToClipboard text={`http://localhost:8080/surveys/${surveyId}`}>
+            <CopyToClipboard text={`${frontbaseUrl}/survey/${surveyId}`}>
               <Button type="primary">링크 복사하기</Button>
             </CopyToClipboard>,
           ]}
           centered
         >
-          <p>{`http://localhost:3000/surveys/${surveyId}`}</p>
+          <p>{`${frontbaseUrl}/survey/${surveyId}`}</p>
         </Modal>
       </DragDropContext>
     </Wrapper>

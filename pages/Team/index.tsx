@@ -33,6 +33,7 @@ import { EndingPage } from "@components/SurveyResponseTemplates/SubmitionComplet
 ////이건 아직이다.. import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
 import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
+import { useLocation } from "react-router";
 
 //atom 설정; 이걸로 모든 설문 응답 데이터 받아올 예정
 export const report = atom<responseDataList>({
@@ -54,15 +55,20 @@ export const submitAll = atom<number[]>({
 });
 
 const Team = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
+  const location = useLocation();
+
   // 현재 페이지 URL에서 숫자를 추출하는 함수
-  const getSurveyIdFromUrl = () => {
-    const url = window.location.pathname; // 현재 페이지 URL의 경로
-    const surveyId = url.substring(url.lastIndexOf("/") + 1); // 마지막 "/" 이후의 문자열 추출 (숫자 부분)
-    return parseInt(surveyId); // 숫자로 변환하여 반환
-  };
+  // const getSurveyIdFromUrl = () => {
+  //   const url = window.location.pathname; // 현재 페이지 URL의 경로
+  //   const surveyId = url.substring(url.lastIndexOf("/") + 1); // 마지막 "/" 이후의 문자열 추출 (숫자 부분)
+  //   return parseInt(surveyId); // 숫자로 변환하여 반환
+  // };
 
-  const surveyId = getSurveyIdFromUrl(); // 현재 페이지의 surveyId 추출
+  // const surveyId = getSurveyIdFromUrl(); // 현재 페이지의 surveyId 추출
 
+  const surveyId = location.pathname.split("/")[2];
   const {
     isLoading,
     isSuccess,
@@ -72,29 +78,17 @@ const Team = () => {
     error,
   } = useQuery<any>(
     ["survey", surveyId],
-    () => fetcher({ queryKey: `http://localhost:8080/surveys/${surveyId}` }),
+    () => fetcher({ queryKey: `${baseUrl}/surveys/${surveyId}` }),
     {
       onSuccess: (data) => {
         setSurvey(data);
         setReportData((prevState) => ({
           ...prevState,
-          surveyId: data?.surveyId,
+          surveyId: parseInt(location.pathname.split("/")[2]),
         }));
       },
     }
   );
-
-  //
-  // const {
-  //   isLoading,
-  //   isSuccess,
-  //   status,
-  //   isError,
-  //   data: surveyData,
-  //   error,
-  // } = useQuery<any>(["survey"], () =>
-  //   fetcher({ queryKey: "http://localhost:8080/surveys/2" })
-  // );
 
   const carouselRef = useRef<CarouselRef>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -149,8 +143,6 @@ const Team = () => {
     carouselRef.current && carouselRef.current.goTo(currentSlide);
   }, [currentSlide]);
 
-  //뒤로 가기 버튼 ->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
-  //앞으로 가기 버튼->  TODO: 이후엔 로직에 따른 번호로 이동으로 바뀌야함
   const handlePrevClick = () => {
     setCounter(counter - 1);
     setLogicQueue((prevState) => {
@@ -174,6 +166,10 @@ const Team = () => {
       });
       setCounter(counter + 1);
     }
+  };
+
+  const handleClick = () => {
+    setEndSurvey(true);
   };
 
   useEffect(() => {
@@ -200,99 +196,88 @@ const Team = () => {
   //   console.log("currentSlide: ", currentSlide);
   // }
   const [endSurvey, setEndSurvey] = useState(false);
-
-  const handleClick = () => {
-    setEndSurvey(true);
-    console.log(endSurvey);
-  };
   return (
     <div style={{ height: "100vh", overflow: "hidden" }}>
-      <Carousel dotPosition={"right"} ref={carouselRef}>
-        {/*TODO:
-            1(해결). 버튼으로 바꾸기 - 해결한 듯?
-            2(해결). 동적 질문 할당
-            2_1(해결). json 입력이 있다고 가정할 때
-            2_2(해결). data.type에 따라서 질문 생성;
-            2_3.(해결) thisQuestion안에 데이터 들어가면, 각 컴포넌트 안에서 이를 props로 세팅할 수 있게 하기.
-            3.(해결) 리스폰스 값 저장
-            4.(해결) 로직에 대한 페이지 이동
-            ---------------------------------------------------------------------------------------
-            5. 로직에 따른 응답 값 출력
-            */}
-        {questions &&
-          questions.map((question: any, index) => {
-            if (question.type === "MULTIPLE") {
-              const mQuestion = question as MultipleQuestion;
-              return (
-                // MULTIPLE 타입에 해당하는 JSX 코드
-                <div>
-                  <MultipleChoiceQuestions thisQuestion={mQuestion} />
-                </div>
-              );
-            } else if (question.type === "RANGE") {
-              const rQuestion = question as RangeBarQuestion;
-              return (
-                // RANGE 타입에 해당하는 JSX 코드
-                <div>
-                  <RangeBarQuestions thisQuestion={rQuestion} />
-                </div>
-              );
-            } else if (question.type === "ESSAY") {
-              const sQuestion = question as SubjectiveQuestion;
-              return (
-                // ESSAY 타입에 해당하는 JSX 코드
-                <div>
-                  <SubjectiveQuestions thisQuestion={sQuestion} />
-                </div>
-              );
-            } else {
-              console.log("Type is null!");
-              return (
-                <div>
-                  <h1>No Type Space</h1>
-                </div>
-              ); // 예외 처리
-            }
-          })}
-
+      {!endSurvey ? (
         <div>
+          <Carousel dotPosition={"right"} ref={carouselRef}>
+            {questions &&
+              questions.map((question: any, index) => {
+                if (question.type === "MULTIPLE") {
+                  const mQuestion = question as MultipleQuestion;
+                  return (
+                    // MULTIPLE 타입에 해당하는 JSX 코드
+                    <div>
+                      <MultipleChoiceQuestions thisQuestion={mQuestion} />
+                    </div>
+                  );
+                } else if (question.type === "RANGE") {
+                  const rQuestion = question as RangeBarQuestion;
+                  return (
+                    // RANGE 타입에 해당하는 JSX 코드
+                    <div>
+                      <RangeBarQuestions thisQuestion={rQuestion} />
+                    </div>
+                  );
+                } else if (question.type === "ESSAY") {
+                  const sQuestion = question as SubjectiveQuestion;
+                  return (
+                    // ESSAY 타입에 해당하는 JSX 코드
+                    <div>
+                      <SubjectiveQuestions thisQuestion={sQuestion} />
+                    </div>
+                  );
+                } else {
+                  console.log("Type is null!");
+                  return (
+                    <div>
+                      <h1>No Type Space</h1>
+                    </div>
+                  ); // 예외 처리
+                }
+              })}
+
+            <div>
+              <QuestionBox>
+                <Title style={{ textAlign: "center" }}>
+                  응답해주셔서 감사합니다!
+                </Title>
+                <SpaceBetween />
+                <ModifiedButton
+                  onClick={() => {
+                    console.log("report Data", reportData);
+                    setSubmitQueue(logicQueue);
+                  }}
+                >
+                  제출하기
+                </ModifiedButton>
+              </QuestionBox>
+            </div>
+          </Carousel>
           <QuestionBox>
-            <Title style={{ textAlign: "center" }}>
-              응답해주셔서 감사합니다!
-            </Title>
-            <SpaceBetween />
-            <ModifiedButton
-              onClick={() => {
-                console.log("report Data", reportData);
-                setSubmitQueue(logicQueue);
-              }}
-            >
-              제출하기
-            </ModifiedButton>
+            <ButtonBox>
+              <Button
+                disabled={currentSlide === 0}
+                onClick={() => {
+                  handlePrevClick();
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </Button>
+              <Button
+                disabled={currentSlide === questions.length}
+                onClick={() => {
+                  handleNextClick();
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </Button>
+            </ButtonBox>
           </QuestionBox>
         </div>
-      </Carousel>
-      {endSurvey && <EndingPage />}
-      <QuestionBox>
-        <ButtonBox>
-          <Button
-            disabled={currentSlide === 0}
-            onClick={() => {
-              handlePrevClick();
-            }}
-          >
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </Button>
-          <Button
-            disabled={currentSlide === questions.length}
-            onClick={() => {
-              handleNextClick();
-            }}
-          >
-            <FontAwesomeIcon icon={faChevronRight} />
-          </Button>
-        </ButtonBox>
-      </QuestionBox>
+      ) : (
+        <EndingPage />
+      )}
     </div>
   );
 };

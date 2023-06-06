@@ -10,7 +10,8 @@
     "strict": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "typeRoots": ["types"],
+    "typeRoots": ["types","typings", "node_modules/@types"],
+    "types": ["cypress","node"],
     "paths": {
       "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
@@ -18,8 +19,14 @@
       "@pages/*": ["pages/*"],
       "@utils/*": ["utils/*"],
       "@typings/*": ["typings/*"]
-    }
+    },
   },
+  "include": ["cypress/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "image"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs",

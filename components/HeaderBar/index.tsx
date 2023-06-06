@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { Link } from "react-router-dom";
 import {
   Bar,
   Header,
-  Img,
   LeftMenu,
   Links,
   MainBar,
@@ -24,7 +23,6 @@ import {
   NodeState,
   EdgeState,
   LogicCountState,
-  MultiConditionState,
   QuestionList,
 } from "../../States/LogicState";
 import { useResetRecoilState } from "recoil";
@@ -43,7 +41,6 @@ const HeaderBar = () => {
   const resetEdgeState = useResetRecoilState(EdgeState);
   const resetNodeState = useResetRecoilState(NodeState);
   const resetLogicCountState = useResetRecoilState(LogicCountState);
-  const resetMultiConditionState = useResetRecoilState(MultiConditionState);
   const resetQuestionList = useResetRecoilState(QuestionList);
 
   const [menuToggle, setMenuToggle] = useState<boolean>(false);
@@ -78,7 +75,6 @@ const HeaderBar = () => {
     resetEdgeState();
     resetNodeState();
     resetLogicCountState();
-    resetMultiConditionState();
     resetQuestionList();
   };
 
@@ -92,18 +88,11 @@ const HeaderBar = () => {
         <TopMenu>
           <Link to="/main" style={{ textDecoration: "none" }}>
             <LeftMenu>
+              {/*<Img src={Logo} alt="" />*/}
               <Header>Cocoa</Header>
             </LeftMenu>
           </Link>
           <RightMenu>
-            <Links>
-              <Link to="/product">Product</Link>
-            </Links>
-            <Links>
-              <Link to="/team">
-                <span>Team</span>
-              </Link>
-            </Links>
             <Links>
               <Link to="/mypage/myinfo">
                 <span>MY PAGE</span>

@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import ReactFlow, {
   Background,
   Controls,
-  Edge,
-  Node,
   ReactFlowProvider,
 } from "react-flow-renderer";
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { SelNodeState, NodeState, EdgeState } from "../../States/LogicState";
+import { currentTabState } from "../../States/SurveyState";
 
 export default function LogicTab() {
   const nodes = useRecoilValue(NodeState);
@@ -15,13 +14,13 @@ export default function LogicTab() {
 
   // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
 
   //노드 클릭하면 selNode에다가 아이디 넣어주기
   const onNodeClick = useCallback(
-    (event) => {
+    (event: any) => {
       if (Number(Object.values(event.currentTarget.dataset.id)) == 0) {
         setSelNode("0");
-        //console.log("submit button");
       } else {
         const nodes = Object.values(event.currentTarget.parentNode.childNodes);
         const clickedIndex = nodes.indexOf(event.currentTarget);
@@ -34,6 +33,7 @@ export default function LogicTab() {
 
   useEffect(() => {
     setSelNode("0");
+    setCurrentTab("LogicControl");
   }, []);
 
   return (
