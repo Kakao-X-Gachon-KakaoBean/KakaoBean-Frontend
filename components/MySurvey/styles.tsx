@@ -11,30 +11,6 @@ export const SurveyHeader = styled.div`
   font-family: "Pretendard-Regular";
 `;
 
-export const CreateSurveyContainer = styled.div`
-  width: 15rem;
-  height: 10rem;
-  margin-left: 2rem;
-
-  padding: 1rem 0;
-  border-radius: 10px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fafbfc;
-  box-shadow: rgba(0, 0, 0, 0.1) 2px 4px 10px;
-  cursor: pointer;
-
-  @media (max-width: 769px) {
-    max-width: 50%;
-    min-width: 50%;
-  }
-
-  &:hover {
-    background-color: #f7e8e8;
-  }
-`;
 export const SurveyContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));

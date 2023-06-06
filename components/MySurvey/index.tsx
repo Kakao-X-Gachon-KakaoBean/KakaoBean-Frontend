@@ -8,11 +8,8 @@ import {
   SurveyResult,
   SurveyTitle,
   SurveyInfo,
-  CreateSurveyContainer,
   StyledFontAwesomeIcon,
 } from "@components/MySurvey/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import axios, { AxiosError } from "axios";

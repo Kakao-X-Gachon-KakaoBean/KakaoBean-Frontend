@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Wrapper, Label } from "@pages/LogIn/styles";
 import {
   Header,
@@ -24,13 +18,12 @@ import {
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Modal } from "antd";
-import { Redirect } from "react-router";
 
 const SignUp = () => {
   const baseUrl = process.env.REACT_APP_BASE_URL;

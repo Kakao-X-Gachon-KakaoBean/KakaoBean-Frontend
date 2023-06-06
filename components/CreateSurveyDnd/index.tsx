@@ -5,7 +5,7 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { constSelector, useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import {
   QuestionTypeItem,
   getQuestionType,

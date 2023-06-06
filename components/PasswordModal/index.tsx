@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  FC,
-  FormEvent,
-  useCallback,
-  useState,
-} from "react";
+import React, { ChangeEvent, FC, useCallback, useState } from "react";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,9 +21,7 @@ import {
 } from "@components/PasswordModal/styles";
 import { PaswwordModal } from "@components/PasswordModal/type";
 import { useMutation } from "react-query";
-import { Search } from "@components/SearchEmail/type";
 import useInput from "../../hooks/useInput";
-import { IUser } from "../../States/UserState";
 
 const SearchPassword: FC<PaswwordModal> = ({
   name,

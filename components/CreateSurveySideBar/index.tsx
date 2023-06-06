@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, Menu } from "antd";
+import React from "react";
+import { Menu } from "antd";
 import type { MenuProps } from "antd";
 import {
   ContentDiv,
