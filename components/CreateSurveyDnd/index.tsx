@@ -331,14 +331,19 @@ const CreateSurveyDnd = (): JSX.Element => {
     (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       finalCheck();
+
       if (surveyTitle && questions) {
         mutation.mutate({
           surveyTitle,
           questions: questions,
         });
+      } else {
+        if (!surveyTitle) {
+          alert("설문 제목을 입력해주세요");
+        }
       }
     },
-    [surveyTitle, surveyQuestions, mutation]
+    [surveyTitle, surveyQuestions, mutation, finalCheck]
   );
 
   return (
