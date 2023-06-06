@@ -6,11 +6,7 @@ import MainFirst from "@components/MainComponent/MainFirst";
 import DNDText from "@components/MainComponent/DNDText";
 import GreyField from "@components/MainComponent/GreyField";
 import BlackField from "@components/MainComponent/BlackField";
-import { Redirect, useLocation } from "react-router";
-import { useCookies } from "react-cookie";
-import moment from "moment";
-import { useQuery } from "react-query";
-import fetcher from "@utils/fetcher";
+import { useLocation } from "react-router";
 
 const Main = () => {
   const [isLogin, setIsLogin] = useState(
