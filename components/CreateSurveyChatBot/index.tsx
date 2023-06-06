@@ -23,6 +23,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [findBtnLoadings, setFindBtnLoadings] = useState<boolean[]>([]);
   const [submitBtnLoadings, setSubmitBtnLoadings] = useState<boolean[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   //질문들
   const [userQuestion, setUserQuestion] = useState<userChat[]>([]);
@@ -104,6 +105,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
       return prevState + 1;
     });
     counter = counter + 5;
+    setLoading(false);
   };
 
   //stomp서버 연결
@@ -125,6 +127,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
   }, [userQuestion]);
 
   const FindQuestion = () => {
+    setLoading(true);
     console.log("메세지 전송 전");
     sendMsg(input);
     //버튼 빙글빙글 바꿔주기
@@ -141,37 +144,28 @@ const CreateSurveyChatBot = (): JSX.Element => {
   };
 
   const handleChatTitleClick = (questionIndex: number, index: number) => {
-    const updatedSet = titleSet;
-    updatedSet[questionIndex].answer[index].checked =
-      !updatedSet[questionIndex].answer[index].checked;
-    //업데이트 TODO:
-    setTitleSet(updatedSet);
+    setTitleSet((prevState) => {
+      const updatedSet = [...prevState];
+      updatedSet[questionIndex].answer[index].checked =
+        !updatedSet[questionIndex].answer[index].checked;
+      return updatedSet;
+    });
   };
 
   const enterFindLoading = (index: number) => {
     setFindBtnLoadings((prevLoadings) => {
       const newLoadings = [...prevLoadings];
-      newLoadings[index] = true;
+      newLoadings[index] = isLoading;
       return newLoadings;
     });
-    // 타임아웃 1초 뒤 state change
-    setTimeout(() => {
-      setFindBtnLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[index] = false;
-        setIsSubmitted(true);
-        return newLoadings;
-      });
-    }, 1000);
   };
+  useEffect(() => {
+    enterFindLoading(0);
+  }, [isLoading]);
 
   const SubmitQuestion = (index: number) => {
     enterSubmitLoading(index);
   };
-
-  // useEffect(() => {
-  //   enterSubmitLoading(0);
-  // }, [titleSet]);
 
   const enterSubmitLoading = (index: number) => {
     CreateQuestion(index);
@@ -188,7 +182,6 @@ const CreateSurveyChatBot = (): JSX.Element => {
         newLoadings[index] = false;
         return newLoadings;
       });
-      // closeDrawer();
     }, 1000);
   };
 
@@ -243,8 +236,6 @@ const CreateSurveyChatBot = (): JSX.Element => {
     console.log("userQuestion: ", userQuestion);
     console.log("titleSet: ", titleSet);
   };
-
-  const [isLoading, setLoading] = useState<boolean>(false);
   return (
     <div>
       {viewLogic === "logic" ? (
@@ -284,64 +275,49 @@ const CreateSurveyChatBot = (): JSX.Element => {
           </Button>
           {/*---------------채팅 박스 생성 공간--------------- */}
         </div>
-        {isLoading
-          ? userQuestion
-              .map((question, index) => {
-                setLoading(true);
-                setTimeout(() => {
-                  if (titleSet[index].index == index) {
-                    console.log("current index:", index);
-                    console.log("titleSet Status:", titleSet);
-                    console.log("got in making div");
-                    return (
-                      <div>
-                        <ResponsesDiv>
-                          {titleSet[index].answer.map((item, answerIndex) => {
-                            return (
-                              <div
-                                style={{ marginTop: "1rem" }}
-                                key={answerIndex}
-                              >
-                                {/*---------------설문 제목 별 버튼--------------- */}
-                                <ChatTitleButton
-                                  type={item.checked ? "primary" : "default"}
-                                  onClick={() =>
-                                    handleChatTitleClick(index, answerIndex)
-                                  }
-                                >
-                                  {item.title}
-                                </ChatTitleButton>
-                              </div>
-                            );
-                          })}
-                          {/*---------------설문 생성 버튼--------------- */}
-                          <CreateQuestionsBtnDiv>
-                            <Button
-                              type={"primary"}
-                              onClick={() => SubmitQuestion(index)}
-                              loading={submitBtnLoadings[0]}
-                            >
-                              질문 생성하기
-                            </Button>
-                          </CreateQuestionsBtnDiv>
-                        </ResponsesDiv>
-                        <ResponsesDiv key={index}>
-                          <h1>User</h1>
-                          <h3>{question.message}</h3>
-                        </ResponsesDiv>
-                      </div>
-                    );
-                  } else {
-                    <></>;
-                  }
-                }, 8000);
-
-                // if (titleSet[index]?.answer?.length > 0) {
-                //
-                //}
-              })
-              .reverse()
-          : null}
+        {!isLoading ? (
+          userQuestion
+            .map((question, index) => {
+              return (
+                <div>
+                  <ResponsesDiv>
+                    {titleSet[index].answer.map((item, answerIndex) => {
+                      return (
+                        <div style={{ marginTop: "1rem" }} key={answerIndex}>
+                          {/*---------------설문 제목 별 버튼--------------- */}
+                          <ChatTitleButton
+                            type={item.checked ? "primary" : "default"}
+                            onClick={() =>
+                              handleChatTitleClick(index, answerIndex)
+                            }
+                          >
+                            {item.title}
+                          </ChatTitleButton>
+                        </div>
+                      );
+                    })}
+                    {/*---------------설문 생성 버튼--------------- */}
+                    <CreateQuestionsBtnDiv>
+                      <Button
+                        type={"primary"}
+                        onClick={() => SubmitQuestion(index)}
+                        loading={submitBtnLoadings[0]}
+                      >
+                        질문 생성하기
+                      </Button>
+                    </CreateQuestionsBtnDiv>
+                  </ResponsesDiv>
+                  <ResponsesDiv key={index}>
+                    <h1>User</h1>
+                    <h3>{question.message}</h3>
+                  </ResponsesDiv>
+                </div>
+              );
+            })
+            .reverse()
+        ) : (
+          <div>로딩 중입니다.</div>
+        )}
       </Drawer>
     </div>
   );

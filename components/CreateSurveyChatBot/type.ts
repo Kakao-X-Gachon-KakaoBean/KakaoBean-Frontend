@@ -1,5 +1,3 @@
-// export type allChat = RecommendedChatTitle[] | userChat;
-
 export interface RecommendedChatTitle {
   id: number;
   title: string;
