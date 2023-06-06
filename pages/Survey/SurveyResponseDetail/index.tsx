@@ -12,6 +12,7 @@ import { dummySurvey } from "./dummy";
 const SurveyResponseDetail = () => {
   const location = useLocation<{ surveyId: string }>();
   const { surveyId } = location.state;
+  console.log(surveyId);
   const [survey, setSurvey] = useState<incomingSurvey>();
   const [responses, setResponses] = useState<incomingResponses[]>();
   interface responseDetail {

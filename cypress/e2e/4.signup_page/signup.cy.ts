@@ -10,7 +10,7 @@ describe("회원가입 페이지 테스트", () => {
   });
 
   context("이메일 인증 버튼을 누른 경우", () => {
-    it("이메일 인증이 가야한다.", () => {
+    it("이메일 인증이 전송 되어야한다.", () => {
       cy.get('button:contains("이메일 인증")').click();
     });
   });
@@ -64,13 +64,13 @@ describe("회원가입 페이지 테스트", () => {
 
   context("모든 input값 입력 후 회원가입 버튼을 누른 경우", () => {
     it("이메일,비밀번호,비밀번호 확인,이름,나이 입력후 회원가입 버튼을 누르면 성공한다.", () => {
-      const email = "j949854@gmail.com";
+      const email = "whdusrua@naver.com";
       const password = "password";
       const name = "추성준";
-      const birth = "19991001";
+      const birth = "19990302";
 
       cy.get('input[name="email"]')
-        .type("j949854@gmail.com")
+        .type("whdusrua@naver.com")
         .should("have.value", email);
       cy.get('input[name="password"]')
         .type("password")
@@ -80,7 +80,7 @@ describe("회원가입 페이지 테스트", () => {
         .should("have.value", password);
       cy.get('input[name="name"]').type("추성준").should("have.value", name);
       cy.get('input[name="birth"]')
-        .type("19991001")
+        .type("19990302")
         .should("have.value", birth);
       // cy.get('input[value="MALE"]').check();
       cy.get('button[type="submit"]').click();
