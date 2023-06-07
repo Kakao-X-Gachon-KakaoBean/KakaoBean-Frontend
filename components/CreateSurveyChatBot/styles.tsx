@@ -26,7 +26,7 @@ export const ResponsesDiv = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 15px;
-  padding: 0 0 5% 7%;
+  padding: 4.5% 0 5% 7%;
   margin-top: 4%;
   background-color: #e5e5eaff;
 `;
@@ -35,7 +35,7 @@ export const QuestionDiv = styled.div`
   color: white;
   width: 50%;
   margin-top: 4%;
-  padding: 0 7% 0 7%;
+  padding: 0 7% 0 2.4%;
   border-radius: 15px;
   background-color: #1086feff;
   align-self: flex-end;
@@ -78,7 +78,7 @@ export const Card = styled.div`
 export const Tools = styled.div`
   display: flex;
   align-items: center;
-  padding: 9px;
+  padding: 9px 9px 0 9px;
 `;
 
 export const Circle = styled.div`
@@ -107,5 +107,6 @@ export const GreenBox = styled(Box)`
 `;
 
 export const GuideDiv = styled.div`
-  padding: 0 2rem 0 2rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
 `;
