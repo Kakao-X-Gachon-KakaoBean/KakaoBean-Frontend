@@ -3,6 +3,7 @@ import {
   Card,
   ChatTitleButton,
   Circle,
+  CreateQuestionBtn,
   CreateQuestionsBtnDiv,
   DialogButton,
   GreenBox,
@@ -346,13 +347,12 @@ const CreateSurveyChatBot = (): JSX.Element => {
                     })}
                     {/*---------------설문 생성 버튼--------------- */}
                     <CreateQuestionsBtnDiv>
-                      <Button
-                        type={"primary"}
+                      <CreateQuestionBtn
                         onClick={() => SubmitQuestion(index)}
                         loading={submitBtnLoadings[0]}
                       >
                         질문 생성하기
-                      </Button>
+                      </CreateQuestionBtn>
                     </CreateQuestionsBtnDiv>
                   </ResponsesDiv>
                   <QuestionDiv key={index}>

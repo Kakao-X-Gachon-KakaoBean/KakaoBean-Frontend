@@ -53,6 +53,17 @@ export const CreateQuestionsBtnDiv = styled.div`
   margin-top: 3%;
 `;
 
+export const CreateQuestionBtn = styled(Button)`
+  background-color: #02ce48ff;
+  color: white;
+  font-weight: 700;
+
+  &:hover {
+    border-color: #77d398 !important;
+    color: white !important;
+  }
+`;
+
 /* 안내 Card 스타일 */
 export const Card = styled.div`
   width: 100%;
