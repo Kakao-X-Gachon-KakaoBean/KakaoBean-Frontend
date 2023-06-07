@@ -66,8 +66,10 @@ const CreateSurveyChatBot = (): JSX.Element => {
   //보내자
   const sendMsg = (message: string) => {
     if (!client) return; // 클라이언트가 아직 초기화되지 않은 경우 무시
-    if (!/^\d+(개|가지)$/.test(message.split(" ").slice(-1)[0])) {
-      console.log("숫자 인식되지않음.");
+    const words = message.split(" ");
+    const lastThreeWords = words.slice(-3); // 마지막에서 3개의 단어 추출
+    if (!lastThreeWords.some((word) => /^\d+(개|가지)$/.test(word))) {
+      console.log("숫자 인식되지 않음.");
       message += " 3개.";
     }
     const question = {
