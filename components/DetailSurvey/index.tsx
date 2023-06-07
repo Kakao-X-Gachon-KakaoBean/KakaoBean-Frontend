@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, useCallback, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import {
   CartesianGrid,
   XAxis,
@@ -73,6 +78,25 @@ const DetailSurvey = () => {
   const frontbaseUrl = process.env.REACT_APP_FRONT_BASE_URL;
   const [patch, setPatch] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener("error", (e) => {
+      if (e.message === "ResizeObserver loop limit exceeded") {
+        const resizeObserverErrDiv = document.getElementById(
+          "webpack-dev-server-client-overlay-div"
+        );
+        const resizeObserverErr = document.getElementById(
+          "webpack-dev-server-client-overlay"
+        );
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute("style", "display: none");
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute("style", "display: none");
+        }
+      }
+    });
+  }, []);
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -183,25 +207,6 @@ const DetailSurvey = () => {
   if (patch) {
     return <Redirect to={"/mypage/mysurvey"} />;
   }
-
-  // useEffect(() => {
-  //   window.addEventListener("error", (e) => {
-  //     if (e.message === "ResizeObserver loop limit exceeded") {
-  //       const resizeObserverErrDiv = document.getElementById(
-  //         "webpack-dev-server-client-overlay-div"
-  //       );
-  //       const resizeObserverErr = document.getElementById(
-  //         "webpack-dev-server-client-overlay"
-  //       );
-  //       if (resizeObserverErr) {
-  //         resizeObserverErr.setAttribute("style", "display: none");
-  //       }
-  //       if (resizeObserverErrDiv) {
-  //         resizeObserverErrDiv.setAttribute("style", "display: none");
-  //       }
-  //     }
-  //   });
-  // }, []);
 
   return (
     <Wrapper>
