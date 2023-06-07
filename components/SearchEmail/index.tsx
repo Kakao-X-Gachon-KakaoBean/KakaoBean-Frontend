@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 
 import {
   Button,
@@ -68,7 +68,6 @@ const SearchEmail: FC<EmailModal> = ({
         setEmail(data?.email);
       },
       onError(error) {
-        // setLogInError(error.response?.data?.code === 401);
         alert("정보를 잘못 입력하셨습니다.");
       },
     }

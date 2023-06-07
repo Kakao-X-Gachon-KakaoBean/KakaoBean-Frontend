@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useEffect ,useState} from "react";
+import React, { PropsWithChildren, useCallback, useState } from "react";
 import {
   CartesianGrid,
   XAxis,
@@ -40,11 +40,13 @@ import {
   SurveyShortSection,
   SurveyShortBody,
   SurveyVertical,
+  CopySection,
   ViewSection,
   Wrapper,
   DetailButton,
   CloseSurveyButton,
   ButtonDiv,
+  StyledFontAwesomeIcon,
 } from "@components/DetailSurvey/styles";
 
 import Accordion from "@mui/material/Accordion";
@@ -53,20 +55,28 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HeaderBar from "@components/HeaderBar";
-import { Link, LinkProps } from "react-router-dom";
-import { Button } from "antd";
 import { SurveyDataType } from "./type";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { format, parse, parseISO } from "date-fns";
+import { format, parse } from "date-fns";
 import axios, { AxiosError } from "axios";
 import fetcher from "../../utils/fetcher";
 import { Redirect, useLocation } from "react-router";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-solid-svg-icons/faCopy";
+import { Button, Modal } from "antd";
+import { Link } from "react-router-dom";
 
 const DetailSurvey = () => {
   const queryClient = useQueryClient();
   const baseUrl = process.env.REACT_APP_BASE_URL;
-
+  const frontbaseUrl = process.env.REACT_APP_FRONT_BASE_URL;
   const [patch, setPatch] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
 
   const COLORS = [
     "#0058ffff",
@@ -161,8 +171,11 @@ const DetailSurvey = () => {
 
   const EndSurvey = useCallback(
     (SurveyId: string) => {
-      console.log(SurveyId);
-      mutation.mutate({ SurveyId });
+      if (SurveyData?.closeStatus) {
+        setIsModalOpen(true);
+      } else {
+        mutation.mutate({ SurveyId });
+      }
     },
     [mutation]
   );
@@ -170,29 +183,41 @@ const DetailSurvey = () => {
   if (patch) {
     return <Redirect to={"/mypage/mysurvey"} />;
   }
-  useEffect(() => {
-    window.addEventListener("error", (e) => {
-      if (e.message === "ResizeObserver loop limit exceeded") {
-        const resizeObserverErrDiv = document.getElementById(
-          "webpack-dev-server-client-overlay-div"
-        );
-        const resizeObserverErr = document.getElementById(
-          "webpack-dev-server-client-overlay"
-        );
-        if (resizeObserverErr) {
-          resizeObserverErr.setAttribute("style", "display: none");
-        }
-        if (resizeObserverErrDiv) {
-          resizeObserverErrDiv.setAttribute("style", "display: none");
-        }
-      }
-    });
-  }, []);
+
+  // useEffect(() => {
+  //   window.addEventListener("error", (e) => {
+  //     if (e.message === "ResizeObserver loop limit exceeded") {
+  //       const resizeObserverErrDiv = document.getElementById(
+  //         "webpack-dev-server-client-overlay-div"
+  //       );
+  //       const resizeObserverErr = document.getElementById(
+  //         "webpack-dev-server-client-overlay"
+  //       );
+  //       if (resizeObserverErr) {
+  //         resizeObserverErr.setAttribute("style", "display: none");
+  //       }
+  //       if (resizeObserverErrDiv) {
+  //         resizeObserverErrDiv.setAttribute("style", "display: none");
+  //       }
+  //     }
+  //   });
+  // }, []);
 
   return (
     <Wrapper>
       <HeaderBar />
       <SectionWrapper>
+        <CopySection>
+          <div>
+            {frontbaseUrl}/survey/{SurveyData?.surveyId}
+          </div>
+          <CopyToClipboard
+            text={`${frontbaseUrl}/survey/${SurveyData?.surveyId}`}
+          >
+            <StyledFontAwesomeIcon icon={faCopy} />
+          </CopyToClipboard>
+        </CopySection>
+
         <ViewSection>
           <TitleResult>
             <div>설문 제목</div>
@@ -201,12 +226,10 @@ const DetailSurvey = () => {
           <ResponseResult>
             <div>생성일</div>
             <div>
-              {SurveyData
-                ? format(
-                    parse(SurveyData?.surveyDate, "yy-M-d", new Date()),
-                    "yyyy.MM.dd"
-                  )
-                : ""}
+              <div>{SurveyData?.surveyDate} </div>
+              {SurveyData?.closeStatus ? (
+                <div>설문이 마감되었습니다.</div>
+              ) : null}
             </div>
           </ResponseResult>
           <GoingResult>
@@ -492,6 +515,15 @@ const DetailSurvey = () => {
           }
         })}
       </SectionWrapper>
+      <Modal
+        title="Cocoa"
+        onCancel={handleOk}
+        open={isModalOpen}
+        onOk={handleOk}
+        centered
+      >
+        <p>마감된 설문입니다.</p>
+      </Modal>
     </Wrapper>
   );
 };

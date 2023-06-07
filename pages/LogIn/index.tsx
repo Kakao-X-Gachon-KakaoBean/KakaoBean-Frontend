@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import GoogleImg from "../../image/google-logo.png";
 import KakaoImg from "../../image/kakao-logo.png";
 
@@ -22,7 +22,7 @@ import {
 import { Link } from "react-router-dom";
 
 import axios, { AxiosError } from "axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 
 import { IUser, UserState } from "../../States/UserState";
 import { useRecoilState } from "recoil";
@@ -31,7 +31,6 @@ import { Redirect } from "react-router";
 import Menu from "@components/Menu";
 import SearchEmail from "@components/SearchEmail";
 import SearchPassword from "@components/PasswordModal";
-import { LeftMenu } from "@components/HeaderBar/styles";
 
 const LogIn = () => {
   const baseUrl = process.env.REACT_APP_BASE_URL;

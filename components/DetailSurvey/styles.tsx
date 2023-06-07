@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -7,6 +8,30 @@ export const Wrapper = styled.div`
   padding-top: 9rem;
   padding-bottom: 9rem;
   background-color: #fbf9f9ff;
+`;
+
+export const CopySection = styled.div`
+  width: 100%;
+  border: 1px solid white;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 5fr 0.1fr;
+  align-items: center;
+  padding: 1rem;
+  font-size: 1.2rem;
+  transition: background-color 0.3s;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+
+  &:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+
+  &:active {
+    background-color: #e6e6e6;
+    cursor: pointer;
+  }
 `;
 export const ViewSection = styled.div`
   width: 100%;
@@ -31,12 +56,41 @@ export const ResponseResult = styled.div`
   }
 
   & > div:last-child {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    & > div:first-child {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    & > div:last-child {
+      font-size: 1rem;
+      color: gray;
+    }
+  }
+`;
+export const GoingResult = styled.div`
+  text-align: center;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  padding: 1rem;
+
+  & > div:first-child {
+  }
+
+  & > div:last-child {
     font-size: 1.5rem;
     font-weight: 600;
   }
 `;
-export const GoingResult = styled(ResponseResult)``;
-export const TitleResult = styled(ResponseResult)``;
+export const TitleResult = styled(GoingResult)``;
 
 export const ButtonDiv = styled.div`
   display: flex;
@@ -91,9 +145,13 @@ export const SectionWrapper = styled.div`
   width: 90%;
   display: grid;
   justify-content: center;
-  grid-template-rows: 1fr 4fr;
-  grid-row-gap: 1rem;
+  grid-template-rows: 0.5fr 1fr 4fr;
+  grid-row-gap: 1.4rem;
   margin: 0 auto;
+`;
+
+export const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
+  color: gray;
 `;
 
 export const StatisticSection = styled.div`

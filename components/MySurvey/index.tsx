@@ -8,10 +8,8 @@ import {
   SurveyResult,
   SurveyTitle,
   SurveyInfo,
-  CreateSurveyContainer,
+  StyledFontAwesomeIcon,
 } from "@components/MySurvey/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import axios, { AxiosError } from "axios";
@@ -92,31 +90,24 @@ const MySurvey = () => {
             MySurvey.myOwnSurveys.map((survey: any) => {
               const Id = survey.surveyId;
               return (
-                <Link to={`/surveydetail/${Id}`}>
-                  <SurveyBox key={survey.surveyId}>
-                    <SurveyInfo>
+                <SurveyBox key={survey.surveyId}>
+                  <SurveyInfo>
+                    <Link to={`/surveydetail/${survey.surveyId}`}>
                       <SurveyTitle>{survey.surveyTitle}</SurveyTitle>
-                      <FontAwesomeIcon
-                        icon={faTrashCan}
-                        onClick={() =>
-                          handleDeleteConfirmation(survey.surveyId)
-                        }
-                      />
-                    </SurveyInfo>
-                    <SurveyResult>
-                      응답 개수: {survey.numberOfResponse}
-                    </SurveyResult>
-                  </SurveyBox>
-                </Link>
+                      <SurveyResult>
+                        응답 개수: {survey.numberOfResponse}
+                      </SurveyResult>
+                    </Link>
+                  </SurveyInfo>
+                  <StyledFontAwesomeIcon
+                    icon={faTrashCan}
+                    onClick={() => handleDeleteConfirmation(survey.surveyId)}
+                  />
+                </SurveyBox>
               );
             })}
         </SurveyContainer>
       ) : (
-        // <CreateSurveyContainer>
-        //   <Link to="/createsurvey">
-        //     <FontAwesomeIcon icon={faCirclePlus} style={{ fontSize: "2rem" }} />
-        //   </Link>
-        // </CreateSurveyContainer>
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           imageStyle={{ height: 100 }}

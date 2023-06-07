@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { Typography } from "antd";
 const { Paragraph, Title } = Typography;
 import DataTable, {
@@ -14,10 +14,7 @@ import {
 } from "@components/SurveyResponseDetailTable/styles";
 import { selectedNodeState } from "../../States/SurveyState";
 import DataRow from "./type";
-import {
-  incomingResponses,
-  QuestionResponse,
-} from "../../pages/Survey/SurveyResponseDetail/type";
+import { incomingResponses } from "../../pages/Survey/SurveyResponseDetail/type";
 
 const columns: TableColumn<DataRow>[] = [
   {

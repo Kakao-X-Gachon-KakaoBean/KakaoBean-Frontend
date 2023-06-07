@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const SurveyHeader = styled.div`
   font-size: 1.7rem;
@@ -10,30 +11,6 @@ export const SurveyHeader = styled.div`
   font-family: "Pretendard-Regular";
 `;
 
-export const CreateSurveyContainer = styled.div`
-  width: 15rem;
-  height: 10rem;
-  margin-left: 2rem;
-
-  padding: 1rem 0;
-  border-radius: 10px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fafbfc;
-  box-shadow: rgba(0, 0, 0, 0.1) 2px 4px 10px;
-  cursor: pointer;
-
-  @media (max-width: 769px) {
-    max-width: 50%;
-    min-width: 50%;
-  }
-
-  &:hover {
-    background-color: #f7e8e8;
-  }
-`;
 export const SurveyContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
@@ -58,10 +35,8 @@ export const SurveyBox = styled.div`
   padding: 1rem 0;
   border-radius: 10px;
 
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 10fr 1fr;
   background-color: #fafbfc;
   box-shadow: rgba(0, 0, 0, 0.1) 2px 4px 10px;
   cursor: pointer;
@@ -76,11 +51,13 @@ export const SurveyBox = styled.div`
   }
 `;
 
+export const StyledFontAwesomeIcon = styled(FontAwesomeIcon)`
+  margin-top: 1rem;
+`;
+
 export const SurveyInfo = styled.div`
   width: 100%;
-  height: 40%;
-  display: flex;
-  justify-content: space-between;
+  height: 100%;
   padding: 1rem;
 `;
 export const SurveyTitle = styled.div`
@@ -88,6 +65,5 @@ export const SurveyTitle = styled.div`
 `;
 export const SurveyResult = styled.div`
   width: 100%;
-  padding: 1rem;
-  flex: 1;
+  margin-top: 2rem;
 `;
