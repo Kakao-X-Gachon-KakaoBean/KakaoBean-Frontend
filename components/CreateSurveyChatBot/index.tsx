@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import {
+  Card,
   ChatTitleButton,
+  Circle,
+  CreateQuestionBtn,
   CreateQuestionsBtnDiv,
   DialogButton,
+  GreenBox,
+  GuideDiv,
+  QuestionDiv,
+  RedBox,
   ResponsesDiv,
+  Tools,
+  YellowBox,
 } from "@components/CreateSurveyChatBot/styles";
 import { answerSet, RecommendedChatTitle, userChat } from "./type";
-import { Button, Drawer, Input } from "antd";
+import { Button, Drawer, Input, Typography } from "antd";
+const { Title, Paragraph, Text } = Typography;
 import { useRecoilState } from "recoil";
 import {
   countState,
@@ -56,6 +66,10 @@ const CreateSurveyChatBot = (): JSX.Element => {
   //보내자
   const sendMsg = (message: string) => {
     if (!client) return; // 클라이언트가 아직 초기화되지 않은 경우 무시
+    if (!/^\d+(개|가지)$/.test(message.split(" ").slice(-1)[0])) {
+      console.log("숫자 인식되지않음.");
+      message += " 3개.";
+    }
     const question = {
       question: message,
     };
@@ -82,13 +96,17 @@ const CreateSurveyChatBot = (): JSX.Element => {
     //   TODO: 들어온 데이터를 가공해서 recommendedChatTitle 형식으로 바꾸기
 
     const extractedMessage: string = chatMessage.content.replace(/\[|\]/g, "");
-    const messageList = extractedMessage.split(".");
+    const messageList = extractedMessage.split("\n");
+    // 숫자와 마침표가 맨 앞에 있는 부분 삭제
+    const processedMessageList = messageList.map((message) =>
+      message.replace(/^\d+\./, "")
+    );
     const wrap: answerSet = {
       index: questionIndex,
       answer: [],
     };
 
-    messageList.map((msg, index) => {
+    processedMessageList.map((msg, index) => {
       const newMessage: RecommendedChatTitle = {
         id: index + counter,
         title: msg,
@@ -254,12 +272,36 @@ const CreateSurveyChatBot = (): JSX.Element => {
           borderBottomLeftRadius: "2.5rem",
         }}
       >
-        <Button onClick={logPrint}>데이터 확인 </Button>
+        {/*<Button onClick={logPrint}>데이터 확인 </Button>*/}
+        <Card>
+          <Tools>
+            <Circle>
+              <RedBox />
+            </Circle>
+            <Circle>
+              <YellowBox />
+            </Circle>
+            <Circle>
+              <GreenBox />
+            </Circle>
+          </Tools>
+          <GuideDiv>
+            <Title level={4}>AI에게 설문 질문을 추천받으세요!</Title>
+            <Paragraph>
+              <Text type={"success"} strong>
+                [질문 주제]에 관련된 질문 [n]개 추천해줘
+              </Text>
+            </Paragraph>
+            <Text disabled>
+              양식에 맞게 작성하실수록,<br></br>더 정확한 답을 얻을 수 있습니다.
+            </Text>
+          </GuideDiv>
+        </Card>
         {/*---------------채팅 입력칸--------------- */}
-        <p>질문 입력란</p>
+        <Title level={4}>질문 입력란</Title>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Input
-            placeholder={"ex) 컴퓨터 구매에 관련된 설문 문제를 추천해주세요"}
+            placeholder={"ex) 컴퓨터에 관련된 질문 3개 추천해줘"}
             style={{ marginRight: "3%" }}
             type="text"
             value={input}
@@ -275,13 +317,20 @@ const CreateSurveyChatBot = (): JSX.Element => {
           </Button>
           {/*---------------채팅 박스 생성 공간--------------- */}
         </div>
-        {!isLoading ? (
+        {!isLoading ||
+        (isLoading && userQuestion && userQuestion.length !== 0) ? (
           userQuestion
-            .map((question, index) => {
+            ?.map((question, index) => {
+              const titleSetItem = titleSet[index];
+              if (!titleSetItem) return null; // titleSetItem이 undefined인 경우 건너뜁니다.
               return (
-                <div>
+                <div
+                  key={index}
+                  style={{ display: "flex", flexDirection: "column" }}
+                >
                   <ResponsesDiv>
                     {titleSet[index].answer.map((item, answerIndex) => {
+                      if (answerIndex == 0 || answerIndex == 1) return null;
                       return (
                         <div style={{ marginTop: "1rem" }} key={answerIndex}>
                           {/*---------------설문 제목 별 버튼--------------- */}
@@ -298,25 +347,23 @@ const CreateSurveyChatBot = (): JSX.Element => {
                     })}
                     {/*---------------설문 생성 버튼--------------- */}
                     <CreateQuestionsBtnDiv>
-                      <Button
-                        type={"primary"}
+                      <CreateQuestionBtn
                         onClick={() => SubmitQuestion(index)}
                         loading={submitBtnLoadings[0]}
                       >
                         질문 생성하기
-                      </Button>
+                      </CreateQuestionBtn>
                     </CreateQuestionsBtnDiv>
                   </ResponsesDiv>
-                  <ResponsesDiv key={index}>
-                    <h1>User</h1>
+                  <QuestionDiv key={index}>
                     <h3>{question.message}</h3>
-                  </ResponsesDiv>
+                  </QuestionDiv>
                 </div>
               );
             })
             .reverse()
         ) : (
-          <div>로딩 중입니다.</div>
+          <></>
         )}
       </Drawer>
     </div>
