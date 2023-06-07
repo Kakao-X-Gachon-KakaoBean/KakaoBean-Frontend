@@ -14,7 +14,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
   process.env.NODE_ENV === "production"
     ? "사이트 주소"
-    : "http://localhost:3090";
+    : "http://localhost:3000";
 
 const queryClient = new QueryClient();
 
