@@ -56,6 +56,10 @@ const CreateSurveyChatBot = (): JSX.Element => {
   //보내자
   const sendMsg = (message: string) => {
     if (!client) return; // 클라이언트가 아직 초기화되지 않은 경우 무시
+    if (!/^\d+(개|가지)$/.test(message.split(" ").slice(-1)[0])) {
+      console.log("숫자 인식되지않음.");
+      message += " 3개.";
+    }
     const question = {
       question: message,
     };
@@ -82,13 +86,17 @@ const CreateSurveyChatBot = (): JSX.Element => {
     //   TODO: 들어온 데이터를 가공해서 recommendedChatTitle 형식으로 바꾸기
 
     const extractedMessage: string = chatMessage.content.replace(/\[|\]/g, "");
-    const messageList = extractedMessage.split(".");
+    const messageList = extractedMessage.split("\n");
+    // 숫자와 마침표가 맨 앞에 있는 부분 삭제
+    const processedMessageList = messageList.map((message) =>
+      message.replace(/^\d+\./, "")
+    );
     const wrap: answerSet = {
       index: questionIndex,
       answer: [],
     };
 
-    messageList.map((msg, index) => {
+    processedMessageList.map((msg, index) => {
       const newMessage: RecommendedChatTitle = {
         id: index + counter,
         title: msg,
@@ -282,6 +290,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
                 <div key={index}>
                   <ResponsesDiv>
                     {titleSet[index].answer.map((item, answerIndex) => {
+                      if (answerIndex == 0 || answerIndex == 1) return null;
                       return (
                         <div style={{ marginTop: "1rem" }} key={answerIndex}>
                           {/*---------------설문 제목 별 버튼--------------- */}
