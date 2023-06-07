@@ -3,6 +3,7 @@ import {
   ChatTitleButton,
   CreateQuestionsBtnDiv,
   DialogButton,
+  QuestionDiv,
   ResponsesDiv,
 } from "@components/CreateSurveyChatBot/styles";
 import { answerSet, RecommendedChatTitle, userChat } from "./type";
@@ -283,11 +284,17 @@ const CreateSurveyChatBot = (): JSX.Element => {
           </Button>
           {/*---------------채팅 박스 생성 공간--------------- */}
         </div>
-        {!isLoading ? (
+        {!isLoading ||
+        (isLoading && userQuestion && userQuestion.length !== 0) ? (
           userQuestion
-            .map((question, index) => {
+            ?.map((question, index) => {
+              const titleSetItem = titleSet[index];
+              if (!titleSetItem) return null; // titleSetItem이 undefined인 경우 건너뜁니다.
               return (
-                <div key={index}>
+                <div
+                  key={index}
+                  style={{ display: "flex", flexDirection: "column" }}
+                >
                   <ResponsesDiv>
                     {titleSet[index].answer.map((item, answerIndex) => {
                       if (answerIndex == 0 || answerIndex == 1) return null;
@@ -316,10 +323,9 @@ const CreateSurveyChatBot = (): JSX.Element => {
                       </Button>
                     </CreateQuestionsBtnDiv>
                   </ResponsesDiv>
-                  <ResponsesDiv key={index}>
-                    <h1>User</h1>
+                  <QuestionDiv key={index}>
                     <h3>{question.message}</h3>
-                  </ResponsesDiv>
+                  </QuestionDiv>
                 </div>
               );
             })

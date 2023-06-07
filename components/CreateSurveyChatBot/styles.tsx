@@ -25,10 +25,20 @@ export const DialogButton = styled.button`
 export const ResponsesDiv = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 0 0 5% 7%;
   margin-top: 4%;
-  background-color: rgba(166, 164, 164, 0.15);
+  background-color: #e5e5eaff;
+`;
+
+export const QuestionDiv = styled.div`
+  color: white;
+  width: 50%;
+  margin-top: 4%;
+  padding: 0 7% 0 7%;
+  border-radius: 15px;
+  background-color: #1086feff;
+  align-self: flex-end;
 `;
 
 export const ChatTitleButton = styled(Button)`
