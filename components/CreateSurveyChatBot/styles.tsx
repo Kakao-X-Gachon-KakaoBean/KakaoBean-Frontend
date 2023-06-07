@@ -52,3 +52,49 @@ export const CreateQuestionsBtnDiv = styled.div`
   display: flex;
   margin-top: 3%;
 `;
+
+/* 안내 Card 스타일 */
+export const Card = styled.div`
+  width: 100%;
+  height: 23%;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 8px;
+  z-index: 1;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+`;
+
+export const Tools = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 9px;
+`;
+
+export const Circle = styled.div`
+  padding: 0 4px;
+`;
+
+export const Box = styled.div`
+  display: inline-block;
+  align-items: center;
+  width: 10px;
+  height: 10px;
+  padding: 1px;
+  border-radius: 50%;
+`;
+
+export const RedBox = styled(Box)`
+  background-color: #ff605c;
+`;
+
+export const YellowBox = styled(Box)`
+  background-color: #ffbd44;
+`;
+
+export const GreenBox = styled(Box)`
+  background-color: #00ca4e;
+`;
+
+export const GuideDiv = styled.div`
+  padding: 0 2rem 0 2rem;
+`;

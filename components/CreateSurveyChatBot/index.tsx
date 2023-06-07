@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
 import {
+  Card,
   ChatTitleButton,
+  Circle,
   CreateQuestionsBtnDiv,
   DialogButton,
+  GreenBox,
+  GuideDiv,
   QuestionDiv,
+  RedBox,
   ResponsesDiv,
+  Tools,
+  YellowBox,
 } from "@components/CreateSurveyChatBot/styles";
 import { answerSet, RecommendedChatTitle, userChat } from "./type";
-import { Button, Drawer, Input } from "antd";
+import { Button, Drawer, Input, Typography } from "antd";
+const { Title, Paragraph, Text } = Typography;
 import { useRecoilState } from "recoil";
 import {
   countState,
@@ -263,12 +271,36 @@ const CreateSurveyChatBot = (): JSX.Element => {
           borderBottomLeftRadius: "2.5rem",
         }}
       >
-        <Button onClick={logPrint}>데이터 확인 </Button>
+        {/*<Button onClick={logPrint}>데이터 확인 </Button>*/}
+        <Card>
+          <Tools>
+            <Circle>
+              <RedBox />
+            </Circle>
+            <Circle>
+              <YellowBox />
+            </Circle>
+            <Circle>
+              <GreenBox />
+            </Circle>
+          </Tools>
+          <GuideDiv>
+            <Title level={4}>AI에게 설문 질문을 추천받으세요!</Title>
+            <Paragraph>
+              <Text type={"success"} strong>
+                [질문 주제]에 관련된 질문 [n]개 추천해줘
+              </Text>
+            </Paragraph>
+            <Text disabled>
+              양식에 맞게 작성하실수록,<br></br>더 정확한 답을 얻을 수 있습니다.
+            </Text>
+          </GuideDiv>
+        </Card>
         {/*---------------채팅 입력칸--------------- */}
-        <p>질문 입력란</p>
+        <Title level={4}>질문 입력란</Title>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Input
-            placeholder={"ex) 컴퓨터 구매에 관련된 설문 문제를 추천해주세요"}
+            placeholder={"ex) 컴퓨터에 관련된 질문 3개 추천해줘"}
             style={{ marginRight: "3%" }}
             type="text"
             value={input}
