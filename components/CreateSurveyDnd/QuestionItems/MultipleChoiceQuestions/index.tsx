@@ -37,21 +37,6 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     props.question
   );
 
-  // 새로운 로직 추가 예시 코드
-  // const newLogic = {
-  //   conditionOfQuestionAnswers: ["yes"],
-  //   nextQuestionNumber: "2",
-  // };
-  // const addLogic = (newLogic: LogicControl) => {
-  //   setMultipleQuestion((prevMultipleQuestion) => {
-  //     const updatedLogics = [...prevMultipleQuestion.logics, newLogic];
-  //     return {
-  //       ...prevMultipleQuestion,
-  //       logics: updatedLogics,
-  //     };
-  //   });
-  // };
-
   useEffect(() => {
     props.onChange(multipleQuestion);
   }, [multipleQuestion]);

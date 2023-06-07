@@ -1,0 +1,16 @@
+{
+  "mySubmittedSurveys": [
+    {
+      "surveyId": 1,
+      "surveyResponseId": 11,
+      "surveyTitle": "제출한 설문 제목1",
+      "submittedDate": "23. 5. 21. 오후 3:59"
+    },
+    {
+      "surveyId": 2,
+      "surveyResponseId": 22,
+      "surveyTitle": "제출한 설문 제목2",
+      "submittedDate": "23. 5. 21. 오후 4:01"
+    }
+  ]
+}

@@ -62,7 +62,7 @@ export const MultipleOptionControl = () => {
         "explanation" in prevQuestion ? prevQuestion.explanation : "",
       questionNumber: prevQuestion.questionNumber,
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: String(Number(prevQuestion.questionNumber) + 1),
     }));
   };
   const changeToRange = () => {
@@ -76,7 +76,7 @@ export const MultipleOptionControl = () => {
         "explanation" in prevQuestion ? prevQuestion.explanation : "",
       questionNumber: prevQuestion.questionNumber,
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: String(Number(prevQuestion.questionNumber) + 1),
       min: 0,
       max: 5,
     }));

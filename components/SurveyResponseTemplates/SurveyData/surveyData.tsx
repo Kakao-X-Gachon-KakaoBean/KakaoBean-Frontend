@@ -7,15 +7,11 @@
 //   key: "testInput",
 //   default: undefined,
 // });
-// const MySurvey: () => incomingDataList = () => {
-//   const { isLoading, isSuccess, status, isError, data, error } = useQuery(
-//     ["survey"],
-//     () => fetcher({ queryKey: "http://localhost:8080/surveys/2" })
-//   );
-//   const [surveyInput, setSurveyInput] = useRecoilState(surveyData);
-//   setSurveyInput(data);
-//   return data;
-// };
 //
-// export default MySurvey;
+// const { isLoading, isSuccess, status, isError, data, error } = useQuery(
+//   ["survey"],
+//   () => fetcher({ queryKey: "http://localhost:8080/surveys/31" })
+// );
+// const [surveyInput, setSurveyInput] = useRecoilState(surveyData);
+// setSurveyInput(data);
 export {};

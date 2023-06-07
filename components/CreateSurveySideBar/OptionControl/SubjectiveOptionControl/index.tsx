@@ -24,7 +24,7 @@ export const SubjectiveOptionControl = () => {
         "explanation" in prevQuestion ? prevQuestion.explanation : "",
       questionNumber: prevQuestion.questionNumber,
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: String(Number(prevQuestion.questionNumber) + 1),
       numberOfAnswerChoices: 1,
       answers: [""],
       logics: [],
@@ -41,7 +41,7 @@ export const SubjectiveOptionControl = () => {
         "explanation" in prevQuestion ? prevQuestion.explanation : "",
       questionNumber: prevQuestion.questionNumber,
       finalQuestion: false,
-      nextQuestionNumber: "0",
+      nextQuestionNumber: String(Number(prevQuestion.questionNumber) + 1),
       min: 0,
       max: 5,
     }));

@@ -1,11 +1,11 @@
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import {
   QuestionTypeItem,
   getQuestionType,
@@ -15,6 +15,7 @@ import {
   createSurveyOptionState,
   selectedQuestionState,
   questionsState,
+  currentTabState,
 } from "../../States/SurveyState";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
@@ -35,39 +36,24 @@ import {
   SidebarNoneSelectedQuestion,
   getQuestionsItemSelectedStyle,
   getQuestionsItemNoneSelectedStyle,
+  LeftSideBackDiv,
 } from "@components/CreateSurveyDnd/styles";
 import { MultipleChoiceQuestions } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions";
 import { SubjectiveQuestions } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions";
 import { RangeBarQuestions } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions";
-import { Button, Input } from "antd";
+import { Button, Input, Modal } from "antd";
 import LogicTab from "@components/LogicTab";
 import { Link, Element } from "react-scroll";
-import {
-  SelNodeState,
-  IdNumState,
-  NodeState,
-  EdgeState,
-  LogicCountState,
-  MultiConditionState,
-  QuestionList,
-} from "../../States/LogicState";
-import { Edge, Node } from "react-flow-renderer";
+import { SelNodeState } from "../../States/LogicState";
 import { useMutation } from "react-query";
 import axios, { AxiosError } from "axios";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const CreateSurveyDnd = (): JSX.Element => {
-  const [nodes, setNodes] = useRecoilState(NodeState);
-  const [edges, setEdges] = useRecoilState(EdgeState);
-  // 현재 선택한 노드
-  const [selNode, setSelNode] = useRecoilState(SelNodeState);
-  const [idNum, setIdNum] = useRecoilState(IdNumState);
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  const frontbaseUrl = process.env.REACT_APP_FRONT_BASE_URL;
 
-  //로직 개수 count
-  const [count, setCount] = useRecoilState(LogicCountState);
-  //로직 조건 개수 count
-  const [isMultiCondition, setIsMultiCondition] =
-    useRecoilState(MultiConditionState);
-  const [questionList, setQuestionList] = useRecoilState(QuestionList);
+  const [selNode, setSelNode] = useRecoilState(SelNodeState);
 
   const [questionTypeItems, setQuestionTypeItems] = useState<
     QuestionTypeItem[]
@@ -78,36 +64,44 @@ const CreateSurveyDnd = (): JSX.Element => {
   const [selectedQuestion, setSelectedQuestion] = useRecoilState(
     selectedQuestionState
   );
+  const resetSelectedQuestion = useResetRecoilState(selectedQuestionState);
+
   const [surveyTitle, setSurveyTitle] = useState<string>("");
-  // const [surveyQuestions, setSurveyQuestions] = useState<QuestionTypes[]>([]); // id, value 포함 전체 질문
+  const [surveyId, setSurveyId] = useState("");
   const [questions, setQuestions] = useState<QuestionTypes[]>([]); // id, value 제거 전체 질문
   const [surveyQuestions, setSurveyQuestions] = useRecoilState(questionsState); // 전체 질문 recoil
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState);
+
   const isEmptyTitle = (title: string) => {
     return title === "" || title === "제목 없음";
   };
 
   const [viewLogic, setViewLogic] = useRecoilState(createSurveyOptionState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
 
   // 하위컴포넌트에서 값 받고 적용
   const handleQuestionChange = (
     updatedQuestion: MultipleQuestion | SubjectiveQuestion | RangeBarQuestion,
     index: number
   ) => {
+    setSelectedQuestion(surveyQuestions[index]);
     const newQuestionItems = [...surveyQuestions];
-    newQuestionItems[index] = updatedQuestion;
+    const originQuestionNumber = newQuestionItems[index].questionNumber;
+    const originNextQuestionNumber = newQuestionItems[index].nextQuestionNumber;
+    const { questionNumber, nextQuestionNumber, ...rest } = updatedQuestion;
+    newQuestionItems[index] = {
+      nextQuestionNumber: originNextQuestionNumber,
+      questionNumber: originQuestionNumber,
+      ...rest,
+    };
     setSurveyQuestions(() => newQuestionItems);
-
-    // 값이 변하면 selectedRecoil 업데이트
-    newQuestionItems.map((item, index) => {
-      if ("id" in selectedQuestion) {
-        if (item.id === selectedQuestion.id) {
-          setSelectedQuestion(() => item);
-        }
-      }
-    });
   };
 
-  // recoilValue가 변하면 surveyQuestions 업데이트
+  //recoilValue가 변하면 surveyQuestions 업데이트
   useEffect(() => {
     surveyQuestions.map((item, index) => {
       if ("id" in selectedQuestion) {
@@ -119,13 +113,6 @@ const CreateSurveyDnd = (): JSX.Element => {
       }
     });
   }, [selectedQuestion]);
-
-  const handleQuestionClick = (
-    clickedQuestion: QuestionTypes,
-    index: number
-  ) => {
-    setSelectedQuestion(() => clickedQuestion);
-  };
 
   // 질문 리스트 순서 바꾸기
   const reorderQuestions = (
@@ -139,6 +126,7 @@ const CreateSurveyDnd = (): JSX.Element => {
 
     return result.map((question, index) => ({
       ...(question as QuestionTypes),
+      questionNumber: list[index].questionNumber,
       nextQuestionNumber: list[index].nextQuestionNumber,
     }));
   };
@@ -223,7 +211,6 @@ const CreateSurveyDnd = (): JSX.Element => {
               item.questionNumber === index.toString()
                 ? (index + 2).toString()
                 : item.nextQuestionNumber;
-            console.log(index + 1, "의 nextQuestionNumber: ", nextNumber);
             return {
               ...item,
               questionNumber: (index + 1).toString(),
@@ -246,151 +233,52 @@ const CreateSurveyDnd = (): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log("questions", questions);
-  }, [questions]);
+    setCurrentTab("CreateSurvey");
+    resetSelectedQuestion();
+  }, []);
 
   useEffect(() => {
-    setSurveyQuestions(() => surveyQuestions);
-    const updatedQuestions = surveyQuestions.map((item, index) => {
-      if ("id" in item) {
-        const { id, ...rest } = item;
-        const updatedItem = Object.assign({}, item, {
-          questionNumber: (index + 1).toString(),
-        });
-        item = updatedItem;
-        if (
-          index == surveyQuestions.length - 1 &&
-          "finalQuestion" in item &&
-          "nextQuestionNumber"
-        ) {
-          const updatedItem = Object.assign({}, item, {
-            finalQuestion: true,
-            nextQuestionNumber: "0",
-          });
-          item = updatedItem;
+    if (currentTab === "CreateSurvey") {
+      setSurveyQuestions(() => surveyQuestions);
+
+      const updatedQuestions = surveyQuestions.map((item, index) => {
+        if ("id" in item) {
+          const { id, ...rest } = item;
+          const updatedItem = { ...rest }; // id를 제외한 나머지 속성들을 가진 객체 생성
+          return updatedItem;
         }
-      }
-      return item;
-    });
-    setQuestions(() => updatedQuestions as QuestionTypes[]);
+        return item;
+      });
+
+      setQuestions(() => updatedQuestions as QuestionTypes[]);
+    }
+
+    console.log(surveyQuestions);
   }, [surveyQuestions]);
 
-  //설문 추가될때 마다 node, edge, logic, count, 멀티 로직 count 초기화
-  useEffect(() => {
-    let i = 0;
-    const newNodeTuple: Node[] = [];
-    const newEdgeTuple: Edge[] = [];
-    const newQuestionTuple: any[] = [];
-    setIdNum(1);
-    let yaxis = 30;
-    let newNode, newEdge;
+  const onClickSurveyDelete = (index: number) => {
+    const newQuestionItems = [
+      ...surveyQuestions.slice(0, index),
+      ...surveyQuestions.slice(index + 1),
+    ];
 
-    // 여기서 i < ? 숫자 바꾸면 그 갯수만큼 생성
-    for (i = 0; i < surveyQuestions.length; i++) {
-      if (i == 0) {
-        newNode = {
-          id: String(i + 1),
-          type: "input",
-          data: {
-            label:
-              surveyQuestions[i].title !== ""
-                ? surveyQuestions[i].title
-                : "제목 없음",
-          },
-          position: { x: 500, y: yaxis },
+    const updatedSurveyQuestions = newQuestionItems.map((q, index) => {
+      if (Number(q.questionNumber) + 1 == Number(q.nextQuestionNumber)) {
+        return {
+          ...q,
+          questionNumber: String(index + 1),
+          nextQuestionNumber: String(index + 2),
         };
       } else {
-        if (i == surveyQuestions.length - 1) {
-          newNode = {
-            id: String(i + 1),
-            data: {
-              label:
-                surveyQuestions[i].title !== ""
-                  ? surveyQuestions[i].title
-                  : "제목 없음",
-            },
-            position: { x: 500, y: yaxis },
-          };
-        } else {
-          newNode = {
-            id: String(i + 1),
-            data: {
-              label:
-                surveyQuestions[i].title !== ""
-                  ? surveyQuestions[i].title
-                  : "제목 없음",
-            },
-            position: { x: 500, y: yaxis },
-          };
-        }
+        return {
+          ...q,
+          questionNumber: String(index + 1),
+        };
       }
+    });
 
-      newEdge = {
-        id: "e" + String(i + 1) + "-" + String(i + 2),
-        source: String(i + 1),
-        target: String(i + 2),
-      };
-
-      setCount((prevCount) => [...prevCount, 0]);
-      setIsMultiCondition((prevVal) => [...prevVal, 1]);
-      newNodeTuple.push(newNode);
-      newEdgeTuple.push(newEdge);
-      newQuestionTuple.push({ value: String(i + 1), label: String(i + 1) });
-
-      setIdNum(idNum + 1);
-      yaxis += 100;
-    }
-
-    const submitNode = {
-      id: "0",
-      type: "output",
-      data: { label: "submit" },
-      position: { x: 500, y: yaxis },
-    };
-
-    const submitEdge = {
-      id: "e_submit",
-      source: String(i),
-      target: "0",
-    };
-
-    newNodeTuple.push(submitNode);
-    newEdgeTuple.push(submitEdge);
-    newQuestionTuple.push({ value: "0", label: "제출하기" });
-
-    //console.log(newNodeTuple);
-    setNodes(newNodeTuple);
-    setEdges(newEdgeTuple);
-    setQuestionList(newQuestionTuple);
-  }, [surveyQuestions.length]);
-
-  useEffect(() => {
-    let i = 0;
-    let yaxis = 0;
-    let updatedNodes = JSON.parse(JSON.stringify(nodes));
-    updatedNodes.pop();
-    console.log(updatedNodes);
-    for (i; i < surveyQuestions.length; i++) {
-      updatedNodes[i].data.label =
-        surveyQuestions[i].title !== ""
-          ? surveyQuestions[i].title
-          : "제목 없음";
-      yaxis = yaxis + 100;
-    }
-
-    const submitNode = {
-      id: "0",
-      type: "output",
-      data: { label: "submit" },
-      position: { x: 500, y: yaxis },
-    };
-
-    updatedNodes.push(submitNode);
-
-    setNodes(updatedNodes);
-    //setEdges(newEdgeTuple);
-    //setQuestionList(newQuestionTuple);
-  }, [surveyQuestions.map((question) => question.title).join("")]);
+    setSurveyQuestions(updatedSurveyQuestions);
+  };
 
   const mutation = useMutation<
     QuestionTypes[],
@@ -403,7 +291,7 @@ const CreateSurveyDnd = (): JSX.Element => {
     "createSurvey",
     (data) =>
       axios
-        .post("http://localhost:8080/surveys", data, {
+        .post(`${baseUrl}/surveys`, data, {
           withCredentials: true,
           headers: {
             "X-Requested-With": "XMLHttpRequest",
@@ -413,131 +301,158 @@ const CreateSurveyDnd = (): JSX.Element => {
         .then((response) => response.data),
     {
       onMutate() {},
-      onSuccess() {
-        alert("성공");
+      onSuccess(returnData: any) {
+        setIsModalOpen(true);
+        setSurveyId(returnData?.surveyId);
       },
       onError(error) {
-        alert("양식을 알맞게 작성해주세요");
+        alert("에러가 발생하였습니다: " + error);
       },
     }
   );
 
+  const finalCheck = () => {
+    const updatedQuestion = [...surveyQuestions];
+    updatedQuestion.map((item, index) => {
+      const { finalQuestion, nextQuestionNumber, ...rest } = item;
+      if (index == updatedQuestion.length - 1) {
+        updatedQuestion[index] = {
+          finalQuestion: true,
+          nextQuestionNumber: "0",
+          ...rest,
+        };
+      }
+    });
+
+    setSurveyQuestions(updatedQuestion);
+  };
+
   const onSubmit = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
+      finalCheck();
+
       if (surveyTitle && questions) {
         mutation.mutate({
           surveyTitle,
           questions: questions,
         });
+      } else {
+        if (!surveyTitle) {
+          alert("설문 제목을 입력해주세요");
+        }
       }
     },
-    [surveyTitle, surveyQuestions, mutation]
+    [surveyTitle, surveyQuestions, mutation, finalCheck]
   );
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper>
-        <QuestionsAndType>
-          <SidebarQuestions>
-            <Input
-              size="large"
-              placeholder="설문 제목"
-              bordered={false}
-              style={{ fontWeight: "bold" }}
-              onChange={(event) => {
-                setSurveyTitle(event.target.value);
-              }}
-            />
-            <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
-            {surveyQuestions.map((item, index) => {
-              const SidebarQuestion =
-                selectedQuestion.id === item.id
-                  ? SidebarSelectedQuestion
-                  : SidebarNoneSelectedQuestion;
-              return (
-                <Link to={item.id} smooth={true} key={index} offset={-220}>
-                  <SidebarQuestion
-                    onClick={() => {
-                      if (
-                        item.type == "MULTIPLE" ||
-                        item.type == "ESSAY" ||
-                        item.type == "RANGE"
-                      ) {
-                        handleQuestionClick(item, index);
-                      }
-                    }}
-                    style={
-                      "title" in item
-                        ? {
-                            color: isEmptyTitle(item.title) ? "gray" : "black",
-                          }
-                        : { color: "black" }
-                    }
-                  >
-                    <SidebarQuestionTitle>
-                      Q.{index + 1 + " "}
-                      {"title" in item
-                        ? item.title == ""
-                          ? "제목 없음"
-                          : item.title
-                        : "제목 타입 없음"}
-                    </SidebarQuestionTitle>
-                    <SidebarQuestionDelete
+    <Wrapper>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <LeftSideBackDiv>
+          <QuestionsAndType>
+            <SidebarQuestions>
+              <Input
+                size="large"
+                placeholder="설문 제목"
+                bordered={false}
+                style={{ fontWeight: "bold" }}
+                onChange={(event) => {
+                  setSurveyTitle(event.target.value);
+                }}
+              />
+              <div style={{ height: "3rem", marginTop: "2rem" }}>전체 문항</div>
+              {surveyQuestions.map((item, index) => {
+                const SidebarQuestion =
+                  selectedQuestion.id === item.id
+                    ? SidebarSelectedQuestion
+                    : SidebarNoneSelectedQuestion;
+                return (
+                  <Link to={item.id} smooth={true} key={index} offset={-220}>
+                    <SidebarQuestion
                       onClick={() => {
-                        const newQuestionItems = [
-                          ...surveyQuestions.slice(0, index),
-                          ...surveyQuestions.slice(index + 1),
-                        ];
-                        setSurveyQuestions(newQuestionItems);
+                        if (
+                          item.type == "MULTIPLE" ||
+                          item.type == "ESSAY" ||
+                          item.type == "RANGE"
+                        ) {
+                          setSelectedQuestion(item);
+                        }
                       }}
+                      style={
+                        "title" in item
+                          ? {
+                              color: isEmptyTitle(item.title)
+                                ? "gray"
+                                : "black",
+                            }
+                          : { color: "black" }
+                      }
                     >
-                      X
-                    </SidebarQuestionDelete>
-                  </SidebarQuestion>
-                </Link>
-              );
-            })}
-          </SidebarQuestions>
-          {viewLogic === "logic" ? (
-            <QuestionTypeListDiv></QuestionTypeListDiv>
-          ) : (
-            <QuestionTypeListDiv>
-              <Droppable droppableId="questionType" isDropDisabled={true}>
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
-                  >
-                    {questionTypeItems.map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getQuestionTypeItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                          >
-                            {item.content}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </QuestionTypeListDiv>
-          )}
-        </QuestionsAndType>
+                      <SidebarQuestionTitle>
+                        Q.{index + 1 + " "}
+                        {"title" in item
+                          ? item.title == ""
+                            ? "제목 없음"
+                            : item.title
+                          : "제목 타입 없음"}
+                      </SidebarQuestionTitle>
+                      {viewLogic !== "logic" ? (
+                        <SidebarQuestionDelete
+                          onClick={() => {
+                            onClickSurveyDelete(index);
+                          }}
+                        >
+                          X
+                        </SidebarQuestionDelete>
+                      ) : (
+                        <div></div>
+                      )}
+                    </SidebarQuestion>
+                  </Link>
+                );
+              })}
+            </SidebarQuestions>
+            {viewLogic === "logic" ? (
+              <QuestionTypeListDiv></QuestionTypeListDiv>
+            ) : (
+              <QuestionTypeListDiv>
+                <Droppable droppableId="questionType" isDropDisabled={true}>
+                  {(provided, snapshot) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getQuestionTypeListStyle(snapshot.isDraggingOver)}
+                    >
+                      {questionTypeItems.map((item, index) => (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getQuestionTypeItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                            >
+                              {item.content}
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </QuestionTypeListDiv>
+            )}
+          </QuestionsAndType>
+        </LeftSideBackDiv>
         {viewLogic === "logic" ? (
           <LogicDiv>
             <LogicTab />
@@ -625,12 +540,25 @@ const CreateSurveyDnd = (): JSX.Element => {
                 </Button>
               </div>
             ) : (
-              <div></div>
+              <></>
             )}
           </QuestionsListDiv>
         )}
-      </Wrapper>
-    </DragDropContext>
+        <Modal
+          title="Cocoa"
+          open={isModalOpen}
+          onCancel={handleOk}
+          footer={[
+            <CopyToClipboard text={`${frontbaseUrl}/survey/${surveyId}`}>
+              <Button type="primary">링크 복사하기</Button>
+            </CopyToClipboard>,
+          ]}
+          centered
+        >
+          <p>{`${frontbaseUrl}/survey/${surveyId}`}</p>
+        </Modal>
+      </DragDropContext>
+    </Wrapper>
   );
 };
 

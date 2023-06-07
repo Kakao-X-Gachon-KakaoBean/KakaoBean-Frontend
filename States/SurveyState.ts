@@ -2,7 +2,9 @@ import { atom } from "recoil";
 import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/MultipleChoiceQuestions/type";
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
+import ReactFlow, { Node } from "react-flow-renderer";
 import { QuestionsItem } from "@components/CreateSurveyDnd/type";
+import DataRow from "@components/SurveyResponseDetailTable/type";
 
 export const countState = atom({
   key: "countQuestions",
@@ -29,8 +31,22 @@ export const selectedQuestionState = atom<
   },
 });
 
+export const selectedNodeState = atom<Node>({
+  key: "selectedNodeState",
+  default: {
+    id: "-",
+    data: "",
+    position: { x: 0, y: 0 },
+  },
+});
+
 type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
 export const questionsState = atom<QuestionTypes[]>({
   key: "questionsState",
   default: [],
+});
+
+export const currentTabState = atom({
+  key: "currentTab",
+  default: "CreateSurvey",
 });

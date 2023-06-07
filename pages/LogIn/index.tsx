@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import GoogleImg from "../../image/google-logo.png";
 import KakaoImg from "../../image/kakao-logo.png";
 
@@ -22,7 +22,7 @@ import {
 import { Link } from "react-router-dom";
 
 import axios, { AxiosError } from "axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 
 import { IUser, UserState } from "../../States/UserState";
 import { useRecoilState } from "recoil";
@@ -31,9 +31,10 @@ import { Redirect } from "react-router";
 import Menu from "@components/Menu";
 import SearchEmail from "@components/SearchEmail";
 import SearchPassword from "@components/PasswordModal";
-import { LeftMenu } from "@components/HeaderBar/styles";
 
 const LogIn = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [email, onChangeEmail, setEmail] = useInput("");
   const [password, onChangePassword, setPassword] = useInput("");
 
@@ -63,7 +64,7 @@ const LogIn = () => {
     "user",
     (data) =>
       axios
-        .post("http://localhost:8080/local/login", data, {
+        .post(`${baseUrl}/local/login`, data, {
           withCredentials: true,
         })
         .then((response) => response.data),
@@ -84,7 +85,7 @@ const LogIn = () => {
 
   //로컬 로그인
   const onSubmit = useCallback(
-    (e) => {
+    (e: any) => {
       e.preventDefault();
       mutation.mutate({ email, password });
     },
@@ -100,7 +101,7 @@ const LogIn = () => {
     <>
       <Wrapper>
         <Header>
-          <Link to="/main">BeanBay</Link>
+          <Link to="/main">Cocoa</Link>
         </Header>
         <Form onSubmit={onSubmit}>
           <Label>
@@ -135,7 +136,7 @@ const LogIn = () => {
               </SearchBtn>
               <div>/</div>
               <SearchBtn type="button" onClick={onClosePasswordModal}>
-                비밀번호 찾기
+                비밀번호 변경
               </SearchBtn>
             </span>
             <Vertical></Vertical>
@@ -149,17 +150,13 @@ const LogIn = () => {
         <Line>또는</Line>
         <SocialLogin>
           <GoogleBtn
-            href={
-              "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000/main"
-            }
+            href={`${baseUrl}/oauth2/authorization/google?redirect_uri=http://localhost:3000/main`}
           >
             <Img src={GoogleImg} alt="Google" />
             <div>Google로 계속</div>
           </GoogleBtn>
           <KakaoBtn
-            href={
-              "http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main"
-            }
+            href={`${baseUrl}/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/main`}
           >
             <Img src={KakaoImg} alt="Google" />
             <div>KaKao로 계속</div>

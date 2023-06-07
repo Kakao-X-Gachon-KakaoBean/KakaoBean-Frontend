@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { forLogic, report } from "@pages/Team/index";
-
+import { forLogic, report, submitAll } from "@pages/Team";
+import { Button, Modal } from "antd";
 import {
   Answer,
   MultipleQuestion,
@@ -9,12 +9,16 @@ import {
 } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import {
   ChoiceBtn,
-  Explanation,
   MultipleQuestionDiv,
-  QuestionBox,
-  Title,
 } from "@components/SurveyResponseTemplates/MultipleChoice/styles";
 import { responseQuestionType } from "@pages/Team/type";
+import { SpaceBetween } from "@pages/Team/styles";
+import {
+  Explanation,
+  PS,
+  QuestionBox,
+  Title,
+} from "@components/SurveyResponseTemplates/styles";
 
 export const MultipleChoiceQuestions = (props: subProps) => {
   const [question] = useState<MultipleQuestion>({
@@ -38,6 +42,8 @@ export const MultipleChoiceQuestions = (props: subProps) => {
   );
   const [makeData, setMakeData] = useState<Answer[]>([]);
   const [reportData, setReportData] = useRecoilState(report);
+  const [submitMultiple] = useRecoilState(submitAll);
+  const [isOverNumberOfAnswer, setIsOverNumberOfAnswer] = useState(false);
 
   //logic Mapping
   const [logic, setLogic] = useRecoilState(forLogic);
@@ -46,16 +52,23 @@ export const MultipleChoiceQuestions = (props: subProps) => {
     question.logics.map(() => ({ id: [0], next: "" }))
   );
 
+  //toast message
   //버튼 클릭에 따른 바뀐 선택지 state true로 적용 vice versa
   const handleCheckboxChange = (index: number) => {
     setCheckboxData((prevState) => {
       const newState = [...prevState];
       newState[index].checked = !newState[index].checked;
+
       //이에 따른 로직 업데이트
       if (newState[index].checked) {
-        setSelectedIdBox((prev) => {
-          return [...prev].concat(question.answers[index].answerId);
-        });
+        if (selectedIdBox.length > question.numberOfAnswerChoices) {
+          setIsOverNumberOfAnswer(true);
+          newState[index].checked = false;
+        } else {
+          setSelectedIdBox((prev) => {
+            return [...prev].concat(question.answers[index].answerId);
+          });
+        }
       } else {
         setSelectedIdBox((prev) => {
           return [...prev].filter(
@@ -100,6 +113,8 @@ export const MultipleChoiceQuestions = (props: subProps) => {
         setLogic(() => {
           return arr.next;
         });
+      } else {
+        setLogic("0");
       }
     });
   };
@@ -133,16 +148,54 @@ export const MultipleChoiceQuestions = (props: subProps) => {
       questionId: question.questionId,
       answers: makeData,
     };
-    setReportData((prevState) => ({
-      ...prevState,
-      questions: [...prevState.questions, newQuestion],
-    }));
+
+    setReportData((prevState) => {
+      if (
+        prevState.questions.some(
+          (item) => item.questionId === newQuestion.questionId
+        )
+      ) {
+        return prevState;
+      } else {
+        return {
+          ...prevState,
+          questions: [...prevState.questions, newQuestion],
+        };
+      }
+    });
   };
+
+  useEffect(() => {
+    if (submitMultiple.includes(Number(question.questionNumber) - 1)) {
+      onSubmit();
+      console.log("submit#", question.questionNumber);
+    }
+  }, [submitMultiple]);
 
   return (
     <QuestionBox>
+      <Modal
+        title="질문의 응답 수가 정해져있습니다"
+        centered
+        open={isOverNumberOfAnswer}
+        onCancel={() => setIsOverNumberOfAnswer(false)}
+        footer={[
+          <Button type="primary" onClick={() => setIsOverNumberOfAnswer(false)}>
+            확인
+          </Button>,
+        ]}
+      >
+        <p>
+          이 문제는 {question.numberOfAnswerChoices}개의 답으로 응답해 주셔야
+          합니다.
+        </p>
+      </Modal>
       <Title>{question.title}</Title>
       <Explanation>{question.explanation}</Explanation>
+      <PS>
+        이 문제는 {question.numberOfAnswerChoices}개의 답으로 응답해 주셔야
+        합니다.
+      </PS>
       {question.answers.map((question, index) => (
         <MultipleQuestionDiv key={index}>
           <ChoiceBtn
@@ -155,6 +208,8 @@ export const MultipleChoiceQuestions = (props: subProps) => {
           </ChoiceBtn>
         </MultipleQuestionDiv>
       ))}
+
+      {/*<SpaceBetween />*/}
       {/*<button*/}
       {/*  onClick={() => {*/}
       {/*    onSubmit();*/}
