@@ -279,7 +279,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
           userQuestion
             .map((question, index) => {
               return (
-                <div>
+                <div key={index}>
                   <ResponsesDiv>
                     {titleSet[index].answer.map((item, answerIndex) => {
                       return (
@@ -316,7 +316,7 @@ const CreateSurveyChatBot = (): JSX.Element => {
             })
             .reverse()
         ) : (
-          <div>로딩 중입니다.</div>
+          <></>
         )}
       </Drawer>
     </div>
