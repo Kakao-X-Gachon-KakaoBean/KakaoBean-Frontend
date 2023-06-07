@@ -1,6 +1,7 @@
-import { Wrapper, Text, TextDiv } from "./styles";
-import { Button } from "antd";
-import React, { useCallback, useState } from "react";
+import { Wrapper, Text, TextDiv, StartButton } from "./styles";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useResetRecoilState } from "recoil";
 import {
@@ -12,7 +13,6 @@ import {
 import {
   EdgeState,
   LogicCountState,
-  MultiConditionState,
   NodeState,
   QuestionList,
   SelNodeState,
@@ -29,7 +29,6 @@ const MainFirst = () => {
   const resetEdgeState = useResetRecoilState(EdgeState);
   const resetNodeState = useResetRecoilState(NodeState);
   const resetLogicCountState = useResetRecoilState(LogicCountState);
-  const resetMultiConditionState = useResetRecoilState(MultiConditionState);
   const resetQuestionList = useResetRecoilState(QuestionList);
 
   const resetSurveyAndLogic = () => {
@@ -41,35 +40,40 @@ const MainFirst = () => {
     resetEdgeState();
     resetNodeState();
     resetLogicCountState();
-    resetMultiConditionState();
     resetQuestionList();
   };
 
   const handleClick = () => {
     resetSurveyAndLogic();
   };
+  useEffect(() => {
+    AOS.init();
+  }, []);
 
   return (
     <Wrapper>
-      <TextDiv>
+      <TextDiv
+        data-aos="fade-up"
+        data-aos-delay="1000"
+        data-aos-duration="1000"
+      >
         <Text>
-          업무를 빠르고 쉽게
+          설문을 빠르고 쉽게
           <br />
         </Text>
         <Text>
           Cocoa
           <br />
         </Text>
-        <Link
-          to="/createsurvey"
-          onClick={handleClick}
-          style={{ textDecoration: "none" }}
-        >
-          <Button>
-            Get Start
-            <br />
-          </Button>
-        </Link>
+        <StartButton>
+          <Link
+            to="/createsurvey"
+            onClick={handleClick}
+            style={{ textDecoration: "none", color: "white" }}
+          >
+            바로 시작하기
+          </Link>
+        </StartButton>
       </TextDiv>
     </Wrapper>
   );

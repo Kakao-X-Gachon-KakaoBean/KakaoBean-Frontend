@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 
 import {
   Button,
@@ -24,6 +24,8 @@ const SearchEmail: FC<EmailModal> = ({
   birth,
   onChangeBirth,
 }) => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [email, setEmail] = useState("");
   const [submitOrClose, setSubmitOrClose] = useState("인증 하기");
   const stopPropagation = useCallback(
@@ -54,7 +56,7 @@ const SearchEmail: FC<EmailModal> = ({
     "searchEmail",
     (data) =>
       axios
-        .post("http://localhost:8080/members/find-email", data, {
+        .post(`${baseUrl}/members/find-email`, data, {
           withCredentials: true,
         })
         .then((response) => response.data),
@@ -66,13 +68,12 @@ const SearchEmail: FC<EmailModal> = ({
         setEmail(data?.email);
       },
       onError(error) {
-        // setLogInError(error.response?.data?.code === 401);
         alert("정보를 잘못 입력하셨습니다.");
       },
     }
   );
   const onSubmit = useCallback(
-    (e) => {
+    (e: any) => {
       e.preventDefault();
       mutation.mutate({ name, birth: formattedBirthday });
     },

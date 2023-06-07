@@ -4,6 +4,7 @@ import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/Su
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import ReactFlow, { Node } from "react-flow-renderer";
 import { QuestionsItem } from "@components/CreateSurveyDnd/type";
+import DataRow from "@components/SurveyResponseDetailTable/type";
 
 export const countState = atom({
   key: "countQuestions",
@@ -43,4 +44,9 @@ type QuestionTypes = MultipleQuestion | SubjectiveQuestion | RangeBarQuestion;
 export const questionsState = atom<QuestionTypes[]>({
   key: "questionsState",
   default: [],
+});
+
+export const currentTabState = atom({
+  key: "currentTab",
+  default: "CreateSurvey",
 });

@@ -28,3 +28,12 @@ export const Explanation = styled.div`
   font-weight: 450;
   margin-bottom: 10px;
 `;
+
+export const PS = styled.div`
+  border: 0;
+  width: 50vw;
+  color: gray;
+  font-size: 17px;
+  font-weight: 360;
+  margin-bottom: 10px;
+`;

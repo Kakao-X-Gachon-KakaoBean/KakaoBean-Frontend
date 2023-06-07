@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Wrapper, Label } from "@pages/LogIn/styles";
 import {
   Header,
@@ -24,15 +18,16 @@ import {
 } from "@pages/SignUp/styles";
 import { Link } from "react-router-dom";
 import useInput from "@hooks/useInput";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { IUser } from "../../States/UserState";
 import axios, { AxiosError } from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Modal } from "antd";
-import { Redirect } from "react-router";
 
 const SignUp = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [name, onChangeName, setName] = useInput("");
   const [email, onChangeEmail, setEmail] = useInput("");
   const [birth, onchangeBirth, setBirthDay] = useInput("");
@@ -65,9 +60,7 @@ const SignUp = () => {
   >(
     "user",
     (data) =>
-      axios
-        .post("http://localhost:8080/members", data)
-        .then((response) => response.data),
+      axios.post(`${baseUrl}/members`, data).then((response) => response.data),
     {
       onMutate() {
         setSignUpError("");
@@ -150,11 +143,7 @@ const SignUp = () => {
       if (!email || !email.trim()) return;
 
       axios
-        .post(
-          "http://localhost:8080/emails",
-          { email },
-          { withCredentials: true }
-        )
+        .post(`${baseUrl}/emails`, { email }, { withCredentials: true })
         .then((response) => {
           setFailUseEmail(true);
           toast(message("메일로 인증번호가 발송되었습니다."), {

@@ -1,6 +1,5 @@
 import { atom } from "recoil";
 import { Edge, Node } from "react-flow-renderer";
-import { Logic } from "@components/LogicTab/type";
 
 export const SelNodeState = atom<string>({
   key: "selNode",
@@ -26,11 +25,6 @@ export const EdgeState = atom<Edge[]>({
 
 export const LogicCountState = atom<number[]>({
   key: "count",
-  default: [0],
-});
-
-export const MultiConditionState = atom<number[]>({
-  key: "isMultiCondition",
   default: [0],
 });
 

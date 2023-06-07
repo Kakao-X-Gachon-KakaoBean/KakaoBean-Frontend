@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import HeaderBar from "@components/HeaderBar";
 import MyPageSideBar from "@components/MyPageSideBar";
 import { RightSide, SideBar, Wrapper } from "@pages/MyPage/styles";
-import { Redirect, Route, Switch } from "react-router";
+import { Route, Switch } from "react-router";
 import loadable from "@loadable/component";
 
 const MyInfo = loadable(() => import("@components/MyInfo"));

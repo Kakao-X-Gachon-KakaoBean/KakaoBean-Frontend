@@ -2,12 +2,11 @@ import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 0.2fr 1fr;
+  grid-template-columns: 0.2fr 0.8fr;
 
   min-height: 100vh;
 
   margin-top: -2rem;
-
   & a {
     text-decoration: none;
     color: inherit;
@@ -27,7 +26,7 @@ export const SideBar = styled.section`
   font-weight: bolder;
   padding-top: 15rem;
   padding-left: 1rem;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
 `;
 
 export const RightSide = styled.section`
