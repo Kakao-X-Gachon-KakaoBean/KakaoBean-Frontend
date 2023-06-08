@@ -646,11 +646,13 @@ export const LogicControl = () => {
                               <LogicBodyHeader>이동</LogicBodyHeader>
                               <Select
                                 value={
-                                  !select.finalQuestion
-                                    ? surveyQuestions[
-                                        Number(select.nextQuestionNumber) - 1
+                                  select.logics[i].nextQuestionNumber == "0"
+                                    ? "제출하기"
+                                    : surveyQuestions[
+                                        Number(
+                                          select.logics[i].nextQuestionNumber
+                                        ) - 1
                                       ].title
-                                    : "제출 하기"
                                 }
                                 style={{ width: 100 }}
                                 onChange={(e: string) =>

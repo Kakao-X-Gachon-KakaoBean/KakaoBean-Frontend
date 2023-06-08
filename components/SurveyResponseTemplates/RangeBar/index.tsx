@@ -104,8 +104,6 @@ export const RangeBarQuestions = (props: subProps) => {
         value={value}
         style={rangeBarStyle}
       />
-      {/*<SpaceBetween />*/}
-      {/*<button onClick={() => onSubmit()}>check Recoiled Data</button>*/}
     </QuestionBox>
   );
 };

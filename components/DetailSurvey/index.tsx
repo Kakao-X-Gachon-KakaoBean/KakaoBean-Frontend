@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, useCallback, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useState,
+  useEffect,
+} from "react";
 import {
   CartesianGrid,
   XAxis,
@@ -74,6 +79,25 @@ const DetailSurvey = () => {
   const [patch, setPatch] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    window.addEventListener("error", (e) => {
+      if (e.message === "ResizeObserver loop limit exceeded") {
+        const resizeObserverErrDiv = document.getElementById(
+          "webpack-dev-server-client-overlay-div"
+        );
+        const resizeObserverErr = document.getElementById(
+          "webpack-dev-server-client-overlay"
+        );
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute("style", "display: none");
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute("style", "display: none");
+        }
+      }
+    });
+  }, []);
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -133,12 +157,17 @@ const DetailSurvey = () => {
     isError,
     data: SurveyData,
     error,
-  } = useQuery<SurveyDataType>(["SurveyResult"], () =>
-    fetcher({
-      queryKey: `${baseUrl}/responses/survey-statistics/${
-        location.pathname.split("/")[2]
-      }`,
-    })
+  } = useQuery<SurveyDataType>(
+    ["SurveyResult", location.pathname.split("/")[2]],
+    () =>
+      fetcher({
+        queryKey: `${baseUrl}/responses/survey-statistics/${
+          location.pathname.split("/")[2]
+        }`,
+      }),
+    {
+      refetchOnMount: "always",
+    }
   );
 
   const mutation = useMutation<string, AxiosError, { SurveyId: string }>(
@@ -183,25 +212,6 @@ const DetailSurvey = () => {
   if (patch) {
     return <Redirect to={"/mypage/mysurvey"} />;
   }
-
-  // useEffect(() => {
-  //   window.addEventListener("error", (e) => {
-  //     if (e.message === "ResizeObserver loop limit exceeded") {
-  //       const resizeObserverErrDiv = document.getElementById(
-  //         "webpack-dev-server-client-overlay-div"
-  //       );
-  //       const resizeObserverErr = document.getElementById(
-  //         "webpack-dev-server-client-overlay"
-  //       );
-  //       if (resizeObserverErr) {
-  //         resizeObserverErr.setAttribute("style", "display: none");
-  //       }
-  //       if (resizeObserverErrDiv) {
-  //         resizeObserverErrDiv.setAttribute("style", "display: none");
-  //       }
-  //     }
-  //   });
-  // }, []);
 
   return (
     <Wrapper>

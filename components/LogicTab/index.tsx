@@ -12,6 +12,25 @@ export default function LogicTab() {
   const nodes = useRecoilValue(NodeState);
   const edges = useRecoilValue(EdgeState);
 
+  useEffect(() => {
+    window.addEventListener("error", (e) => {
+      if (e.message === "ResizeObserver loop limit exceeded") {
+        const resizeObserverErrDiv = document.getElementById(
+          "webpack-dev-server-client-overlay-div"
+        );
+        const resizeObserverErr = document.getElementById(
+          "webpack-dev-server-client-overlay"
+        );
+        if (resizeObserverErr) {
+          resizeObserverErr.setAttribute("style", "display: none");
+        }
+        if (resizeObserverErrDiv) {
+          resizeObserverErrDiv.setAttribute("style", "display: none");
+        }
+      }
+    });
+  }, []);
+
   // 현재 선택한 노드
   const [selNode, setSelNode] = useRecoilState(SelNodeState);
   const [currentTab, setCurrentTab] = useRecoilState(currentTabState);

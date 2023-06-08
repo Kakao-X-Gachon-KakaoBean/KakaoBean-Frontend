@@ -66,8 +66,10 @@ const CreateSurveyChatBot = (): JSX.Element => {
   //보내자
   const sendMsg = (message: string) => {
     if (!client) return; // 클라이언트가 아직 초기화되지 않은 경우 무시
-    if (!/^\d+(개|가지)$/.test(message.split(" ").slice(-1)[0])) {
-      console.log("숫자 인식되지않음.");
+    const words = message.split(" ");
+    const lastThreeWords = words.slice(-3); // 마지막에서 3개의 단어 추출
+    if (!lastThreeWords.some((word) => /^\d+(개|가지)$/.test(word))) {
+      console.log("숫자 인식되지 않음.");
       message += " 3개.";
     }
     const question = {
@@ -263,13 +265,13 @@ const CreateSurveyChatBot = (): JSX.Element => {
       )}
       {/*---------------DRAWER--------------- */}
       <Drawer
+        width="35%"
         title="AI로 질문 추천 받기"
         placement="right"
         onClose={closeDrawer}
         open={openDrawer}
         style={{
           borderTopLeftRadius: "2.5rem",
-          borderBottomLeftRadius: "2.5rem",
         }}
       >
         {/*<Button onClick={logPrint}>데이터 확인 </Button>*/}
@@ -287,13 +289,14 @@ const CreateSurveyChatBot = (): JSX.Element => {
           </Tools>
           <GuideDiv>
             <Title level={4}>AI에게 설문 질문을 추천받으세요!</Title>
-            <Paragraph>
-              <Text type={"success"} strong>
-                [질문 주제]에 관련된 질문 [n]개 추천해줘
-              </Text>
-            </Paragraph>
+            <Text type={"success"} strong>
+              [질문 주제]에 관련된 질문 [n]개 추천해줘
+            </Text>
+            <br />
+            <br />
             <Text disabled>
-              양식에 맞게 작성하실수록,<br></br>더 정확한 답을 얻을 수 있습니다.
+              양식에 맞게 작성하실수록,
+              <br />더 정확한 답을 얻을 수 있습니다.
             </Text>
           </GuideDiv>
         </Card>

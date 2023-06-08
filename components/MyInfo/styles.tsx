@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  font-size: 2rem;
+  font-size: 1.7rem;
   font-weight: 600;
   margin-bottom: 0.8rem;
   margin-left: 1rem;
@@ -42,7 +42,7 @@ export const SectionHeader = styled.div`
   align-items: center;
   justify-content: flex-start;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 `;
 export const SectionBody = styled.div`
   background-color: white;
@@ -53,6 +53,6 @@ export const SectionBody = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: dimgrey;
 `;

@@ -13,14 +13,12 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-
 import { MultipleChoiceQuestions } from "@components/SurveyResponseTemplates/MultipleChoice";
 import { RangeBarQuestions } from "@components/SurveyResponseTemplates/RangeBar";
 import { SubjectiveQuestions } from "@components/SurveyResponseTemplates/Subjective";
 import { MultipleQuestion } from "@components/SurveyResponseTemplates/MultipleChoice/type";
 import { RangeBarQuestion } from "@components/SurveyResponseTemplates/RangeBar/type";
 import { SubjectiveQuestion } from "@components/SurveyResponseTemplates/Subjective/type";
-import { testInput } from "@pages/Team/testIncomingData";
 import { QuestionBox, Title } from "@components/SurveyResponseTemplates/styles";
 import {
   incomingDataList,
@@ -28,9 +26,6 @@ import {
   responseDataList,
 } from "@pages/Team/type";
 import { EndingPage } from "@components/SurveyResponseTemplates/SubmitionCompletePage";
-
-// 실제 데이터 recoil
-////이건 아직이다.. import { surveyData } from "@components/SurveyResponseTemplates/SurveyData/surveyData";
 import { useQuery } from "react-query";
 import fetcher from "@utils/fetcher";
 import { useLocation } from "react-router";
@@ -58,15 +53,6 @@ const Team = () => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
   const location = useLocation();
-
-  // 현재 페이지 URL에서 숫자를 추출하는 함수
-  // const getSurveyIdFromUrl = () => {
-  //   const url = window.location.pathname; // 현재 페이지 URL의 경로
-  //   const surveyId = url.substring(url.lastIndexOf("/") + 1); // 마지막 "/" 이후의 문자열 추출 (숫자 부분)
-  //   return parseInt(surveyId); // 숫자로 변환하여 반환
-  // };
-
-  // const surveyId = getSurveyIdFromUrl(); // 현재 페이지의 surveyId 추출
 
   const surveyId = location.pathname.split("/")[2];
   const {
@@ -97,18 +83,6 @@ const Team = () => {
   const [logicQueue, setLogicQueue] = useState<number[]>([0]);
   const [counter, setCounter] = useState<number>(0);
 
-  // //survey dummy data
-  // const [questions, setQuestions] = useState<QuestionTypes[]>(
-  //   testInput.questions
-  // );
-  // //surveyID 초기화 함수
-  // const initializeReport = () => {
-  //   setReportData((prevState) => ({
-  //     ...prevState,
-  //     surveyId: testInput.surveyId,
-  //   }));
-  // };
-
   //실제 데이터 _ 위에 주석하고 사용
   //이건 아직,, const [survey, setSurvey] = useRecoilState(surveyData);
   const [survey, setSurvey] = useState<incomingDataList>();
@@ -119,24 +93,12 @@ const Team = () => {
     }
   });
 
-  // const initializeReport = () => {
-  //   setReportData((prevState) => ({
-  //     ...prevState,
-  //     surveyId: survey?.surveyId,
-  //   }));
-  // };
-
   //recoil_ can view received response in here
   const [reportData, setReportData] = useRecoilState(report);
   const [submitQueue, setSubmitQueue] = useRecoilState(submitAll);
 
   //logic에 의한 이동 슬라이드 번호
   const [slideToGo, setSlideToGo] = useRecoilState(forLogic);
-
-  // // surveyId는 실행시 한번 만 실행
-  // useEffect(() => {
-  //   initializeReport();
-  // }, [surveyData]);
 
   //carousel(페이지 돌아가는거 구현)
   useEffect(() => {
@@ -188,13 +150,6 @@ const Team = () => {
     if (submitQueue.length > 0) handleClick();
   }, [submitQueue]);
 
-  // 로그 출력용
-  // function consoleLogger() {
-  //   console.log("slideToGO: ", slideToGo);
-  //   console.log("counter: ", counter);
-  //   console.log("current queue:", logicQueue);
-  //   console.log("currentSlide: ", currentSlide);
-  // }
   const [endSurvey, setEndSurvey] = useState(false);
   return (
     <div style={{ height: "100vh", overflow: "hidden" }}>

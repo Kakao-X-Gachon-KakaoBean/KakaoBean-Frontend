@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const SurveyHeader = styled.div`
-  font-size: 2rem;
+  font-size: 1.7rem;
   font-weight: 600;
   margin-bottom: 0.8rem;
   margin-left: 1rem;

@@ -3,8 +3,6 @@ import { MultipleQuestion } from "@components/CreateSurveyDnd/QuestionItems/Mult
 import { SubjectiveQuestion } from "@components/CreateSurveyDnd/QuestionItems/SubjectiveQuestions/type";
 import { RangeBarQuestion } from "@components/CreateSurveyDnd/QuestionItems/RangeBarQuestions/type";
 import ReactFlow, { Node } from "react-flow-renderer";
-import { QuestionsItem } from "@components/CreateSurveyDnd/type";
-import DataRow from "@components/SurveyResponseDetailTable/type";
 
 export const countState = atom({
   key: "countQuestions",
