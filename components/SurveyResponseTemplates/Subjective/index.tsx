@@ -80,8 +80,6 @@ export const SubjectiveQuestions = (props: subProps) => {
       <Title>{subjectiveQuestions.title}</Title>
       <Explanation>{subjectiveQuestions.explanation}</Explanation>
       <Subjective type="text" value={inputValue} onChange={handleInputChange} />
-      {/*<button onClick={() => onSubmit()}>check Recoiled Data</button>*/}
-      {/*<SpaceBetween />*/}
     </QuestionBox>
   );
 };
