@@ -157,12 +157,17 @@ const DetailSurvey = () => {
     isError,
     data: SurveyData,
     error,
-  } = useQuery<SurveyDataType>(["SurveyResult"], () =>
-    fetcher({
-      queryKey: `${baseUrl}/responses/survey-statistics/${
-        location.pathname.split("/")[2]
-      }`,
-    })
+  } = useQuery<SurveyDataType>(
+    ["SurveyResult", location.pathname.split("/")[2]],
+    () =>
+      fetcher({
+        queryKey: `${baseUrl}/responses/survey-statistics/${
+          location.pathname.split("/")[2]
+        }`,
+      }),
+    {
+      refetchOnMount: "always",
+    }
   );
 
   const mutation = useMutation<string, AxiosError, { SurveyId: string }>(
