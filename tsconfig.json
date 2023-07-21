@@ -13,6 +13,7 @@
     "typeRoots": ["types","typings", "node_modules/@types"],
     "types": ["cypress","node"],
     "paths": {
+      "@/*": ["src/*"],
       "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
       "@layouts/*": ["layouts/*"],
